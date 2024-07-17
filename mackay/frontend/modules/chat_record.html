@@ -1,0 +1,17 @@
+{% if chat_record_ssr %}
+  <header>This is MVC Basic</header>
+  <ul>
+    {% for records in chat_record_ssr %}
+    <li>
+      <span>對話ID: {{ records.id }}</span>
+      <span>對話內容: {{ records.content }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+
+{% elif chat_record_ssr_with_query %}
+  <span>This is MVC With Query {{ id }}</span>
+
+{% else %}
+  <span>出包拉</span>
+{% endif %}

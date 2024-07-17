@@ -7,10 +7,34 @@ from rest_framework.response import Response
 from .models import chat_record
 from django.db.models import Q, F
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
+from django.shortcuts import render, redirect
 
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
+
+# URLpath: mvc/
+def chat_record_ssr(request):
+  recordData = chat_record.objects.all()
+  recordDataList = list(recordData)
+  ctx = {
+    "chat_record_ssr": recordDataList
+  }
+  return render(request, "mvc.html", ctx)
+
+
+
+# URLpath: mvc/<id>
+def chat_record_ssr_with_query(request, id):
+  recordData = chat_record.objects.filter(Q(id=id))
+  recordDataList = list(recordData)
+  ctx = {
+    "chat_record_ssr_with_query": id
+  }
+  return render(request, "mvc.html", ctx)
+
+
 
 
 @api_view(['GET'])
