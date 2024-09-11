@@ -1,33 +1,30 @@
 <template>
   <v-container class="chat-container">
-    <v-row>
-      <v-col cols="12">
-        <div class="chat-window">
-          <div class="date-divider">2024-10-01</div>
-          <chat-message
-            v-for="(msg, index) in messages"
-            :key="index"
-            :isOwnMessage="msg.isOwnMessage"
-            :name="msg.name"
-            :message="msg.message"
-            @image-click="openImagePopup(msg.message)" 
-          ></chat-message>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-text-field
-          v-model="newMessage"
-          placeholder="請輸入留言"
-          solo
-          dense
-          append-icon="mdi-emoticon-outline"
-          @keyup.enter="sendMessage"
-          class="message-input"
-        ></v-text-field>
-      </v-col>
-    </v-row>
+    <div class="px-3">
+      <div class="chat-window">
+        <div class="date-divider">2024-10-01</div>
+        <chat-message
+          v-for="(msg, index) in messages"
+          :key="index"
+          :isOwnMessage="msg.isOwnMessage"
+          :name="msg.name"
+          :message="msg.message"
+          @image-click="openImagePopup(msg.message)" 
+        ></chat-message>
+      </div>
+    </div>
+    <div>
+      <v-text-field
+        v-model="newMessage"
+        placeholder="請輸入留言"
+        outlined
+        hint="This field uses counter prop"
+        persistent-hint
+        append-icon="mdi-emoticon-outline"
+        @keyup.enter="sendMessage"
+        class="message-input mb-13 mx-4"
+      ></v-text-field>
+    </div>
 
     <!-- 圖片彈窗 -->
     <v-dialog v-model="imagePopupVisible" max-width="none" persistent>
@@ -101,7 +98,7 @@ export default {
 .chat-window {
   flex: 1;
   background-color: #fff;
-  padding: 0 20px;
+  padding: 0;
   height: calc(100vh - 205px);
   overflow-y: auto;
 }

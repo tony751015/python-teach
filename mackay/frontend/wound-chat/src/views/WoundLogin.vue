@@ -1,16 +1,19 @@
 <template>
   <v-app>
     <v-container class="fill-height">
-      <v-row justify="center" align="center">
+      <v-row justify="center" align="center" style="max-width: 400px; border-radius: 15px; overflow: hidden; box-shadow: 0px 5px 15px #e3e3e3;">
         <!-- 左側圖片方框 -->
-        <v-col cols="12" md="4" class="v-col colLeft">
+        <!-- <v-col cols="12" md="4" class="v-col colLeft">
           <v-card class="image-box">
             <v-img src="../assets/loginNurse.jpg" alt="Left Image"></v-img>
           </v-card>
-        </v-col>
-        
+        </v-col> -->
+        <v-col 
+          cols="12" 
+          style="height: 250px; width: 100%; background-size: cover; background-image: url(https://images.squarespace-cdn.com/content/v1/5ebaaed9bb839b7b67d29b74/1595423617407-II6O8RO8D10X3DPXO4RJ/PatientFlow%26OperationalVisibility.jpg);"></v-col>
         <!-- 右側登入方框 -->
-        <v-col cols="12" md="4" class="v-col colRight">
+        <v-col cols="12" md="12" class="v-col colRight">
+          
           <v-card class="pa-5">
             <v-card-title class="headline text-center custom-title">會員登入</v-card-title>
             <v-divider></v-divider>
@@ -18,14 +21,28 @@
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
-                <v-btn class="mb-4 justify-space-between align-center fastLogin lineFast" block @click="redirectToWoundChat('line')">
+                <v-btn
+                  color="v-dark"
+                  class="mb-3 justify-space-between align-center fastLogin lineFast white--text"
+                  block
+                  x-large
+                  outlined
+                  elevation="0"
+                  @click="redirectToWoundChat('line')">
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
                   <span style="flex: 1; text-align: center;">LINE 快速登入 / 註冊</span>
                 </v-btn>
 
-                <v-btn color="white" class="mb-4 justify-space-between align-center fastLogin" block @click="redirectToWoundChat('google')">
+                <v-btn 
+                  color="v-dark"
+                  class="mb-2 justify-space-between align-center fastLogin"
+                  block
+                  x-large
+                  outlined
+                  elevation="0"
+                  @click="redirectToWoundChat('google')">
                   <div style="display: flex; align-items: center;">
                     <!-- <v-icon left>mdi-google</v-icon> -->
                      <v-img left class="iconImg" src="../assets/google.png"></v-img>
@@ -54,7 +71,7 @@ export default {
 
 <style scoped>
 .theme--light.v-application{
-  background-image: url(../assets/hospital_BG.jpg);
+  /* background-image: url(../assets/hospital_BG.jpg); */
   background-repeat: no-repeat; 
   background-size: cover;
 }
@@ -63,14 +80,12 @@ export default {
 }
 .fill-height .row{
   /* box-shadow: 0 0 1px #ccc; */
-  height: 70vh;
 }
 .image-box {
   background-color: #f5f5f5;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
   overflow: hidden;
   filter: brightness(0.7) blur(2px);
   background-size: contain;
@@ -80,7 +95,6 @@ export default {
   font-size: 20px;
 }
 .v-application .lineFast {
-  margin-bottom: 25px !important;
   color: #fff;
   background-color: #06c755;
 }
@@ -97,7 +111,6 @@ export default {
 .colRight .pa-5{
   box-shadow: unset;
   background-color: #f5f5f5;
-  height: 70vh;
   border-radius: 0 4px 4px 0;
 }
 .colLeft .pa-5{
