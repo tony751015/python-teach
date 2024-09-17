@@ -5,8 +5,14 @@
         :class="[isOwnMessage ? 'own-message': 'other-message']"
         flat>
         <v-card-text 
-          v-html="message"
-          class="font-weight-bold"></v-card-text>
+          v-if="content_type === 'text'"
+          class="font-weight-bold">{{message}}</v-card-text>
+        
+        <v-card-text 
+          v-else-if="content_type === 'image'"
+        >
+          <img :src="message">
+        </v-card-text>
       </v-card>
     </v-col>
   </v-row>
@@ -20,6 +26,10 @@ export default {
       type: Boolean,
       required: true
     },
+    content_type: {
+      type: String,
+      required: true
+    },
     name: {
       type: String,
       required: true
@@ -30,6 +40,7 @@ export default {
     }
   }
 }
+// console.log(this.content_type)
 </script>
 
 <style scoped>

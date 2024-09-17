@@ -7,6 +7,7 @@
           v-for="(msg, index) in messages"
           :key="index"
           :isOwnMessage="msg.isOwnMessage"
+          :content_type="msg.content_type"
           :name="msg.name"
           :message="msg.message"
           @image-click="openImagePopup(msg.message)" 
@@ -52,11 +53,11 @@ export default {
       imagePopupVisible: false,
       selectedImage: '',
       messages: [
-        { isOwnMessage: false, name: '照護專員', message: '您好，您的傷口照護已告一段落 我們會幫您做結案的動作 若日後您有任何傷口的問題都歡迎您來可以訪問' },
-        { isOwnMessage: true, name: '您', message: '我有些問題' },
-        { isOwnMessage: true, name: '您', message: '客氣了，如果能有助益' },
-        { isOwnMessage: true, name: '您', message: '<img src="https://via.placeholder.com/150" alt="image"><br>最近的傷口照' },
-        { isOwnMessage: false, name: '照護專員', message: '照片看起來復原得不錯 但是還是要記得再幫我上傳傷口照片 提醒您臉部傷口可以使用除疤產品喔' }
+        { isOwnMessage: false, content_type: 'text', name: '照護專員', message: '您好，您的傷口照護已告一段落 我們會幫您做結案的動作 若日後您有任何傷口的問題都歡迎您來可以訪問' },
+        { isOwnMessage: true, content_type: 'text', name: '您', message: '我有些問題' },
+        { isOwnMessage: true, content_type: 'text', name: '您', message: '客氣了，如果能有助益' },
+        { isOwnMessage: true, content_type: 'image', name: '您', message: 'https://via.placeholder.com/150' },
+        { isOwnMessage: false, content_type: 'text', name: '照護專員', message: '照片看起來復原得不錯 但是還是要記得再幫我上傳傷口照片 提醒您臉部傷口可以使用除疤產品喔' }
       ]
     }
   },
