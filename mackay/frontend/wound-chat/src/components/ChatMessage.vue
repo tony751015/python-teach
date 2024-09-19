@@ -4,15 +4,16 @@
       <v-card 
         :class="[isOwnMessage ? 'own-message': 'other-message']"
         flat>
+        
         <v-card-text 
           v-if="content_type === 'text'"
           class="font-weight-bold">{{message}}</v-card-text>
         
         <v-card-text 
-          v-else-if="content_type === 'image'"
-        >
-          <img :src="message">
+          v-else-if="content_type === 'image'">
+          <img :src="message" @click="handleImageClick">
         </v-card-text>
+
       </v-card>
     </v-col>
   </v-row>
@@ -38,9 +39,13 @@ export default {
       type: String,
       required: true
     }
+  },
+  methods: {
+    handleImageClick() {
+      this.$emit('image-click', this.message); // 將圖片的 URL 傳遞給父組件
+    }
   }
 }
-// console.log(this.content_type)
 </script>
 
 <style scoped>
@@ -51,16 +56,11 @@ export default {
 .v-card__text{
   padding: 10px 15px;
 }
-/* .row-reverse{
-  flex-direction: row-reverse;
-} */
 .own-message {
   background-color: #000 !important;
   color: #fff;
   border-radius: 16px 16px 0 16px;
-  /* padding: 3px 8px; */
   margin: 5px 0;
-  /* max-width: 60%; */
 }
 .own-message .v-card__text{
   color: #FFF;
@@ -70,9 +70,7 @@ export default {
   background-color: #f8f8f8;
   border: 1px solid #ddd;
   border-radius: 16px 16px 16px 0;
-  /* padding: 3px 8px; */
   margin: 5px 0;
-  /* max-width: 60%; */
 }
 
 img {
@@ -80,6 +78,6 @@ img {
   height: auto;
   border-radius: 10px;
   margin-top: 10px;
+  cursor: pointer; /* 指示圖片可以點擊 */
 }
 </style>
-  

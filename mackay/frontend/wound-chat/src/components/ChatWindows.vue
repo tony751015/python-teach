@@ -10,7 +10,7 @@
           :content_type="msg.content_type"
           :name="msg.name"
           :message="msg.message"
-          @image-click="openImagePopup(msg.message)" 
+          @image-click="openImagePopup" 
         ></chat-message>
       </div>
     </div>
@@ -19,8 +19,6 @@
         v-model="newMessage"
         placeholder="請輸入留言"
         outlined
-        hint="This field uses counter prop"
-        persistent-hint
         append-icon="mdi-emoticon-outline"
         @keyup.enter="sendMessage"
         class="message-input mb-13 mx-4"
@@ -72,12 +70,9 @@ export default {
         this.newMessage = '';
       }
     },
-    openImagePopup(imageHtml) {
-      const imgTag = imageHtml.match(/<img src="([^"]+)"/);
-      if (imgTag) {
-        this.selectedImage = imgTag[1];
-        this.imagePopupVisible = true;
-      }
+    openImagePopup(imageUrl) {
+      this.selectedImage = imageUrl; // 接收到圖片的 URL
+      this.imagePopupVisible = true;
     },
     closeImagePopup() {
       this.imagePopupVisible = false;
@@ -111,7 +106,6 @@ export default {
 }
 
 .message-input {
-  /* margin-top: 10px; */
   border-top: 1px solid #eee;
 }
 
