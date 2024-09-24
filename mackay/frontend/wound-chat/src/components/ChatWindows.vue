@@ -70,6 +70,8 @@ export default {
         url: '/api/chat/list',
         headers: {
           'Content-Type': 'application/json',
+        },
+        data:{
           "user_id": "1",
           "page": 1,
           "size": 10
