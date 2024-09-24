@@ -70,30 +70,13 @@ export default {
         url: '/api/chat/list',
         headers: {
           'Content-Type': 'application/json',
-          'user_id': '1',
-          'page': 1,
-          'size': 10
+          "user_id": "1",
+          "page": 1,
+          "size": 10
         }
       })
       .then((result) => {
         this.messages = result.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    },
-    // 獲取使用者名稱並存儲到 localStorage
-    getUserName() {
-      axios({
-        method: 'get',
-        baseURL: 'http://127.0.0.1:8000/',
-        url: '/api/chat/list',  // 
-        headers: {
-          'Content-Type': 'application/json',
-          'user_id': '1'
-        }
-      })
-      .then((result) => {
         this.userName = result.data.name;
         localStorage.setItem('userName', this.userName);
       })
@@ -101,13 +84,15 @@ export default {
         console.error(err);
       });
     },
+    // 獲取使用者名稱並存儲到 localStorage
+    
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
       if (this.newMessage.trim() !== '') {
         const name = localStorage.getItem('userName') || '您';
         const messageData = {
           is_carer_user: false,
-          name: name,
+          userName: name,
           content: this.newMessage,
           content_type: 'text'
         };
