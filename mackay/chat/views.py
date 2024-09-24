@@ -35,74 +35,83 @@ def chat_record_ssr_with_query(request, id):
   return render(request, "mvc.html", ctx)
 
 
-
+# GET / POST / DELETE = request.data
+# JSONParser().parse(request)
 
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
 def chat_record_list(request):
-  serializer = JSONParser().parse(request)
-  
-  # 如果有找到params
-  if 'user_id' and 'page' and 'size' in serializer:
-    userId = serializer['user_id']
-    page = serializer['page']
-    size = serializer['size']
+  try:
+    # serializer = JSONParser().parse(request)
+    serializer = request.GET
+    # print('Check 1', request.GET)
 
-    # 取得某會員 指定Field的對話記錄 
-    recordQuery = chat_record.objects.filter(Q(create_user=userId))
-    recordCount = recordQuery.count() # 找到的資料數量
-    recordData = recordQuery.order_by('-create_date').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date') # 取出指定Field
+    user_id = serializer.get('user_id')
+    page = serializer.get('page', 1)
+    size = serializer.get('size', 10)
 
+    # 如果有找到params
+    if user_id or page or size:
+      userId = serializer['user_id']
+      page = serializer['page']
+      size = serializer['size']
 
-  
-    # For迴圈
-    for items in recordData:
-      eachUserId = User.objects.get(id=userId) # 取得每筆資料的User檔案，因為id是唯一，所以用GET
-      getUserName = eachUserId.name # 會員名稱
-      getUserGender = eachUserId.gender # 會員性別
-      oldDate = items['create_date'] # 先記錄原本日期
-
-      # 轉換格式
-      newDateTime = oldDate.strftime('%Y-%m-%d') # 轉換格式 YYYY-MM-DD
-      # 每筆資料額外添加 user_name / gender的資料
-      items['user_name'] = getUserName
-      items['gender'] = getUserGender
-      # 替換原本create_date的資料內容
-      items['create_date'] = newDateTime
-
-    try:
-      p = Paginator(recordData, size) 
-      page1 = p.page(page)
-      final = page1.object_list 
-      results = {
-        "count": recordCount,
-        "results": final
-      }
-      return Response(results, status=200)
+      # 取得某會員 指定Field的對話記錄 
+      recordQuery = chat_record.objects.filter(Q(create_user=userId))
+      recordCount = recordQuery.count() # 找到的資料數量
+      recordData = recordQuery.order_by('-create_date').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date', 'is_carer_user') # 取出指定Field
     
-    # 如果超出分頁範圍
-    except PageNotAnInteger:
-      results = {
-        "count": recordCount,
-        "results": []
-      }
-      return Response(results, status=200)
+      # For迴圈
+      for items in recordData:
+        eachUserId = User.objects.get(id=userId) # 取得每筆資料的User檔案，因為id是唯一，所以用GET
+        getUserName = eachUserId.name # 會員名稱
+        getUserGender = eachUserId.gender # 會員性別
+        oldDate = items['create_date'] # 先記錄原本日期
 
-    # 如果指定分頁沒有資料
-    except EmptyPage:
-      results = {
-        "count": recordCount,
-        "results": []
-      }
-      return Response(results, status=200)
+        # 轉換格式
+        newDateTime = oldDate.strftime('%Y-%m-%d') # 轉換格式 YYYY-MM-DD
+        # 每筆資料額外添加 user_name / gender的資料
+        items['user_name'] = getUserName
+        items['gender'] = getUserGender
+        # 替換原本create_date的資料內容
+        items['create_date'] = newDateTime
+
+      try:
+        p = Paginator(recordData, size) 
+        page1 = p.page(page)
+        final = page1.object_list 
+        results = {
+          "count": recordCount,
+          "results": final
+        }
+        return Response(results, status=200)
+      
+      # 如果超出分頁範圍
+      except PageNotAnInteger:
+        results = {
+          "count": recordCount,
+          "results": []
+        }
+        return Response(results, status=200)
+
+      # 如果指定分頁沒有資料
+      except EmptyPage:
+        results = {
+          "count": recordCount,
+          "results": []
+        }
+        return Response(results, status=200)
+      
+      # 發生其他錯誤時
+      except:
+        return Response('error', status=500)
+      
+    else:
+      return Response('need params', status=500)
     
-    # 發生其他錯誤時
-    except:
-      return Response('error', status=500)
-    
-  else:
-    return Response('need params', status=500)
+  except:
+    return Response('error', status=500)
     
 
 

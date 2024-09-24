@@ -29,7 +29,7 @@ export default {
       type: String,
       required: true
     },
-    userName: {
+    user_name: {
       type: String,
       required: true
     },

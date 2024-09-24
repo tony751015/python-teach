@@ -8,7 +8,7 @@
       <v-avatar left size="40">
         <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
       </v-avatar>
-      <v-title class="chat-title text-h6 font-weight-black">星禾互聯</v-title>
+      <header class="chat-title text-h6 font-weight-black">星禾互聯</header>
       <v-spacer>
         <template>
           <v-tabs align-with-title background-color="transparent">

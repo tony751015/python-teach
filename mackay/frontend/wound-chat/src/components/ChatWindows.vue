@@ -1,5 +1,10 @@
 <template>
   <v-container class="chat-container">
+    <v-dialog v-model="detectError" width="200">
+      <v-alert dense type="error">發生錯誤</v-alert>
+    </v-dialog>
+
+
     <div class="px-3">
       <div class="chat-window">
         <div class="date-divider">2024-10-01</div>
@@ -8,7 +13,7 @@
           :key="index"
           :is_carer_user="msg.is_carer_user"
           :content_type="msg.content_type"
-          :userName="msg.userName"
+          :userName="msg.user_name"
           :content="msg.content"
           @image-click="openImagePopup(msg.content)" 
         ></chat-message>
@@ -54,37 +59,55 @@ export default {
       imagePopupVisible: false,
       selectedImage: '',
       messages: [],
-      userName: ''  // 儲存使用者名稱
+      detectError: false,
+      userName: '',  // 儲存使用者名稱
     }
   },
   created() {
     this.fetchMessages();
-    this.getUserName();
+    // this.getUserName();
   },
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-      axios({
-        method: 'get',
-        baseURL: 'http://127.0.0.1:8000/',
-        url: '/api/chat/list',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        data:{
-          "user_id": "1",
-          "page": 1,
-          "size": 10
+      console.log('Test fetchMessages')
+      
+      axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=1&size=10')
+      .then((res) => {
+        if (!res.data.count) {
+          this.detectError = true;
+          console.log('not found', this.detectError);
+        } else {
+          this.messages = res.data.results;
+          this.userName = res.data.results[0].user_name;
+          localStorage.setItem('userName', this.userName);
         }
       })
-      .then((result) => {
-        this.messages = result.data;
-        this.userName = result.data.userName;
-        localStorage.setItem('userName', this.userName);
-      })
       .catch((err) => {
+        this.detectError = true;
         console.error(err);
       });
+      // axios({
+      //   method: 'get',
+      //   baseURL: 'http://127.0.0.1:8000',
+      //   url: '/api/chat/list',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   data:{
+      //     "user_id": "1",
+      //     "page": 1,
+      //     "size": 10
+      //   }
+      // })
+      // .then((result) => {
+      //   this.messages = result.data;
+      //   this.userName = result.data.userName;
+      //   localStorage.setItem('userName', this.userName);
+      // })
+      // .catch((err) => {
+      //   console.error(err);
+      // });
     },
     // 獲取使用者名稱並存儲到 localStorage
     

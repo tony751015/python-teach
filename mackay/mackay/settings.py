@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-$c&ho%6zv9xq5$@-8+2ycwm@r#&p1nbsw1t^-0g#!7qn6#70c$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1:3000']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     # 下面開始是引用的APP
+    'corsheaders',
     "user",
     "chat",
     "ai"
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'user.User'
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -58,6 +60,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = "mackay.urls"
 
 TEMPLATES = [
