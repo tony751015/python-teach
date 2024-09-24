@@ -90,9 +90,7 @@ export default {
         url: '/api/chat/list',  // 
         headers: {
           'Content-Type': 'application/json',
-          'user_id': '1',
-          'page': 1,
-          'size': 10
+          'user_id': '1'
         }
       })
       .then((result) => {
@@ -125,11 +123,9 @@ export default {
           url: '/api/chat/list',
           headers: {
             'Content-Type': 'application/json',
-            'user_id': '1',
-            'page': 1,
-            'size': 10
           },
           data: {
+            user_id: '1',
             is_carer_user: false,  // 自己發送的訊息
             name: name,
             content: messageData.content,
