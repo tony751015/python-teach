@@ -6,11 +6,11 @@
         <chat-message
           v-for="(msg, index) in messages"
           :key="index"
-          :isOwnMessage="msg.isOwnMessage"
+          :is_carer_user="msg.is_carer_user"
           :content_type="msg.content_type"
           :name="msg.name"
-          :message="msg.message"
-          @image-click="openImagePopup" 
+          :content="msg.content"
+          @image-click="openImagePopup(msg.content)" 
         ></chat-message>
       </div>
     </div>
@@ -19,6 +19,8 @@
         v-model="newMessage"
         placeholder="請輸入留言"
         outlined
+        hint="This field uses counter prop"
+        persistent-hint
         append-icon="mdi-emoticon-outline"
         @keyup.enter="sendMessage"
         class="message-input mb-13 mx-4"
@@ -38,7 +40,8 @@
 </template>
 
 <script>
-import ChatMessage from './ChatMessage.vue'
+import axios from 'axios';
+import ChatMessage from './ChatMessage.vue';
 
 export default {
   name: 'ChatWindows',
@@ -50,30 +53,103 @@ export default {
       newMessage: '',
       imagePopupVisible: false,
       selectedImage: '',
-      messages: [
-        { isOwnMessage: false, content_type: 'text', name: '照護專員', message: '您好，您的傷口照護已告一段落 我們會幫您做結案的動作 若日後您有任何傷口的問題都歡迎您來可以訪問' },
-        { isOwnMessage: true, content_type: 'text', name: '您', message: '我有些問題' },
-        { isOwnMessage: true, content_type: 'text', name: '您', message: '客氣了，如果能有助益' },
-        { isOwnMessage: true, content_type: 'image', name: '您', message: 'https://via.placeholder.com/150' },
-        { isOwnMessage: false, content_type: 'text', name: '照護專員', message: '照片看起來復原得不錯 但是還是要記得再幫我上傳傷口照片 提醒您臉部傷口可以使用除疤產品喔' }
-      ]
+      messages: [],
+      userName: ''  // 儲存使用者名稱
     }
   },
+  created() {
+    this.fetchMessages();
+    this.getUserName();
+  },
   methods: {
+    // 獲取訊息列表
+    fetchMessages() {
+      axios({
+        method: 'get',
+        baseURL: 'http://127.0.0.1:8000/',
+        url: '/api/chat/list',
+        headers: {
+          'Content-Type': 'application/json',
+          'user_id': '1',
+          'page': 1,
+          'size': 10
+        }
+      })
+      .then((result) => {
+        this.messages = result.data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    },
+    // 獲取使用者名稱並存儲到 localStorage
+    getUserName() {
+      axios({
+        method: 'get',
+        baseURL: 'http://127.0.0.1:8000/',
+        url: '/api/chat/list',  // 
+        headers: {
+          'Content-Type': 'application/json',
+          'user_id': '1',
+          'page': 1,
+          'size': 10
+        }
+      })
+      .then((result) => {
+        this.userName = result.data.name;
+        localStorage.setItem('userName', this.userName);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    },
+    // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
       if (this.newMessage.trim() !== '') {
-        this.messages.push({
-          isOwnMessage: true,
-          name: '您',
-          message: this.newMessage
-        });
+        const name = localStorage.getItem('userName') || '您';
+        const messageData = {
+          is_carer_user: false,
+          name: name,
+          content: this.newMessage,
+          content_type: 'text'
+        };
+        
+        // 發送到前端 UI
+        this.messages.push(messageData);
         this.newMessage = '';
+
+        // 發送 POST 請求到後端
+        axios({
+          method: 'post',
+          baseURL: 'http://127.0.0.1:8000/',
+          url: '/api/chat/list',
+          headers: {
+            'Content-Type': 'application/json',
+            'user_id': '1',
+            'page': 1,
+            'size': 10
+          },
+          data: {
+            is_carer_user: false,  // 自己發送的訊息
+            name: name,
+            content: messageData.content,
+            content_type: 'text'
+          }
+        })
+        .then((response) => {
+          console.log('Message sent successfully:', response.data);
+        })
+        .catch((err) => {
+          console.error('Error sending message:', err);
+        });
       }
     },
+    // 開啟圖片彈窗
     openImagePopup(imageUrl) {
-      this.selectedImage = imageUrl; // 接收到圖片的 URL
+      this.selectedImage = imageUrl;
       this.imagePopupVisible = true;
     },
+    // 關閉圖片彈窗
     closeImagePopup() {
       this.imagePopupVisible = false;
       this.selectedImage = '';
@@ -84,7 +160,7 @@ export default {
 
 <style scoped>
 .chat-container {
-  height: calc(100vh - 64px); /* Adjust based on your app bar height */
+  height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -109,10 +185,9 @@ export default {
   border-top: 1px solid #eee;
 }
 
-/* 彈窗樣式 */
 .image-popup {
-  background-color: rgba(0, 0, 0, 0.8); /* 半透明黑色背景 */
-  width: calc(9/12 * 100vw); /* 占滿左側聊天室區域 */
+  background-color: rgba(0, 0, 0, 0.8); 
+  width: calc(9/12 * 100vw); 
   height: 100vh;
   position: relative;
 }
@@ -127,10 +202,10 @@ export default {
   top: 10px;
   right: 10px;
   color: white;
-  z-index: 1001; /* 確保關閉按鈕位於最上層 */
+  z-index: 1001;
 }
 
 .v-dialog__content {
-  z-index: 1000; /* 確保彈窗位於聊天室上方 */
+  z-index: 1000;
 }
 </style>

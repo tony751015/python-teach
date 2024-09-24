@@ -1,19 +1,17 @@
 <template>
-  <v-row :class="[isOwnMessage ? 'justify-end': 'justify-start']" style="margin: 0;">
+  <v-row :class="[is_carer_user ? 'justify-start' : 'justify-end']" style="margin: 0;">
     <v-col cols="auto">
       <v-card 
-        :class="[isOwnMessage ? 'own-message': 'other-message']"
+        :class="[is_carer_user ? 'other-message': 'own-message']"
         flat>
-        
         <v-card-text 
           v-if="content_type === 'text'"
-          class="font-weight-bold">{{message}}</v-card-text>
+          class="font-weight-bold">{{content}}</v-card-text>
         
         <v-card-text 
           v-else-if="content_type === 'image'">
-          <img :src="message" @click="handleImageClick">
+          <img :src="content" @click="$emit('image-click', content)" />
         </v-card-text>
-
       </v-card>
     </v-col>
   </v-row>
@@ -23,7 +21,7 @@
 export default {
   name: 'ChatMessage',
   props: {
-    isOwnMessage: {
+    is_carer_user: {
       type: Boolean,
       required: true
     },
@@ -35,14 +33,9 @@ export default {
       type: String,
       required: true
     },
-    message: {
+    content: {
       type: String,
       required: true
-    }
-  },
-  methods: {
-    handleImageClick() {
-      this.$emit('image-click', this.message); // 將圖片的 URL 傳遞給父組件
     }
   }
 }
@@ -78,6 +71,6 @@ img {
   height: auto;
   border-radius: 10px;
   margin-top: 10px;
-  cursor: pointer; /* 指示圖片可以點擊 */
+  cursor: pointer;
 }
 </style>
