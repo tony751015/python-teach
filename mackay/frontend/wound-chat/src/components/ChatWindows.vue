@@ -8,7 +8,7 @@
           :key="index"
           :is_carer_user="msg.is_carer_user"
           :content_type="msg.content_type"
-          :name="msg.name"
+          :userName="msg.userName"
           :content="msg.content"
           @image-click="openImagePopup(msg.content)" 
         ></chat-message>
@@ -79,7 +79,7 @@ export default {
       })
       .then((result) => {
         this.messages = result.data;
-        this.userName = result.data.name;
+        this.userName = result.data.userName;
         localStorage.setItem('userName', this.userName);
       })
       .catch((err) => {
@@ -91,10 +91,10 @@ export default {
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
       if (this.newMessage.trim() !== '') {
-        const name = localStorage.getItem('userName') || '您';
+        const userName = localStorage.getItem('userName') || '您';
         const messageData = {
-          is_carer_user: false,
-          userName: name,
+          is_carer_user: 0,
+          userName: userName,
           content: this.newMessage,
           content_type: 'text'
         };
@@ -114,7 +114,7 @@ export default {
           data: {
             user_id: '1',
             is_carer_user: false,  // 自己發送的訊息
-            name: name,
+            userName: userName,
             content: messageData.content,
             content_type: 'text'
           }
