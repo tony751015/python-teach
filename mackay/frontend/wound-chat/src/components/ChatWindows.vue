@@ -4,12 +4,11 @@
       <v-alert dense type="error">發生錯誤</v-alert>
     </v-dialog>
 
-
     <div class="px-3">
-      <div class="chat-window">
+      <div ref="chatWindow" class="chat-window">
         <div class="date-divider">2024-10-01</div>
         <chat-message
-          v-for="(msg, index) in messages"
+          v-for="(msg, index) in messages.slice().reverse()"
           :key="index"
           :is_carer_user="msg.is_carer_user"
           :content_type="msg.content_type"
@@ -61,56 +60,49 @@ export default {
       messages: [],
       detectError: false,
       user_name: '',  // 儲存使用者名稱
-    }
+    };
   },
   created() {
     this.fetchMessages();
-    // this.getuser_name();
+  },
+  mounted() {
+    // 頁面初次加載時滾動到底部
+    this.$nextTick(() => {
+      const chatWindow = this.$refs.chatWindow;
+      if (chatWindow) {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+    });
+  },
+  watch: {
+    messages() {
+      // 當 messages 更新時，滾動到底部
+      this.$nextTick(() => {
+        const chatWindow = this.$refs.chatWindow;
+        if (chatWindow) {
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+      });
+    }
   },
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-      console.log('Test fetchMessages')
-      
       axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=1&size=10')
-      .then((res) => {
-        if (!res.data.count) {
+        .then((res) => {
+          if (!res.data.count) {
+            this.detectError = true;
+          } else {
+            this.messages = res.data.results;
+            this.user_name = res.data.results[0].user_name;
+            localStorage.setItem('user_name', this.user_name);
+          }
+        })
+        .catch((err) => {
           this.detectError = true;
-          console.log('not found', this.detectError);
-        } else {
-          this.messages = res.data.results;
-          this.user_name = res.data.results[0].user_name;
-          localStorage.setItem('user_name', this.user_name);
-        }
-      })
-      .catch((err) => {
-        this.detectError = true;
-        console.error(err);
-      });
-      // axios({
-      //   method: 'get',
-      //   baseURL: 'http://127.0.0.1:8000',
-      //   url: '/api/chat/list',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   data:{
-      //     "user_id": "1",
-      //     "page": 1,
-      //     "size": 10
-      //   }
-      // })
-      // .then((result) => {
-      //   this.messages = result.data;
-      //   this.user_name = result.data.user_name;
-      //   localStorage.setItem('user_name', this.user_name);
-      // })
-      // .catch((err) => {
-      //   console.error(err);
-      // });
+          console.error(err);
+        });
     },
-    // 獲取使用者名稱並存儲到 localStorage
-    
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
       if (this.newMessage.trim() !== '') {
@@ -121,25 +113,17 @@ export default {
           content: this.newMessage,
           content_type: 'text'
         };
-        
+
         // 發送到前端 UI
         this.messages.push(messageData);
         this.newMessage = '';
 
         // 發送 POST 請求到後端
-        axios({
-          method: 'post',
-          baseURL: 'http://127.0.0.1:8000/',
-          url: '/api/chat/list',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: {
-            user_id: '1',
-            is_carer_user: false,  // 自己發送的訊息
-            content: messageData.content,
-            content_type: 'text'
-          }
+        axios.post('http://127.0.0.1:8000/api/chat/control', {
+          user_id: '1',
+          is_carer_user: false,  // 自己發送的訊息
+          content: messageData.content,
+          content_type: 'text'
         })
         .then((response) => {
           console.log('Message sent successfully:', response.data);
@@ -160,7 +144,7 @@ export default {
       this.selectedImage = '';
     }
   }
-}
+};
 </script>
 
 <style scoped>
