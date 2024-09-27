@@ -188,12 +188,14 @@ def chat_record_control(request):
         getUserId = serializer['user_id']
         getContent = serializer['content']
         contentType = serializer['content_type']
+        isCarerUser = serializer['is_carer_user']
         # 建立一筆新資料
         # 如果沒有default值，則必須傳參數
         newCreate = chat_record.objects.create(
           create_user = getUserId,
           content = getContent,
-          content_type = contentType)
+          content_type = contentType,
+          is_carer_user = isCarerUser)
         
         if newCreate:
           return Response({
