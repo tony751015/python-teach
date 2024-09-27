@@ -183,7 +183,9 @@ def chat_record_control(request):
 
   elif request.method == 'POST':
     # 檢查是否有email params
+    print('Check 1', serializer)
     try:
+     
       if 'user_id' in serializer and 'content' in serializer:
         getUserId = serializer['user_id']
         getContent = serializer['content']

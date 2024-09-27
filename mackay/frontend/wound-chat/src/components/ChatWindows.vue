@@ -112,60 +112,43 @@ export default {
     // 獲取使用者名稱並存儲到 localStorage
     
     // 發送訊息並用 axios 將資料 POST 到資料庫
-    // sendMessage() {
-    //   if (this.newMessage.trim() !== '') {
-    //     const user_name = localStorage.getItem('user_name') || '您';
-    //     const messageData = {
-    //       is_carer_user: false,
-    //       user_name: user_name,
-    //       content: this.newMessage,
-    //       content_type: 'text'
-    //     };
-        
-    //     // 發送到前端 UI
-    //     this.messages.push(messageData);
-    //     this.newMessage = '';
-
-    //     // 發送 POST 請求到後端
-    //     axios({
-    //       method: 'post',
-    //       baseURL: 'http://127.0.0.1:8000/',
-    //       url: '/api/chat/list',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       data: {
-    //         user_id: '1',
-    //         is_carer_user: false,  // 自己發送的訊息
-    //         content: messageData.content,
-    //         content_type: 'text'
-    //       }
-    //     })
-    //     .then((response) => {
-    //       console.log('Message sent successfully:', response.data);
-    //     })
-    //     .catch((err) => {
-    //       console.error('Error sending message:', err);
-    //     });
-    //   }
-    // },
     sendMessage() {
-      const messageData = {
-        user_id: '1',
-        content: this.newMessage,
-        content_type: 'text',
-        is_carer_user: false
-      };
+      if (this.newMessage.trim() !== '') {
+        const user_name = localStorage.getItem('user_name') || '您';
+        const messageData = {
+          is_carer_user: false,
+          user_name: user_name,
+          content: this.newMessage,
+          content_type: 'text'
+        };
+        
+        // 發送到前端 UI
+        this.messages.push(messageData);
+        this.newMessage = '';
 
-      axios.post('/api/chat_record_control/', messageData)
-        .then(response => {
-          console.log('Message sent', response.data);
+        // 發送 POST 請求到後端
+        axios({
+          method: 'post',
+          baseURL: 'http://127.0.0.1:8000/',
+          url: '/api/chat/list',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: {
+            user_id: '1',
+            is_carer_user: false,  // 自己發送的訊息
+            content: messageData.content,
+            content_type: 'text'
+          }
         })
-        .catch(error => {
-          console.error('Error sending message', error.response);
+        .then((response) => {
+          console.log('Message sent successfully:', response.data);
+        })
+        .catch((err) => {
+          console.error('Error sending message:', err);
         });
+      }
     },
-
     // 開啟圖片彈窗
     openImagePopup(imageUrl) {
       this.selectedImage = imageUrl;
