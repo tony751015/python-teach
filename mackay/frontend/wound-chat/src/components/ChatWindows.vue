@@ -7,8 +7,9 @@
     <div class="px-3">
       <div ref="chatWindow" class="chat-window">
         <div class="date-divider">2024-10-01</div>
+        <infinite-loading direction="top" @infinite="infiniteHandler"></infinite-loading>
         <chat-message
-          v-for="(msg, index) in messages.slice().reverse()"
+          v-for="(msg, index) in messages"
           :key="index"
           :is_carer_user="msg.is_carer_user"
           :content_type="msg.content_type"
@@ -46,7 +47,7 @@
 <script>
 import axios from 'axios';
 import ChatMessage from './ChatMessage.vue';
-
+const GET_API_URL = 'http://127.0.0.1:8000/api/chat/list?';
 export default {
   name: 'ChatWindows',
   components: {
@@ -54,6 +55,7 @@ export default {
   },
   data() {
     return {
+      page: 1,
       newMessage: '',
       imagePopupVisible: false,
       selectedImage: '',
@@ -67,41 +69,83 @@ export default {
   },
   mounted() {
     // 頁面初次加載時滾動到底部
-    this.$nextTick(() => {
-      const chatWindow = this.$refs.chatWindow;
-      if (chatWindow) {
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-      }
-    });
+    // this.$nextTick(() => {
+    //   const chatWindow = this.$refs.chatWindow;
+    //   if (chatWindow) {
+    //     chatWindow.scrollTop = chatWindow.scrollHeight;
+    //   }
+    // });
   },
   watch: {
-    messages() {
-      // 當 messages 更新時，滾動到底部
-      this.$nextTick(() => {
-        const chatWindow = this.$refs.chatWindow;
-        if (chatWindow) {
-          chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
-      });
-    }
+    // messages() {
+    //   // 當 messages 更新時，滾動到底部
+    //   this.$nextTick(() => {
+    //     const chatWindow = this.$refs.chatWindow;
+    //     if (chatWindow) {
+    //       chatWindow.scrollTop = chatWindow.scrollHeight;
+    //     }
+    //   });
+    // }
   },
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-      axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=1&size=10')
+      // console.log('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=10');
+      // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
+      axios.get(GET_API_URL,{
+        params: {
+          user_id: '1',
+          page: this.page,
+          size: 15
+        }
+      })
         .then((res) => {
           if (!res.data.count) {
             this.detectError = true;
           } else {
-            this.messages = res.data.results;
+            this.page += 1;
+            this.messages = res.data.results.slice().reverse();
             this.user_name = res.data.results[0].user_name;
             localStorage.setItem('user_name', this.user_name);
+             // 頁面初次加載時滾動到底部
+            this.$nextTick(() => {
+              const chatWindow = this.$refs.chatWindow;
+              if (chatWindow) {
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+              }
+            });
           }
         })
         .catch((err) => {
           this.detectError = true;
           console.error(err);
         });
+    },
+    infiniteHandler($state) {
+      axios.get(GET_API_URL, {
+        params: {
+          user_id: '1',
+          page: this.page,
+          size: 15
+        },
+      }).then(( res ) => {
+        console.log(JSON.stringify(res.data.results));
+        console.log(res.data.count);
+        if (!res.data.count) {
+          $state.complete();
+        } else {
+          this.page += 1;
+          this.messages.unshift(res.data.results.slice().reverse());
+          $state.loaded();
+        }
+        // if (res.data.count) {
+        //   this.page += 1;
+        //   this.messages.unshift(res.data.results.slice().reverse());
+        //   $state.loaded();
+        // } else {
+        //   $state.complete();
+        // }
+      });
     },
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
