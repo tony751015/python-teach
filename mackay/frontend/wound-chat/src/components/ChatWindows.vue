@@ -90,7 +90,6 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-      // console.log('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=10');
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(GET_API_URL,{
         params: {
@@ -131,11 +130,11 @@ export default {
       }).then(( res ) => {
         console.log(JSON.stringify(res.data.results));
         console.log(res.data.count);
-        if (!res.data.count) {
+        if (!res.data.results.length) {
           $state.complete();
         } else {
           this.page += 1;
-          this.messages.unshift(res.data.results.slice().reverse());
+          this.messages.unshift(...res.data.results.slice().reverse());
           $state.loaded();
         }
         // if (res.data.count) {
