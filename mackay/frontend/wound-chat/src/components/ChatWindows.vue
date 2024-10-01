@@ -7,7 +7,10 @@
     <div class="px-3">
       <div ref="chatWindow" class="chat-window">
         <div class="date-divider">2024-10-01</div>
-        <infinite-loading direction="top" @infinite="infiniteHandler"></infinite-loading>
+        <infinite-loading direction="top" @infinite="infiniteHandler">
+          <div slot="no-more">沒有更多留言了</div>
+          <div slot="no-results">沒有更多留言了</div>
+        </infinite-loading>
         <chat-message
           v-for="(msg, index) in messages"
           :key="index"
@@ -128,8 +131,8 @@ export default {
           size: 15
         },
       }).then(( res ) => {
-        console.log(JSON.stringify(res.data.results));
-        console.log(res.data.count);
+        // console.log(JSON.stringify(res.data.results));
+        // console.log(res.data.count);
         if (!res.data.results.length) {
           $state.complete();
         } else {

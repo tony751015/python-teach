@@ -66,9 +66,24 @@
               outlined
               placeholder="搜尋對話"
               hide-details
+              @keyup.enter="performSearch"
+              @input="onInput"
             ></v-text-field>
+            
+            <!-- 搜尋結果列表 -->
+            <v-list v-if="searchResults.length > 0" class="search-results-list">
+              <v-list-item
+                v-for="(result, index) in searchResults"
+                :key="index"
+                @click="scrollToMessage(result.index)"
+              >
+                <v-list-item-content>
+                  <v-list-item-title>{{ result.content }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </v-toolbar>
-          <chat-windows class="chatWindows"></chat-windows>
+          <chat-windows class="chatWindows" ref="chatWindows"></chat-windows>
         </v-col>
 
         <!-- 右側：商品區域 -->
@@ -111,7 +126,8 @@ export default {
   },
   data() {
     return {
-      searchChat: '',
+      searchChat: '', // 搜尋框中的文字
+      searchResults: [], // 儲存搜尋結果
       searchProduct: '',
       topBarNavList: ['One', 'Two', 'Three'],
       chatRecord: [],
@@ -121,6 +137,43 @@ export default {
         { name: '商品名', description: '介紹內容123321', image: 'https://cdn.vuetifyjs.com/images/cards/fashion.jpg' }
       ]
     };
+  },
+  methods: {
+    // 當輸入改變時，更新搜尋結果
+    onInput() {
+      this.performSearch();
+    },
+
+    // 執行搜尋
+    performSearch() {
+      const searchText = this.searchChat.trim().toLowerCase();
+      if (searchText) {
+        this.searchResults = this.$refs.chatWindows.messages
+          .map((msg, index) => ({ content: msg.content, index }))
+          .filter((msg) => msg.content.toLowerCase().includes(searchText));
+      } else {
+        this.searchResults = [];
+      }
+    },
+
+    // 滾動到指定訊息
+    scrollToMessage(index) {
+      const chatWindow = this.$refs.chatWindows.$refs.chatWindow; // 獲取 .chat-window 容器
+      const chatMessageElements = chatWindow.children; // 獲取所有訊息元素
+
+      if (chatMessageElements[index]) {
+        // 計算目標訊息相對於 chatWindow 的 offsetTop
+        const targetMessageTop = chatMessageElements[index].offsetTop;
+
+        // 使用 scrollTop 進行平滑滾動
+        chatWindow.scrollTo({
+          top: targetMessageTop,
+          behavior: 'smooth'
+        });
+      }
+
+      this.searchResults = []; // 清空搜尋結果
+    }
   }
 };
 </script>
@@ -159,5 +212,14 @@ export default {
 .dropdown-btn {
   display: flex;
   align-items: center;
+}
+.search-results-list {
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  position: absolute;
+  z-index: 5;
+  width: 100%;
 }
 </style>
