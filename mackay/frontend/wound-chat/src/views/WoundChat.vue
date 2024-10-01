@@ -71,16 +71,27 @@
             ></v-text-field>
             
             <!-- 搜尋結果列表 -->
-            <v-list v-if="searchResults.length > 0" class="search-results-list">
-              <v-list-item
-                v-for="(result, index) in searchResults"
-                :key="index"
-                @click="scrollToMessage(result.index)"
-              >
-                <v-list-item-content>
-                  <v-list-item-title>{{ result.content }}</v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
+            <v-list v-if="searchResults.length > 0 || noResults" class="search-results-list">
+              <template v-if="searchResults.length > 0">
+                <v-list-item
+                  v-for="(result, index) in searchResults"
+                  :key="index"
+                  @click="scrollToMessage(result.index)"
+                >
+                  <v-list-item-content>
+                    <v-list-item-title>{{ result.content }}</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+
+              <!-- 沒有搜尋結果時顯示 -->
+              <template v-else>
+                <v-list-item>
+                  <v-list-item-content>
+                    <v-list-item-title>沒有搜尋結果</v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
             </v-list>
           </v-toolbar>
           <chat-windows class="chatWindows" ref="chatWindows"></chat-windows>
@@ -128,6 +139,7 @@ export default {
     return {
       searchChat: '', // 搜尋框中的文字
       searchResults: [], // 儲存搜尋結果
+      noResults: false, // 用於顯示沒有搜尋結果的訊息
       searchProduct: '',
       topBarNavList: ['One', 'Two', 'Three'],
       chatRecord: [],
@@ -148,11 +160,20 @@ export default {
     performSearch() {
       const searchText = this.searchChat.trim().toLowerCase();
       if (searchText) {
-        this.searchResults = this.$refs.chatWindows.messages
+        const results = this.$refs.chatWindows.messages
           .map((msg, index) => ({ content: msg.content, index }))
           .filter((msg) => msg.content.toLowerCase().includes(searchText));
+
+        if (results.length > 0) {
+          this.searchResults = results;
+          this.noResults = false;
+        } else {
+          this.searchResults = [];
+          this.noResults = true; // 當沒有搜尋結果時，設置為 true
+        }
       } else {
         this.searchResults = [];
+        this.noResults = false; // 清除搜尋結果時，隱藏提示
       }
     },
 
@@ -219,7 +240,8 @@ export default {
   background-color: white;
   border: 1px solid #e0e0e0;
   position: absolute;
-  z-index: 5;
+  top: 44px;;
+  z-index: 1003;
   width: 100%;
 }
 </style>
