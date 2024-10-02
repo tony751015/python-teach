@@ -5,6 +5,8 @@ from rest_framework.parsers import DataAndFiles, JSONParser
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from django.shortcuts import render, redirect
+from chat.models import chat_room
+import uuid
 
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
@@ -61,5 +63,63 @@ def load_user_profile(request):
     return Response('error', status=500)
   
 
-  
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
+def user_fast_login(request):
+  serializer = JSONParser().parse(request)
+
+  if 'line_id' in serializer and 'line_name' in serializer:
+    line_id = serializer["line_id"]
+    line_name = serializer["line_name"]
+    # line_thumb = serializer["line_thumb"]
+    # print('user_fast_login', serializer)
     
+    try:
+      User.objects.get(account=line_id, fast_auth="LINE")
+      return Response('is exist', status=200)
+
+    except User.DoesNotExist:
+      newUUID4 = uuid.uuid4()
+      
+      createUser = User.objects.create(
+        fast_auth="LINE",
+        account=line_id,
+        name=line_name,
+        hashCode = newUUID4,
+      )
+
+      newCreateID = createUser.id
+
+      chat_room.objects.create(
+        user_id=newCreateID,
+        room_path=f"{newCreateID}-{newUUID4}"
+      )
+      return Response('new create', status=200)
+
+    # obj, created = User.objects.get_or_create(
+    #     # fast_auth = "LINE",
+    #     account = line_id,
+    #     hashCode = uuid.uuid4(),
+    #     name = line_name,
+    #     defaults = {
+    #         'account': line_id,
+    #         'fast_auth': "LINE"
+    #     }
+    # )
+
+    # if created:
+    #   return Response('new create', status=200)
+    
+    # elif obj:
+    #   return Response({
+    #     "status": "is exist",
+    #     "data": obj
+    #   }, status=200)
+  
+  else: 
+    return Response('error', status=400)
+
+  
+

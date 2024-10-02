@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 
-from user.views import load_user_profile, load_member_list_ssr, load_member_list_ssr_query
+# from user.views import load_user_profile, load_member_list_ssr, load_member_list_ssr_query
+from user.views import user_fast_login
 from chat.views import chat_record_list, chat_record_control, chat_record_ssr, chat_record_ssr_with_query
 
 urlpatterns = [
@@ -11,8 +12,9 @@ urlpatterns = [
     path("api/chat/control", chat_record_control),
     path("api/chat/list", chat_record_list),
 
-    path("member/", load_member_list_ssr),
-    path("member/<id>", load_member_list_ssr_query),
+    path("api/member/fast_login", user_fast_login),
+    # path("member/", load_member_list_ssr),
+    # path("member/<id>", load_member_list_ssr_query),
 
     path('mvc/', chat_record_ssr), # 執行 chat_record_ssr
     path('mvc/<id>', chat_record_ssr_with_query), # 執行 chat_record_ssr_with_query

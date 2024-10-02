@@ -183,7 +183,7 @@ def chat_record_control(request):
 
   elif request.method == 'POST':
     
-    print('Check 1', request)
+    # print('Check 1', request)
     try:
      
       if 'user_id' in serializer and 'content' in serializer:

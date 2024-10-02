@@ -13,3 +13,13 @@ class chat_record(models.Model):
 
   class Meta:
       db_table = "chat_record" # 輸出table
+
+
+class chat_room(models.Model):
+  user_id = models.TextField(blank=True)
+  room_path = models.TextField(default='text', blank=True)
+  notes = models.TextField(default="", blank=True)
+  create_date = models.DateTimeField(auto_now_add=True) # 會自動建立日期
+
+  class Meta:
+      db_table = "chat_room" # 輸出table
