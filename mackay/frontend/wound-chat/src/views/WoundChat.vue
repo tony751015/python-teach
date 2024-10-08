@@ -217,6 +217,10 @@ export default {
   border-right: 1px solid #ccc;
   height: 100%;
   overflow: hidden;
+  position: relative;
+}
+.chat-section header {
+  z-index: 1004;
 }
 
 
@@ -243,5 +247,24 @@ export default {
   top: 44px;;
   z-index: 1003;
   width: 100%;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 </style>

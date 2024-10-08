@@ -27,7 +27,7 @@
         v-model="newMessage"
         placeholder="請輸入留言"
         outlined
-        hint="This field uses counter prop"
+        hint="Shift + Enter 換行 Enter 發送訊息"
         persistent-hint
         append-icon="mdi-emoticon-outline"
         @keyup.enter="sendMessage"
@@ -163,6 +163,13 @@ export default {
         // 發送到前端 UI
         this.messages.push(messageData);
         this.newMessage = '';
+        // 發送滾動到底部
+        this.$nextTick(() => {
+            const chatWindow = this.$refs.chatWindow;
+            if (chatWindow) {
+              chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+          });
 
         // 發送 POST 請求到後端
         axios.post('http://127.0.0.1:8000/api/chat/control', {
@@ -208,6 +215,7 @@ export default {
   padding: 0;
   height: calc(100vh - 205px);
   overflow-y: auto;
+  position: relative;
 }
 
 .date-divider {
@@ -242,5 +250,24 @@ export default {
 
 .v-dialog__content {
   z-index: 1000;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 </style>

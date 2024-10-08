@@ -54,6 +54,7 @@ export default {
   color: #fff;
   border-radius: 16px 16px 0 16px;
   margin: 5px 0;
+  margin-right: 5px;
 }
 .own-message .v-card__text{
   color: #FFF;
