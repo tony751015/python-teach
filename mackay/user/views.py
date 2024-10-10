@@ -70,23 +70,29 @@ def load_user_profile(request):
 def user_fast_login(request):
   serializer = JSONParser().parse(request)
 
-  if 'line_id' in serializer and 'line_name' in serializer:
-    line_id = serializer["line_id"]
-    line_name = serializer["line_name"]
+  if 'patient_id' in serializer and 'patient_name' in serializer and 'patient_auth' in serializer:
+    patient_id = serializer["patient_id"]
+    patient_name = serializer["patient_name"]
+    patient_auth = serializer["patient_auth"]
     # line_thumb = serializer["line_thumb"]
     # print('user_fast_login', serializer)
     
     try:
-      User.objects.get(account=line_id, fast_auth="LINE")
+      User.objects.get(account=patient_id, fast_auth=patient_auth)
+      # getMember = User.objects.get(account=patient_id, fast_auth=patient_auth)
+      # getMemberList = list(getMember)
+      # ctx = {
+      #   "load_member_list_ssr": getMemberList
+      # }
       return Response('is exist', status=200)
 
     except User.DoesNotExist:
       newUUID4 = uuid.uuid4()
       
       createUser = User.objects.create(
-        fast_auth="LINE",
-        account=line_id,
-        name=line_name,
+        fast_auth= patient_auth,
+        account=patient_id,
+        name=patient_name,
         hashCode = newUUID4,
       )
 
@@ -96,15 +102,20 @@ def user_fast_login(request):
         user_id=newCreateID,
         room_path=f"{newCreateID}-{newUUID4}"
       )
+      # getMember = User.objects.get(account=patient_id, fast_auth=patient_auth)
+      # getMemberList = list(getMember)
+      # ctx = {
+      #   "load_member_list_ssr": getMemberList
+      # }
       return Response('new create', status=200)
 
     # obj, created = User.objects.get_or_create(
-    #     # fast_auth = "LINE",
-    #     account = line_id,
+    #     # fast_auth = patient_auth,
+    #     account = patient_id,
     #     hashCode = uuid.uuid4(),
-    #     name = line_name,
+    #     name = patient_name,
     #     defaults = {
-    #         'account': line_id,
+    #         'account': patient_id,
     #         'fast_auth': "LINE"
     #     }
     # )

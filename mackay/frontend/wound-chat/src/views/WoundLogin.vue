@@ -28,7 +28,7 @@
                   x-large
                   outlined
                   elevation="0"
-                  @click="redirectToWoundChat('line')">
+                  @click="loginToWoundChat('line123','line會員','line')">
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
@@ -42,7 +42,7 @@
                   x-large
                   outlined
                   elevation="0"
-                  @click="redirectToWoundChat('google')">
+                  @click="loginToWoundChat('google123','google會員','google')">
                   <div style="display: flex; align-items: center;">
                     <!-- <v-icon left>mdi-google</v-icon> -->
                      <v-img left class="iconImg" src="../assets/google.png"></v-img>
@@ -59,11 +59,24 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   methods: {
-    redirectToWoundChat() {
-      // 跳轉到 /woundChat
-      this.$router.push('/woundChat');
+    loginToWoundChat(patient_id , patient_name, patient_auth) {
+      axios.post('http://127.0.0.1:8000/api/member/fast_login', {
+          patient_id: patient_id,
+          patient_name: patient_name,  
+          patient_auth: patient_auth
+        })
+        .then((response) => {
+          console.log('Login successfully:', response.data);
+          // 跳轉到 /woundChat
+          this.$router.push('/woundChat');
+        })
+        .catch((err) => {
+          console.error('Error sending message:', err);
+        });
+      
     }
   }
 };
@@ -78,8 +91,8 @@ export default {
 .fill-height {
   min-height: 100vh;
 }
-.fill-height .row{
-  /* box-shadow: 0 0 1px #ccc; */
+.fill-height{
+  justify-content: center;
 }
 .image-box {
   background-color: #f5f5f5;
