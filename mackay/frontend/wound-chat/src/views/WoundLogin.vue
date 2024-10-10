@@ -90,8 +90,6 @@ export default {
 }
 .fill-height {
   min-height: 100vh;
-}
-.fill-height{
   justify-content: center;
 }
 .image-box {
