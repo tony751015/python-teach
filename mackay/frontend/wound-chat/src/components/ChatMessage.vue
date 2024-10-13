@@ -2,7 +2,7 @@
   <v-row :class="[is_carer_user ? 'justify-start' : 'justify-end']" style="margin: 0;">
     <v-col cols="auto">
       <v-card 
-        :class="[is_carer_user ? 'other-message': 'own-message']"
+        :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
         flat>
         <v-card-text 
           v-if="content_type === 'text'"
@@ -43,18 +43,21 @@ export default {
 
 <style scoped>
 .col-auto{
-  max-width: 60%;
+  max-width: 75%;
   padding: 0;
 }
 .v-card__text{
   padding: 10px 15px;
+  overflow-wrap: break-word;
+  word-wrap:break-word;
+  word-break:break-all;
 }
 .own-message {
   background-color: #000 !important;
   color: #fff;
   border-radius: 16px 16px 0 16px;
   margin: 5px 0;
-  margin-right: 5px;
+  /* margin-right: 15px; */
 }
 .own-message .v-card__text{
   color: #FFF;

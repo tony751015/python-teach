@@ -31,7 +31,7 @@
         persistent-hint
         append-icon="mdi-emoticon-outline"
         @keyup.enter="sendMessage"
-        class="message-input mb-13 mx-4"
+        class="message-input mb-13 mx-3"
       ></v-text-field>
     </div>
 

@@ -78,25 +78,34 @@ def user_fast_login(request):
     # print('user_fast_login', serializer)
     
     try:
-      User.objects.get(account=patient_id, fast_auth=patient_auth)
-      # getMember = User.objects.get(account=patient_id, fast_auth=patient_auth)
+      # User.objects.get(account=patient_id, fast_auth=patient_auth)
+      getMember = User.objects.get(account=patient_id, fast_auth=patient_auth) # Queryset
       # getMemberList = list(getMember)
-      # ctx = {
-      #   "load_member_list_ssr": getMemberList
-      # }
-      return Response('is exist', status=200)
+
+      ctx = {
+        "load_member_list_ssr": {
+          "account": getMember.account,
+          "fast_auth": getMember.fast_auth,
+        }
+      }
+
+      print('AAAAAAAA', getMember, ctx)
+
+      return Response(ctx, status=200)
 
     except User.DoesNotExist:
       newUUID4 = uuid.uuid4()
       
       createUser = User.objects.create(
-        fast_auth= patient_auth,
-        account=patient_id,
-        name=patient_name,
+        fast_auth = patient_auth,
+        account = patient_id,
+        name = patient_name,
         hashCode = newUUID4,
       )
 
       newCreateID = createUser.id
+
+      print('BBBBBBBB', newCreateID)
 
       chat_room.objects.create(
         user_id=newCreateID,
