@@ -3,9 +3,10 @@
 from rest_framework.parsers import DataAndFiles, JSONParser
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
+from django.db.models.functions import TruncDate
 # 抓取chat的 model.py 的 chat_record table
 from .models import chat_record
-from django.db.models import Q, F
+from django.db.models import Q, F, Func, Value, CharField
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 
@@ -42,40 +43,58 @@ def chat_record_ssr_with_query(request, id):
 @authentication_classes([])
 @permission_classes([])
 def chat_record_list(request):
-  try:
-    # serializer = JSONParser().parse(request)
-    serializer = request.GET
-    # print('Check 1', request.GET)
+  # try:
+    serializer = JSONParser().parse(request)
+    # serializer = request.GET
 
-    user_id = serializer.get('user_id')
-    page = serializer.get('page', 1)
-    size = serializer.get('size', 10)
+    # user_id = serializer.get('user_id')
+    # page = serializer.get('page', 1)
+    # size = serializer.get('size', 10)
+    user_id = serializer['user_id']
+    page = serializer['page']
+    size = serializer['size']
 
     # 如果有找到params
     if user_id or page or size:
-      userId = serializer['user_id']
-      page = serializer['page']
-      size = serializer['size']
 
-      # 取得某會員 指定Field的對話記錄 
-      recordQuery = chat_record.objects.filter(Q(create_user=userId))
+      # 取得某會員 指定Field的對話記錄
+      # Filter後先使用annotate + TruncDate，設計一個新的資料key = create_date_truncated，轉換create_date成 2024-10-01格式
+      recordQuery = chat_record.objects.filter(Q(create_user=user_id)).annotate(
+        create_date_truncated=TruncDate('create_date')
+      )
       recordCount = recordQuery.count() # 找到的資料數量
-      recordData = recordQuery.order_by('-create_date').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date', 'is_carer_user') # 取出指定Field
-    
+      # recordData = recordQuery.order_by('-create_date').annotate(record_id=F('id')).values_list('record_id', 'content', 'content_type', 'create_date', 'is_carer_user') # 取出指定Field
+
+      # 把recordQuery資料集先判斷create_date_truncated的順序作排列 (最新到舊)
+      # 排序完後，在轉換id成自己希望的key name = record_id
+      # 然後再取出想給前端的資料
+      recordData = list(recordQuery.values_list('create_date_truncated', flat=True).order_by('-create_date_truncated').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
+
+      # 設計一個變數，用來記錄每次For迴圈保存的 create_date_truncated 值
+      currentLoopDate = ''
+
       # For迴圈
       for items in recordData:
-        eachUserId = User.objects.get(id=userId) # 取得每筆資料的User檔案，因為id是唯一，所以用GET
+        itemsDate = items['create_date_truncated']
+
+        # 比對上一輪Loop的currentLoopDate 是否跟 當前create_date_truncated 相同?
+        # 如果不相同，把當前日期寫入 isFirstDate
+        # 否則 isFirstDate 寫入空值
+        if currentLoopDate != itemsDate:
+          items['isFirstDate'] = itemsDate
+        else: 
+          items['isFirstDate'] = ''
+
+        # 上面完成後 在更新currentLoopDate 為當前Loop日期
+        currentLoopDate = itemsDate
+
+        eachUserId = User.objects.get(id=user_id) # 取得每筆資料的User檔案，因為id是唯一，所以用GET
         getUserName = eachUserId.name # 會員名稱
         getUserGender = eachUserId.gender # 會員性別
-        oldDate = items['create_date'] # 先記錄原本日期
-
-        # 轉換格式
-        newDateTime = oldDate.strftime('%Y-%m-%d') # 轉換格式 YYYY-MM-DD
         # 每筆資料額外添加 user_name / gender的資料
         items['user_name'] = getUserName
         items['gender'] = getUserGender
         # 替換原本create_date的資料內容
-        items['create_date'] = newDateTime
 
       try:
         p = Paginator(recordData, size) 
@@ -110,8 +129,8 @@ def chat_record_list(request):
     else:
       return Response('need params', status=500)
     
-  except:
-    return Response('error', status=500)
+  # except:
+  #   return Response('error', status=500)
     
 
 
