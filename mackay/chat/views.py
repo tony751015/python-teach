@@ -43,7 +43,7 @@ def chat_record_ssr_with_query(request, id):
 @authentication_classes([])
 @permission_classes([])
 def chat_record_list(request):
-  # try:
+  try:
     serializer = JSONParser().parse(request)
     # serializer = request.GET
 
@@ -96,6 +96,14 @@ def chat_record_list(request):
         items['gender'] = getUserGender
         # 替換原本create_date的資料內容
 
+      #   # 轉換格式
+      #   newDateTime = oldDate.strftime('%Y-%m-%d') # 轉換格式 YYYY-MM-DD
+      #   # 每筆資料額外添加 user_name / gender的資料
+      #   items['user_name'] = getUserName
+      #   items['gender'] = getUserGender
+      #   # 替換原本create_date的資料內容
+      #   items['create_date'] = newDateTime
+
       try:
         p = Paginator(recordData, size) 
         page1 = p.page(page)
@@ -129,8 +137,8 @@ def chat_record_list(request):
     else:
       return Response('need params', status=500)
     
-  # except:
-  #   return Response('error', status=500)
+  except:
+    return Response('error', status=500)
     
 
 
