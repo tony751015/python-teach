@@ -44,8 +44,8 @@ def chat_record_ssr_with_query(request, id):
 @permission_classes([])
 def chat_record_list(request):
   try:
-    serializer = JSONParser().parse(request)
-    # serializer = request.GET
+    # serializer = JSONParser().parse(request)
+    serializer = request.GET
 
     # user_id = serializer.get('user_id')
     # page = serializer.get('page', 1)
