@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container class="fill-height">
-      <v-row justify="center" align="center" style="max-width: 400px; border-radius: 15px; overflow: hidden; box-shadow: 0px 5px 15px #e3e3e3;">
+      <v-row justify="center" align="center" style="max-width: 400px;">
         <!-- 左側圖片方框 -->
         <!-- <v-col cols="12" md="4" class="v-col colLeft">
           <v-card class="image-box">
@@ -10,14 +10,25 @@
         </v-col> -->
         <v-col 
           cols="12" 
-          style="height: 250px; width: 100%; background-size: cover; background-image: url(https://images.squarespace-cdn.com/content/v1/5ebaaed9bb839b7b67d29b74/1595423617407-II6O8RO8D10X3DPXO4RJ/PatientFlow%26OperationalVisibility.jpg);"></v-col>
+          style="height: 150px; width: 100%;">
+          <v-layout align-center class="justify-center">
+            <v-img 
+            max-width="70%"
+            class="aling-center loginLogo" src="../assets/trm01.png"></v-img>
+          </v-layout>
+          
+        </v-col>
         <!-- 右側登入方框 -->
         <v-col cols="12" md="12" class="v-col colRight">
           
-          <v-card class="pa-5">
-            <v-card-title class="headline text-center custom-title">會員登入</v-card-title>
-            <v-divider></v-divider>
-            
+          <v-card class="pa-5 text-center">
+            <v-card-title class="headline font-weight-bold text-center custom-title">傷造口遠距照護諮詢平台</v-card-title>
+            <v-chip 
+             closed 
+             close-label
+             color="v-dark"
+             class="white--text mb-3"
+             >會員快速登入</v-chip>
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
@@ -55,6 +66,21 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-footer
+      v-model="value"
+      color="v-dark"
+      fixed
+    >
+      <v-card-text class="white--text text-center">
+        <div>© 2020, MacKay Memorial Hospital     本網站內容為馬偕紀念醫院所有，未經許可請勿轉載。</div>
+        <div>台灣基督長老教會馬偕醫療財團法人馬偕紀念醫院 著作權所有，並保留一切權利。</div>
+      </v-card-text>
+      <v-card-text class="white--text text-center py-0 mb-4">
+        <a class="white--text px-2 text-decoration-none bdR" href="">馬偕醫院首頁</a>
+        <a class="white--text px-2 text-decoration-none bdR" href="">FB粉專</a>
+        <a class="white--text px-2 text-decoration-none" href="">LINE官方帳號</a>
+      </v-card-text>
+    </v-footer>
   </v-app>
 </template>
 
@@ -84,7 +110,7 @@ export default {
 
 <style scoped>
 .theme--light.v-application{
-  /* background-image: url(../assets/hospital_BG.jpg); */
+  background-image: url(../assets/loginBG.png); 
   background-repeat: no-repeat; 
   background-size: cover;
 }
@@ -112,6 +138,7 @@ export default {
 .custom-title {
   font-size: 1.3rem !important;
   padding: 8px 16px;
+  justify-content: center;
 }
 .v-btn.fastLogin {
   font-size: 1rem;
@@ -120,15 +147,21 @@ export default {
   padding: unset;
 }
 .colRight .pa-5{
-  box-shadow: unset;
-  background-color: #f5f5f5;
-  border-radius: 0 4px 4px 0;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
-.colLeft .pa-5{
-  border-radius: 4px 0 0 4px;
+.colRight .custom-title{
+  letter-spacing: 3px !important;
 }
+.loginLogo{
+  justify-content: center;
+}
+
 .iconImg{
   width: 20px;
+}
+.bdR{
+  border-right: 1px solid #fff;
 }
 @media screen and (max-width: 767px){
   .colRight .pa-5{
