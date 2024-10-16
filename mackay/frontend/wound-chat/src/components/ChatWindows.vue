@@ -6,7 +6,6 @@
 
     <div class="px-3">
       <div ref="chatWindow" class="chat-window">
-        <div class="date-divider">2024-10-01</div>
         <infinite-loading direction="top" @infinite="infiniteHandler">
           <div slot="no-more">沒有更多留言了</div>
           <div slot="no-results">沒有更多留言了</div>
@@ -18,6 +17,7 @@
           :content_type="msg.content_type"
           :user_name="msg.user_name"
           :content="msg.content"
+          :isFirstDate="msg.isFirstDate"
           @image-click="openImagePopup(msg.content)" 
         ></chat-message>
       </div>
@@ -105,6 +105,7 @@ export default {
           if (!res.data.count) {
             this.detectError = true;
           } else {
+            console.log(JSON.stringify(res.data));
             this.page += 1;
             this.messages = res.data.results.slice().reverse();
             this.user_name = res.data.results[0].user_name;
@@ -218,11 +219,6 @@ export default {
   position: relative;
 }
 
-.date-divider {
-  text-align: center;
-  margin: 20px 0;
-  color: #aaa;
-}
 
 .message-input {
   border-top: 1px solid #eee;

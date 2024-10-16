@@ -1,20 +1,24 @@
 <template>
-  <v-row :class="[is_carer_user ? 'justify-start' : 'justify-end']" style="margin: 0;">
-    <v-col cols="auto">
-      <v-card 
-        :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
-        flat>
-        <v-card-text 
-          v-if="content_type === 'text'"
-          class="font-weight-bold">{{content}}</v-card-text>
-        
-        <v-card-text 
-          v-else-if="content_type === 'image'">
-          <img :src="content" @click="$emit('image-click', content)" />
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+  <div>
+    <div class="date-divider text-center grey--text">{{ isFirstDate }}</div>
+    <v-row :class="[is_carer_user ? 'justify-start' : 'justify-end']" style="margin: 0;">
+      <v-col cols="auto">
+        <v-card 
+          :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
+          flat>
+          <v-card-text 
+            v-if="content_type === 'text'"
+            class="font-weight-bold">{{content}}</v-card-text>
+          
+          <v-card-text 
+            v-else-if="content_type === 'image'">
+            <img :src="content" @click="$emit('image-click', content)" />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>  
+  </div>
+  
 </template>
   
 <script>
@@ -34,6 +38,10 @@ export default {
       required: true
     },
     content: {
+      type: String,
+      required: true
+    },
+    isFirstDate: {
       type: String,
       required: true
     }
@@ -70,6 +78,9 @@ export default {
   margin: 5px 0;
 }
 
+.date-divider {
+  color: #aaa;
+}
 img {
   max-width: 100%;
   height: auto;
