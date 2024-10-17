@@ -67,7 +67,6 @@
       </v-row>
     </v-container>
     <v-footer
-      v-model="value"
       color="v-dark"
       fixed
     >

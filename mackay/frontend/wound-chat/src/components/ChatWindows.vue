@@ -105,7 +105,7 @@ export default {
           if (!res.data.count) {
             this.detectError = true;
           } else {
-            console.log(JSON.stringify(res.data));
+            // console.log(JSON.stringify(res.data));
             this.page += 1;
             this.messages = res.data.results.slice().reverse();
             this.user_name = res.data.results[0].user_name;
@@ -132,18 +132,18 @@ export default {
           size: 15
         },
       }).then(( res ) => {
-        // console.log(JSON.stringify(res.data.results));
+        console.log(JSON.stringify(res.data.results));
         // console.log(res.data.count);
         if (!res.data.results.length) {
           $state.complete();
         } else {
           this.page += 1;
-          this.messages.unshift(...res.data.results.slice().reverse());
+          this.messages.unshift(...res.data.results.slice());
           $state.loaded();
         }
         // if (res.data.count) {
         //   this.page += 1;
-        //   this.messages.unshift(res.data.results.slice().reverse());
+        //   this.messages.unshift(res.data.results.slice());
         //   $state.loaded();
         // } else {
         //   $state.complete();
