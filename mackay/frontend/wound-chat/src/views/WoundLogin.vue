@@ -32,7 +32,7 @@
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
-                <v-btn
+                <!-- <v-btn
                   color="v-dark"
                   class="mb-3 justify-space-between align-center fastLogin lineFast white--text"
                   block
@@ -40,6 +40,19 @@
                   outlined
                   elevation="0"
                   @click="loginToWoundChat('line123','line會員','line')">
+                  <div style="display: flex; align-items: center;">
+                    <i class="fab fa-line" style="margin-right: 10px;"></i>
+                  </div>
+                  <span style="flex: 1; text-align: center;">LINE 快速登入 / 註冊</span>
+                </v-btn> -->
+                <v-btn
+                  color="v-dark"
+                  class="mb-3 justify-space-between align-center fastLogin lineFast white--text"
+                  block
+                  x-large
+                  outlined
+                  elevation="0"
+                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/WoundChat&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>

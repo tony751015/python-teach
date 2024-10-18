@@ -140,6 +140,3 @@ def user_fast_login(request):
   
   else: 
     return Response('error', status=400)
-
-  
-

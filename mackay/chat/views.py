@@ -68,7 +68,14 @@ def chat_record_list(request):
       # 把recordQuery資料集先判斷create_date_truncated的順序作排列 (最新到舊)
       # 排序完後，在轉換id成自己希望的key name = record_id
       # 然後再取出想給前端的資料
-      recordData = list(recordQuery.values_list('create_date_truncated', flat=True).order_by('-create_date_truncated').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
+      filterData = recordQuery.order_by('-create_date').values_list('create_date_truncated', flat=True)
+      # check2 = check1.order_by('-create_date_truncated')
+
+      # print('AAAAAAAAAAAAAAAAAAA', list(check1))
+      # print('BBBBBBBBBBBBBBBBBBB', list(check2))
+
+      # recordData = list(recordQuery.values_list('create_date_truncated', flat=True).order_by('-create_date_truncated').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
+      recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
 
       # 設計一個變數，用來記錄每次For迴圈保存的 create_date_truncated 值
       currentLoopDate = ''

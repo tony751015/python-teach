@@ -6,10 +6,12 @@
 
     <div class="px-3">
       <div ref="chatWindow" class="chat-window">
-        <infinite-loading direction="top" @infinite="infiniteHandler">
+
+        <infinite-loading direction="top" @infinite="infiniteHandler" :identifier='infiniteId'>
           <div slot="no-more">沒有更多留言了</div>
           <div slot="no-results">沒有更多留言了</div>
         </infinite-loading>
+
         <chat-message
           v-for="(msg, index) in messages"
           :key="index"
@@ -60,15 +62,30 @@ export default {
     return {
       page: 1,
       newMessage: '',
+      preloader: true,
       imagePopupVisible: false,
       selectedImage: '',
       messages: [],
       detectError: false,
       user_name: '',  // 儲存使用者名稱
+      infiniteId: 1,
     };
   },
   created() {
     this.fetchMessages();
+    if (this.$route.query.code && this.$route.query.state) {
+
+      axios.post('http://127.0.0.1:8000/api/member/line_login', {
+          code: this.$route.query.code,
+          state: this.$route.query.state,  // 自己發送的訊息
+        })
+        .then((res) => {
+          console.log('LINE LOGIN Success:', res.data);
+        })
+        .catch((err) => {
+          console.error('LINE LOGIN Failed:', err);
+        });
+    }
   },
   mounted() {
     // 頁面初次加載時滾動到底部
@@ -93,12 +110,13 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
+
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(GET_API_URL,{
         params: {
           user_id: '1',
           page: this.page,
-          size: 15
+          size: 3
         }
       })
         .then((res) => {
@@ -106,11 +124,16 @@ export default {
             this.detectError = true;
           } else {
             // console.log(JSON.stringify(res.data));
-            this.page += 1;
+            this.preloader = false;
+            console.log('fetchMessages', this.page);
+
             this.messages = res.data.results.slice().reverse();
             this.user_name = res.data.results[0].user_name;
             localStorage.setItem('user_name', this.user_name);
-             // 頁面初次加載時滾動到底部
+            this.page += 1;
+            this.infiniteId += 1;
+
+            // 頁面初次加載時滾動到底部
             this.$nextTick(() => {
               const chatWindow = this.$refs.chatWindow;
               if (chatWindow) {
@@ -124,31 +147,40 @@ export default {
           console.error(err);
         });
     },
+
     infiniteHandler($state) {
-      axios.get(GET_API_URL, {
-        params: {
-          user_id: '1',
-          page: this.page,
-          size: 15
-        },
-      }).then(( res ) => {
-        console.log(JSON.stringify(res.data.results));
-        // console.log(res.data.count);
-        if (!res.data.results.length) {
-          $state.complete();
-        } else {
-          this.page += 1;
-          this.messages.unshift(...res.data.results.slice());
-          $state.loaded();
-        }
-        // if (res.data.count) {
-        //   this.page += 1;
-        //   this.messages.unshift(res.data.results.slice());
-        //   $state.loaded();
-        // } else {
-        //   $state.complete();
-        // }
-      });
+      console.log('check 1')
+
+      if (!this.preloader) {
+        console.log('check 2')
+        axios.get(GET_API_URL, {
+          params: {
+            user_id: '1',
+            page: this.page,
+            size: 3
+          },
+        }).then(( res ) => {
+          // console.log(JSON.stringify(res.data.results));
+          // console.log(res.data.count);
+          if (!res.data.results.length) {
+            $state.complete();
+          } else {
+            console.log('infiniteHandler', this.page);
+            this.messages.unshift(...res.data.results.slice().reverse());
+
+            this.page += 1;
+            $state.loaded();
+          }
+          // if (res.data.count) {
+          //   this.page += 1;
+          //   this.messages.unshift(res.data.results.slice());
+          //   $state.loaded();
+          // } else {
+          //   $state.complete();
+          // }
+        });
+      }
+      
     },
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
