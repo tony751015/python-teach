@@ -4,10 +4,10 @@
 from rest_framework.parsers import DataAndFiles, JSONParser
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-# import request
+import requests
 # from django.shortcuts import render, redirect
-# from chat.models import chat_room
-# import uuid
+from chat.models import chat_room
+import uuid
 
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
@@ -61,6 +61,33 @@ def line_fast_login(request):
     'displayName': '周子堯 Victor',
     'statusMessage': 'cancell.tw',
     'pictureUrl': 'https://profile.line-scdn.net/0hBArZlfZ8HW5fIwjvDqVjES9zHgR8UkR8JE1UWGl2QVw3EF0wehJRDD10FFgwRglqIUFTWzh0EwxTMGoIQXXhWlgTQF9jFF8_cERRjw'}
+  try:
+      getMember = User.objects.get(account=getProfileJson['userId'], fast_auth="LINE") # Queryset
+
+
+      print('AAAAAAAA', getMember)
+
+      return Response('ok', status=200)
+
+  except User.DoesNotExist:
+      newUUID4 = uuid.uuid4()
+      
+      createUser = User.objects.create(
+        fast_auth = 'LINE',
+        account = getProfileJson['userId'],
+        name = getProfileJson['displayName'],
+        avatar = getProfileJson['pictureUrl'],
+        hashCode = newUUID4,
+      )
+
+      newCreateID = createUser.id
+
+      print('BBBBBBBB', newCreateID)
+
+      chat_room.objects.create(
+        user_id=newCreateID,
+        room_path=f"{newCreateID}-{newUUID4}"
+      )
 
   return Response('ok', status=200)
 

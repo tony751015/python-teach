@@ -12,6 +12,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     fast_auth = models.TextField(max_length=200, blank=True)
     phone = models.TextField(max_length=20, blank=True)
     verify = models.BooleanField(default=False)
+    avatar = models.TextField(blank=True, default="")
 
     USERNAME_FIELD = 'account' # 主要判斷帳號的資料，作為帳號判斷 必須訂為unique
 
