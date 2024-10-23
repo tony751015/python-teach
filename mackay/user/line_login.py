@@ -4,7 +4,7 @@
 from rest_framework.parsers import DataAndFiles, JSONParser
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-import requests
+# import request
 # from django.shortcuts import render, redirect
 # from chat.models import chat_room
 # import uuid
@@ -65,6 +65,6 @@ def line_fast_login(request):
   return Response('ok', status=200)
 
 
-Line判斷有無會員資料，存DB
-新建Model，存LINE id
-閱讀JWT
+# Line判斷有無會員資料，存DB
+# 新建Model，存LINE id
+# 閱讀JWT

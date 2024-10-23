@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container class="fill-height">
-      <v-row justify="center" align="center" style="max-width: 400px;">
+      <v-row justify="center" align="center" class="main-container" style="max-width: 400px;">
         <!-- 左側圖片方框 -->
         <!-- <v-col cols="12" md="4" class="v-col colLeft">
           <v-card class="image-box">
@@ -49,7 +49,6 @@
                   color="v-dark"
                   class="mb-3 justify-space-between align-center fastLogin lineFast white--text"
                   block
-                  x-large
                   outlined
                   elevation="0"
                   href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/WoundChat&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
@@ -125,10 +124,14 @@ export default {
   background-image: url(../assets/loginBG.png); 
   background-repeat: no-repeat; 
   background-size: cover;
+  background-position: center;
 }
 .fill-height {
   min-height: 100vh;
   justify-content: center;
+}
+.main-container {
+  transform: translate3d(0, -7vh, 0);
 }
 .image-box {
   background-color: #f5f5f5;
@@ -154,6 +157,7 @@ export default {
 }
 .v-btn.fastLogin {
   font-size: 1rem;
+  height: 62px;
 }
 .v-col{
   padding: unset;
