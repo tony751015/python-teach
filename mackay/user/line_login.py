@@ -16,6 +16,11 @@ User = get_user_model()
 apiTokenUrl = 'https://api.line.me/oauth2/v2.1/token'
 apiProfileUrl = 'https://api.line.me/v2/profile'
 
+# === JWT參考說明 === #
+# https://medium.com/%E4%BC%81%E9%B5%9D%E4%B9%9F%E6%87%82%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/jwt-json-web-token-%E5%8E%9F%E7%90%86%E4%BB%8B%E7%B4%B9-74abfafad7ba
+# https://jwt.io/
+# https://www.cadch.com/article/timestamp/index.php
+
 
 @api_view(['POST'])
 @authentication_classes([])
@@ -41,10 +46,10 @@ def line_fast_login(request):
     data = data_config)
   
   lineAuthResult = lineAuthApi.json()
-  print('AAAAAAAAAAAAAAAAAAAAA', lineAuthResult)
-
-
   access_token = lineAuthResult["access_token"]
+  jwtTokenId = lineAuthResult["id_token"]
+
+  print('SHOW JWT TOKEN', jwtTokenId)
     
   responseProfile = requests.get(
       apiProfileUrl,
@@ -55,7 +60,6 @@ def line_fast_login(request):
 
   getProfileJson = responseProfile.json()
 
-  print('BBBBBBBBBBBBBBBB', getProfileJson)
   {
     'userId': 'U98cd6521297c5a714372aabefaef5bc9',
     'displayName': '周子堯 Victor',
@@ -63,11 +67,7 @@ def line_fast_login(request):
     'pictureUrl': 'https://profile.line-scdn.net/0hBArZlfZ8HW5fIwjvDqVjES9zHgR8UkR8JE1UWGl2QVw3EF0wehJRDD10FFgwRglqIUFTWzh0EwxTMGoIQXXhWlgTQF9jFF8_cERRjw'}
   try:
       getMember = User.objects.get(account=getProfileJson['userId'], fast_auth="LINE") # Queryset
-
-
-      print('AAAAAAAA', getMember)
-
-      return Response('ok', status=200)
+      # return Response('ok', status=200)
 
   except User.DoesNotExist:
       newUUID4 = uuid.uuid4()
@@ -82,14 +82,15 @@ def line_fast_login(request):
 
       newCreateID = createUser.id
 
-      print('BBBBBBBB', newCreateID)
-
       chat_room.objects.create(
         user_id=newCreateID,
         room_path=f"{newCreateID}-{newUUID4}"
       )
 
-  return Response('ok', status=200)
+  return Response({
+     "status": "ok",
+     "jwt_token": jwtTokenId,
+  }, status=200)
 
 
 # Line判斷有無會員資料，存DB
