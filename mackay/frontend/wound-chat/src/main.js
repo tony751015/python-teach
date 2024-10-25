@@ -11,6 +11,22 @@ import axios from 'axios'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+import { mapGetters, mapMutations } from 'vuex';
+
+Vue.mixin({
+  methods: {
+    ...mapMutations({
+      updateUserProfile: 'UPDATE_USER_PROFILE',
+    }),
+  },
+
+  computed: {
+    ...mapGetters({
+      exportUserProfile: 'exportUserProfile',
+    }),
+  },
+})
+
 new Vue({
   router,
   store,
