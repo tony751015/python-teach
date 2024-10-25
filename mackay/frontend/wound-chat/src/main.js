@@ -6,26 +6,94 @@ import vuetify from './plugins/vuetify'
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
 import InfiniteLoading from 'vue-infinite-loading';
-Vue.component('infinite-loading', InfiniteLoading);
 import axios from 'axios'
+
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
+Vue.component('infinite-loading', InfiniteLoading);
 
 import { mapGetters, mapMutations } from 'vuex';
+import * as jwt_decode from 'jwt-decode';
 
-Vue.mixin({
+const VUEX_FEATURE = {
+  // data: () => ({
+  //   alertShow: false,
+  //   alertStatus: '',
+  // }),
+
   methods: {
     ...mapMutations({
       updateUserProfile: 'UPDATE_USER_PROFILE',
+      updateUserLogin: 'UPDATE_USER_LOGIN',
+      updateAlert: 'UPDATE_ALERT',
     }),
+
+    // showAlertBlock(status) {
+    //   this.alertShow = true;
+    //   this.alertStatus = status;
+      
+    //   console.log('RUN ALERT: ', status, this.alertShow, this.alertStatus);
+    //   // setTimeout(() => {
+    //   //   this.alertShow = false;
+    //   // }, 5000);
+    // },
+
+    userLoginProcess(code, state) {
+      axios.post('http://127.0.0.1:8000/api/member/line_login', {code, state,})
+        .then((res) => {
+          const getJWT = res.data.jwt_token;
+          
+          if (getJWT) {
+            // alert('JWT存在');
+            console.log('JWT content: ', getJWT)
+            localStorage.setItem('mackay', JSON.stringify(getJWT));
+
+            const decoded = jwt_decode(getJWT);
+
+            const USER_PROFILE = {
+              name: decoded.name,
+              line_id: decoded.sub,
+              thumb: decoded.picture,
+            }
+
+            this.updateUserProfile(USER_PROFILE);
+            this.updateUserLogin(true);
+            this.updateAlert({
+              show: true,
+              status: 'success',
+            });
+
+            console.log('LOGIN STATUS: ', this.userLogin);
+            // this.showAlertBlock('success');
+          }
+
+          this.$router.push({name: 'woundChat'});
+        })
+        .catch((err) => {
+          console.error('LINE LOGIN Failed:', err);
+          this.updateUserProfile({});
+          this.updateUserLogin(false);
+          this.updateAlert({
+            show: true,
+            status: 'error',
+          });
+          localStorage.removeItem('mackay');
+        });
+
+      return true;
+    }
   },
 
   computed: {
     ...mapGetters({
-      exportUserProfile: 'exportUserProfile',
+      userProfile: 'exportUserProfile',
+      userLogin: 'exportUserLogin',
+      alert: 'exportAlert',
     }),
   },
-})
+}
+
+Vue.mixin(VUEX_FEATURE);
 
 new Vue({
   router,

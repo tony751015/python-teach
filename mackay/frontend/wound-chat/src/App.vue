@@ -1,5 +1,10 @@
 <template>
   <v-app>
+    <v-alert
+      v-if='alert.show'
+      dense
+      :type="alert.status"> {{ alert.status === 'success' ? '登入成功!' : '自動登出' }}
+    </v-alert>
     <!-- <v-app-bar
       app
       color="primary"
@@ -43,14 +48,111 @@
   </v-app>
 </template>
 
+
 <script>
+// import { mapMutations, mapGetters } from 'vuex';
+import * as jwt_decode from 'jwt-decode';
 
 export default {
   name: 'App',
 
   data: () => ({
-    //
+    alertShow: false,
+    alertStatus: '',
   }),
+
+  created() {
+    if (this.$router.name !== 'woundLogin' && !this.$route.query.code && !this.$route.query.state) {
+      this.detectAutoLoginProcess();
+    }
+  },
+
+  // mounted() {
+  //   if (this.userLogin) {
+  //     this.$router.push({
+  //       name: 'woundChat'
+  //     })
+  //   }
+  // },
+
+  methods: {
+    detectAutoLoginProcess() {
+      const getJWT = localStorage.getItem('mackay');
+
+      if (getJWT) {
+        // alert('JWT存在');
+        console.log('JWT content: ', getJWT)
+        const decoded = jwt_decode(getJWT);
+        const { exp } = decoded;
+        // const iat = Number(decoded.iat);
+        const dateNow = Date.now() / 1000;
+        console.log('JWT content: ', decoded)
+     
+        if (exp - dateNow > 0) {
+          const USER_PROFILE = {
+            name: decoded.name,
+            line_id: decoded.sub,
+            thumb: decoded.picture,
+          }
+
+          this.updateUserProfile(USER_PROFILE);
+          this.updateUserLogin(true);
+          this.updateAlert({
+            show: true,
+            status: 'success',
+          });
+        }
+      } else {
+        // alert('JWT不存在');
+        this.updateUserProfile({});
+        this.updateUserLogin(false);
+        this.updateAlert({
+          show: true,
+          status: 'error',
+        });
+
+        // this.$router.push({
+        //   name: 'woundLogin'
+        // })
+      }
+    }
+    // detectAutoLoginProccess() {
+    //   const getJWT = localStorage.getItem('mackay');
+
+    //   if (getJWT) {
+    //     // const JWT = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVTk4Y2Q2NTIxMjk3YzVhNzE0MzcyYWFiZWZhZWY1YmM5IiwiYXVkIjoiMjAwNjQ2MjAyNiIsImV4cCI6MTcyOTgyNzIwMywiaWF0IjoxNzI5ODIzNjAzLCJub25jZSI6ImhlbGxvV29ybGQiLCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoi5ZGo5a2Q5aCvIFZpY3RvciIsInBpY3R1cmUiOiJodHRwczovL3Byb2ZpbGUubGluZS1zY2RuLm5ldC8waEJBclpMOTBlSFc1UEl3anZEcVZpT1hObUV3TTREUnNtTnhKYURqb2dGbHhnUmxrX2Uwd0ZDMjUwRkFsa1FROXJJUmRXQ1RseEZBNHcifQ.fDIzyGerYXRTI_B17ZbNI1m29GZFKehM0V6IAKztWPM';
+  
+    //     // const accessToken = JSON.parse(JWT);
+    //     const decoded = jwt_decode(getJWT);
+    //     const { exp } = decoded;
+    //     const iat = Number(decoded.iat);
+    //     const dateNow = Date.now() / 1000;
+
+    //     console.log('JWT content: ', decoded)
+  
+    //     if (exp - dateNow > 0) {
+    //       console.log('JWT令牌在免驗證時間內，不做任何事 | Exp:', (exp), 'Iat:', (iat), 'Count', (iat - exp), );
+
+    //       const USER_PROFILE = {
+    //         name: decoded.name,
+    //         line_id: decoded.sub,
+    //         thumb: decoded.picture,
+    //       }
+    //       this.updateUserProfile(USER_PROFILE);
+
+    //     } else {
+    //       console.log('JWT令牌過期了，強制登出 | Exp:', (exp), 'Iat:', (iat), 'Count', (iat - exp));
+    //       // localStorage.removeItem('mackay');
+    //     }
+    //   }
+    // }
+  },
+
+  // computed: {
+  //   ...mapGetters({
+  //     getUserProfile: 'exportUserProfile',
+  //   }),
+  // },
 };
 </script>
 

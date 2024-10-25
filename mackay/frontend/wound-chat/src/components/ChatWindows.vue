@@ -73,19 +73,20 @@ export default {
   },
   created() {
     this.fetchMessages();
-    if (this.$route.query.code && this.$route.query.state) {
+    // if (this.$route.query.code && this.$route.query.state) {
 
-      axios.post('http://127.0.0.1:8000/api/member/line_login', {
-          code: this.$route.query.code,
-          state: this.$route.query.state,  // 自己發送的訊息
-        })
-        .then((res) => {
-          console.log('LINE LOGIN Success:', res.data);
-        })
-        .catch((err) => {
-          console.error('LINE LOGIN Failed:', err);
-        });
-    }
+    //   axios.post('http://127.0.0.1:8000/api/member/line_login', {
+    //       code: this.$route.query.code,
+    //       state: this.$route.query.state,  // 自己發送的訊息
+    //     })
+    //     .then((res) => {
+    //       localStorage.setItem('mackay', JSON.stringify(res.data.jwt_token));
+    //       console.log('LINE LOGIN Success:');
+    //     })
+    //     .catch((err) => {
+    //       console.error('LINE LOGIN Failed:', err);
+    //     });
+    // }
   },
   mounted() {
     // 頁面初次加載時滾動到底部

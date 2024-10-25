@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container class="fill-height">
+    <v-container v-if='!preloading' class="fill-height">
       <v-row justify="center" align="center" class="main-container" style="max-width: 400px;">
         <!-- 左側圖片方框 -->
         <!-- <v-col cols="12" md="4" class="v-col colLeft">
@@ -51,7 +51,7 @@
                   block
                   outlined
                   elevation="0"
-                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/WoundChat&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
+                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/WoundLogin&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
@@ -78,6 +78,11 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- 這裡在設計一個v-else 轉圈圈動畫 -->
+    <span v-else style="font-size: 50px;">轉圈圈</span>
+
+
     <v-footer
       color="v-dark"
       fixed
@@ -98,6 +103,39 @@
 <script>
 import axios from 'axios';
 export default {
+  created() {
+    console.log('LOGIN STATUS 2: ', this.userLogin);
+
+    // LINE登入Callback頁面
+    if (this.$route.query.code && this.$route.query.state) {
+      const LoginProcess = new Promise((resolve) => {
+        const done = this.userLoginProcess(this.$route.query.code, this.$route.query.state);
+        if (done) {
+          return resolve({
+            status: 'ok',
+            value: true,
+          });
+        }
+      })
+
+      LoginProcess.then((value) => {
+        if (value.status === 'ok') {
+          this.preloading = value.value;
+          console.log('LOGIN STATUS END: ', this.userLogin);
+        }
+      });
+    } else {
+      this.preloading = false
+    }
+
+  },
+
+  data() {
+    return {
+      preloading: true,
+    };
+  },
+
   methods: {
     loginToWoundChat(patient_id , patient_name, patient_auth) {
       axios.post('http://127.0.0.1:8000/api/member/fast_login', {
@@ -106,8 +144,8 @@ export default {
           patient_auth: patient_auth
         })
         .then((response) => {
-          console.log('Login successfully:', response.data);
           // 跳轉到 /woundChat
+          console.log('Login successfully:', response.data);
           this.$router.push('/woundChat');
         })
         .catch((err) => {
@@ -115,7 +153,7 @@ export default {
         });
       
     }
-  }
+  },
 };
 </script>
 
