@@ -27,15 +27,15 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal">
             <v-avatar size="30">
-              <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
+              <v-img :src="thumb_avatar"></v-img>
             </v-avatar>
-            <span class="ml-2">Helena</span>
+            <span class="ml-2">{{ username }}</span>
             <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
         <v-list>
           <v-list-item>
-            <v-list-item-title>Logout</v-list-item-title>
+            <v-list-item-title>登出</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -137,6 +137,8 @@ export default {
   },
   data() {
     return {
+      username: '使用者',
+      thumb_avatar: '',
       searchChat: '', // 搜尋框中的文字
       searchResults: [], // 儲存搜尋結果
       noResults: false, // 用於顯示沒有搜尋結果的訊息
@@ -194,6 +196,14 @@ export default {
       }
 
       this.searchResults = []; // 清空搜尋結果
+    }
+  },
+  mounted() {
+    if (localStorage.getItem('userName')) {
+      this.username = localStorage.getItem('userName');
+    }
+    if (localStorage.getItem('userThumb')) {
+      this.thumb_avatar = localStorage.getItem('userThumb');
     }
   }
 };

@@ -64,6 +64,9 @@ const VUEX_FEATURE = {
             });
 
             console.log('LOGIN STATUS: ', this.userLogin);
+            console.log('USER_PROFILE: ', USER_PROFILE);
+            localStorage.setItem('userName', USER_PROFILE.name);
+            localStorage.setItem('userThumb', USER_PROFILE.thumb);
             // this.showAlertBlock('success');
           }
 

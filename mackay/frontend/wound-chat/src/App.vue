@@ -1,10 +1,14 @@
 <template>
   <v-app>
-    <v-alert
-      v-if='alert.show'
-      dense
-      :type="alert.status"> {{ alert.status === 'success' ? '登入成功!' : '自動登出' }}
-    </v-alert>
+        <v-alert class="login-alert"
+          v-if='alert.show'
+          dense
+          transition="scale-transition"
+          :value="alert_timeout"
+          :type="alert.status"> {{ alert.status === 'success' ? '登入成功!' : '自動登出' }}
+        </v-alert>
+      
+    
     <!-- <v-app-bar
       app
       color="primary"
@@ -59,6 +63,8 @@ export default {
   data: () => ({
     alertShow: false,
     alertStatus: '',
+    alert_timeout: true,
+    timer: '',
   }),
 
   created() {
@@ -115,7 +121,11 @@ export default {
         //   name: 'woundLogin'
         // })
       }
-    }
+      // setTimeout(() => {
+      //   this.alert_timeout = false;
+      //   console.log('alert_timeout', this.alert_timeout);
+      // },3000);
+    },
     // detectAutoLoginProccess() {
     //   const getJWT = localStorage.getItem('mackay');
 
@@ -146,8 +156,19 @@ export default {
     //     }
     //   }
     // }
+    
   },
-
+  watch: {
+    'alert.show'(newVal) {
+      if (newVal) {
+        this.alert_timeout = true;
+        setTimeout(() => {
+          this.alert_timeout = false;
+        }, 3000);
+      }
+    },
+  },
+  
   // computed: {
   //   ...mapGetters({
   //     getUserProfile: 'exportUserProfile',
@@ -159,5 +180,14 @@ export default {
 <style>
 .row {
   margin: 0 !important;
+}
+.login-alert{
+  position: fixed;
+  top: 50px;  
+  z-index: 10000;
+  left: 0;
+  right: 0;
+  width: 200px;
+  margin: auto;
 }
 </style>
