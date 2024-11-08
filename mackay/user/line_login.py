@@ -8,7 +8,8 @@ import requests
 # from django.shortcuts import render, redirect
 from chat.models import chat_room
 import uuid
-
+from django.utils import timezone
+from datetime import timedelta
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -67,6 +68,9 @@ def line_fast_login(request):
     'pictureUrl': 'https://profile.line-scdn.net/0hBArZlfZ8HW5fIwjvDqVjES9zHgR8UkR8JE1UWGl2QVw3EF0wehJRDD10FFgwRglqIUFTWzh0EwxTMGoIQXXhWlgTQF9jFF8_cERRjw'}
   try:
       getMember = User.objects.get(account=getProfileJson['userId'], fast_auth="LINE") # Queryset
+      # 更新 last_login 欄位為當前時間
+      getMember.last_login = timezone.now() + timedelta(hours=8)
+      getMember.save()
       # return Response('ok', status=200)
 
   except User.DoesNotExist:
@@ -78,6 +82,7 @@ def line_fast_login(request):
         name = getProfileJson['displayName'],
         avatar = getProfileJson['pictureUrl'],
         hashCode = newUUID4,
+        last_login=timezone.now() + timedelta(hours=8)  # 新增使用者時設定 last_login
       )
 
       newCreateID = createUser.id

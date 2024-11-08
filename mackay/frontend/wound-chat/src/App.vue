@@ -126,6 +126,7 @@ export default {
       //   console.log('alert_timeout', this.alert_timeout);
       // },3000);
     },
+    
     // detectAutoLoginProccess() {
     //   const getJWT = localStorage.getItem('mackay');
 

@@ -33,9 +33,9 @@
             <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
-        <v-list>
+        <v-list dense>
           <v-list-item>
-            <v-list-item-title>登出</v-list-item-title>
+            <v-list-item-title class="logoutBtn" @click="logout">登出</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -157,7 +157,6 @@ export default {
     onInput() {
       this.performSearch();
     },
-
     // 執行搜尋
     performSearch() {
       const searchText = this.searchChat.trim().toLowerCase();
@@ -257,6 +256,10 @@ export default {
   top: 44px;;
   z-index: 1003;
   width: 100%;
+}
+.logoutBtn{
+  cursor: pointer;
+  text-align: center;
 }
 /* width */
 ::-webkit-scrollbar {
