@@ -6,9 +6,9 @@
         <v-card 
           :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
           flat>
-          <v-card-text 
+          <v-card-text
             v-if="content_type === 'text'"
-            class="font-weight-bold">{{content}}</v-card-text>
+            class="font-weight-bold" v-html="contentRegexMatchURL"></v-card-text>
           
           <v-card-text 
             v-else-if="content_type === 'image'">
@@ -22,8 +22,10 @@
 </template>
   
 <script>
+
 export default {
   name: 'ChatMessage',
+
   props: {
     is_carer_user: {
       type: Boolean,
@@ -45,21 +47,42 @@ export default {
       type: String,
       required: true
     }
-  }
+  },
+
+  computed: {
+    contentRegexMatchURL: function() {
+      let newContent = this.content;
+      // eslint-disable-next-line
+      /* eslint-disable-next-line */
+      const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g;
+      const matchURL = newContent.match(urlRegex);
+      if (matchURL) {
+        newContent = newContent.replace(urlRegex, `<a style="margin: 0 5px;" href="${matchURL[0]}" target="_blank">${matchURL[0]}</a>`);
+      }
+      return newContent;
+    }
+  },
+
+  watch: {
+
+  },
+
 }
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .col-auto{
   max-width: 75%;
   padding: 0;
 }
-.v-card__text{
+
+.v-card__text {
   padding: 10px 15px;
   overflow-wrap: break-word;
   word-wrap:break-word;
   word-break:break-all;
 }
+
 .own-message {
   background-color: #000 !important;
   color: #fff;

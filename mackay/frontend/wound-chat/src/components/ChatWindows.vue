@@ -5,8 +5,9 @@
     </v-dialog>
 
     <div class="px-3">
+      <ProgressLoader :key='activeKey' :showText="`LOADING...`" :active="activeProgress"></ProgressLoader>
+      
       <div ref="chatWindow" class="chat-window">
-
         <infinite-loading direction="top" @infinite="infiniteHandler" :identifier='infiniteId'>
           <div slot="no-more">沒有更多留言了</div>
           <div slot="no-results">沒有更多留言了</div>
@@ -52,11 +53,14 @@
 <script>
 import axios from 'axios';
 import ChatMessage from './ChatMessage.vue';
+import ProgressLoader from '../common/progessLoading.vue';
+
 const GET_API_URL = 'http://127.0.0.1:8000/api/chat/list?';
 export default {
   name: 'ChatWindows',
   components: {
-    ChatMessage
+    ChatMessage,
+    ProgressLoader,
   },
   data() {
     return {
@@ -69,10 +73,16 @@ export default {
       detectError: false,
       user_name: '',  // 儲存使用者名稱
       infiniteId: 1,
+
+      activeProgress: false,
+      activeKey: 1,
     };
   },
   created() {
-    this.fetchMessages();
+    this.activeProgress = true;
+    setTimeout(() => {
+      this.fetchMessages();
+    }, 2000);
     // if (this.$route.query.code && this.$route.query.state) {
 
     //   axios.post('http://127.0.0.1:8000/api/member/line_login', {
@@ -111,7 +121,6 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(GET_API_URL,{
         params: {
@@ -136,6 +145,8 @@ export default {
 
             // 頁面初次加載時滾動到底部
             this.$nextTick(() => {
+              this.activeProgress = false;
+              this.activeKey += 1;
               const chatWindow = this.$refs.chatWindow;
               if (chatWindow) {
                 chatWindow.scrollTop = chatWindow.scrollHeight;
