@@ -89,7 +89,7 @@ const VUEX_FEATURE = {
       localStorage.removeItem('mackay');
       localStorage.removeItem('userName');
       localStorage.removeItem('userThumb');
-      this.$router.push('/WoundLogin');
+      this.$router.push('/');
     }
   },
 

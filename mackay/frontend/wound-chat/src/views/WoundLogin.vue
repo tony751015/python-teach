@@ -51,7 +51,7 @@
                   block
                   outlined
                   elevation="0"
-                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/WoundLogin&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
+                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
@@ -80,7 +80,8 @@
     </v-container>
 
     <!-- 這裡在設計一個v-else 轉圈圈動畫 -->
-    <span v-else style="font-size: 50px;">轉圈圈</span>
+    <!-- <span v-else style="font-size: 50px;">轉圈圈</span> -->
+    <ProgressLoader :key='activeKey' :showText="`LOADING...`" :active="preloading"></ProgressLoader>
 
 
     <v-footer
@@ -102,7 +103,11 @@
 
 <script>
 import axios from 'axios';
+import ProgressLoader from '../common/progessLoading.vue';
 export default {
+  components: {
+    ProgressLoader,
+  },
   created() {
     console.log('LOGIN STATUS 2: ', this.userLogin);
 
@@ -120,6 +125,7 @@ export default {
 
       LoginProcess.then((value) => {
         if (value.status === 'ok') {
+          this.activeKey += 1 ;
           this.preloading = value.value;
           console.log('LOGIN STATUS END: ', this.userLogin);
         }
@@ -133,6 +139,7 @@ export default {
   data() {
     return {
       preloading: true,
+      activeKey: 0,
     };
   },
 

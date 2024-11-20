@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Topbar 區域 -->
-    <v-app-bar color="green lighten-1" elevation="1" dense>
+    <v-app-bar color="primary" elevation="1" dense>
       <v-responsive class="d-sm-none">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </v-responsive>
@@ -13,9 +13,9 @@
         <template>
           <v-tabs align-with-title background-color="transparent">
             
-            <v-tab v-for="items, index in topBarNavList" class="white--text font-weight-bold" active-class="white v-dark2--text font-weight-bold" :key="index">
+            <!-- <v-tab v-for="items, index in topBarNavList" class="white--text font-weight-bold" active-class="white v-dark2--text font-weight-bold" :key="index">
               {{ items }}
-            </v-tab>
+            </v-tab> -->
             <!-- <v-tab class="white--text font-weight-bold" active-class="white v-dark2--text font-weight-bold">One</v-tab>
             <v-tab class="white--text font-weight-bold" active-class="white v-dark2--text font-weight-bold">Two</v-tab>
             <v-tab class="white--text font-weight-bold" active-class="white v-dark2--text font-weight-bold">Three</v-tab> -->
@@ -47,12 +47,12 @@
         <!-- 左側：聊天室區域 -->
         <v-col cols="8" class="chat-section">
           <v-toolbar flat dense class="w-100">
-            <div class="d-flex align-center">
+            <!-- <div class="d-flex align-center">
               <v-avatar size="30">
                 <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
               </v-avatar>
               <v-toolbar-title class="pl-2 text-subtitle-1 font-weight-medium">照護專員</v-toolbar-title>
-            </div>
+            </div> -->
 
             <!-- <v-spacer></v-spacer>
             <v-spacer></v-spacer>
@@ -60,7 +60,7 @@
 
             <v-text-field
               v-model="searchChat"
-              append-icon="mdi-magnify"
+              prepend-icon="mdi-magnify"
               label="搜尋對話"
               dense
               outlined
@@ -255,7 +255,9 @@ export default {
   position: absolute;
   top: 44px;;
   z-index: 1003;
-  width: 100%;
+  width: 97%;
+  border-radius: 4px;
+  box-shadow: 0 0 0 5px #555;
 }
 .logoutBtn{
   cursor: pointer;

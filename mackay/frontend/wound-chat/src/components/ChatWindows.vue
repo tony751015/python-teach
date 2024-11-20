@@ -202,7 +202,8 @@ export default {
           is_carer_user: false,
           user_name: user_name,
           content: this.newMessage,
-          content_type: 'text'
+          content_type: 'text',
+          isFirstDate:''
         };
 
         // 發送到前端 UI

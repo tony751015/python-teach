@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+// import HomeView from '../views/HomeView.vue'
 import WoundChat from '../views/WoundChat.vue'
 import WoundLogin from '@/views/WoundLogin.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
+  // {
+  //   path: '/',
+  //   name: 'home',
+  //   component: HomeView
+  // },
   {
     path: '/about',
     name: 'about',
@@ -21,12 +21,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path:'/woundChat',
+    path:'/chat',
     name:'woundChat',
     component: WoundChat
   },
   {
-    path:'/woundLogin',
+    path:'/',
     name:'woundLogin',
     component: WoundLogin
   }

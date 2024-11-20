@@ -34,7 +34,7 @@ def line_fast_login(request):
   data_config = {
     'grant_type': 'authorization_code',
     'code': code,
-    'redirect_uri': 'http://127.0.0.1:3000/WoundLogin',
+    'redirect_uri': 'http://127.0.0.1:3000/',
     'client_id': 2006462026,
     'client_secret': '5d9bbfbaeb564b6bae32765e79c20ab2'
   }
