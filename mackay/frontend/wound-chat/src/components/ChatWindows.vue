@@ -292,6 +292,12 @@ export default {
 .v-dialog__content {
   z-index: 1000;
 }
+.infinite-loading-container{
+  font-size: 12px;
+  color: #ccc;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
