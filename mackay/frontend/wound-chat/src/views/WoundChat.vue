@@ -227,9 +227,10 @@ export default {
   height: 100%;
   overflow: hidden;
   position: relative;
+  z-index: 100;
 }
 .chat-section header {
-  z-index: 1004;
+  z-index: 104;
 }
 
 

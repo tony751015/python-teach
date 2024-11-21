@@ -26,27 +26,36 @@
       </div>
     </div>
     <div>
-      <v-text-field
-        v-model="newMessage"
-        placeholder="請輸入留言"
-        outlined
-        hint="Shift + Enter 換行 Enter 發送訊息"
-        persistent-hint
-        append-icon="mdi-emoticon-outline"
-        @keyup.enter="sendMessage"
-        class="message-input mb-13 mx-3"
-      ></v-text-field>
+      <v-layout row>
+        <v-text-field
+          v-model="newMessage"
+          placeholder="請輸入留言"
+          outlined
+          hint="Shift + Enter 換行 Enter 發送訊息"
+          persistent-hint
+          append-icon="mdi-emoticon-outline"
+          @keyup.enter="sendMessage"
+          class="message-input mb-13 mx-3"
+        ></v-text-field>
+        <v-btn @click="openUploadImage" color="primary">
+          <v-icon>mdi-image-plus</v-icon>
+        上傳傷口照片
+        </v-btn>
+      </v-layout>
+      
     </div>
 
     <!-- 圖片彈窗 -->
-    <v-dialog v-model="imagePopupVisible" max-width="none" persistent>
+    <!-- <v-dialog v-model="imagePopupVisible" max-width="none" persistent>
       <v-card class="image-popup">
         <v-btn icon @click="closeImagePopup" class="close-btn">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-img :src="selectedImage" class="popup-img"></v-img>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
+    <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup>
+    <UploadImage :key="activeImgKey" :activeUpload="uploadImage" @close="closeUploadImage" @update:visible="updateVisible"></UploadImage>
   </v-container>
 </template>
 
@@ -54,13 +63,16 @@
 import axios from 'axios';
 import ChatMessage from './ChatMessage.vue';
 import ProgressLoader from '../common/progessLoading.vue';
-
+import ImagePopup from './ImagePopup.vue';
+import UploadImage from './UploadImage.vue';
 const GET_API_URL = 'http://127.0.0.1:8000/api/chat/list?';
 export default {
   name: 'ChatWindows',
   components: {
+    ImagePopup,
     ChatMessage,
     ProgressLoader,
+    UploadImage
   },
   data() {
     return {
@@ -76,6 +88,9 @@ export default {
 
       activeProgress: false,
       activeKey: 1,
+
+      uploadImage: false,
+      activeImgKey: 1
     };
   },
   created() {
@@ -241,6 +256,16 @@ export default {
     closeImagePopup() {
       this.imagePopupVisible = false;
       this.selectedImage = '';
+    },
+    updateVisible(val) {
+      this.imagePopupVisible = val
+    },
+    openUploadImage() {
+      this.uploadImage = true;
+      this.activeImgKey += 1
+    },
+    closeUploadImage() {
+      this.uploadImage = false;
     }
   }
 };
@@ -286,11 +311,11 @@ export default {
   top: 10px;
   right: 10px;
   color: white;
-  z-index: 1001;
+  z-index: 101;
 }
 
 .v-dialog__content {
-  z-index: 1000;
+  z-index: 100;
 }
 .infinite-loading-container{
   font-size: 12px;
