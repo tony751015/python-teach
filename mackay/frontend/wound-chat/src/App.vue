@@ -191,4 +191,24 @@ export default {
   width: 200px;
   margin: auto;
 }
+
+.font-super-small {
+  font-size: 10px !important;
+}
+
+.font-small {
+  font-size: 12px !important;
+}
+
+.font-normal {
+  font-size: 14px !important;
+}
+
+.font-large {
+  font-size: 16px !important;
+}
+
+.font-super-large {
+  font-size: 18px !important;
+}
 </style>

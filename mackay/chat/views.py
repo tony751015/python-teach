@@ -71,11 +71,8 @@ def chat_record_list(request):
       filterData = recordQuery.order_by('-create_date').values_list('create_date_truncated', flat=True)
       # check2 = check1.order_by('-create_date_truncated')
 
-      # print('AAAAAAAAAAAAAAAAAAA', list(check1))
-      # print('BBBBBBBBBBBBBBBBBBB', list(check2))
-
       # recordData = list(recordQuery.values_list('create_date_truncated', flat=True).order_by('-create_date_truncated').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
-      recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
+      recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'content', 'media_url', 'content_type', 'create_date_truncated', 'is_carer_user'))
 
       # 設計一個變數，用來記錄每次For迴圈保存的 create_date_truncated 值
       currentLoopDate = ''
@@ -249,3 +246,53 @@ def chat_record_control(request):
   else:
     return Response('error', status=500)
     
+
+
+@api_view(['POST'])
+@authentication_classes([])
+@permission_classes([])
+def chat_upload_photo(request):
+  resData = request.data
+  create_user = resData["user_id"]
+  isCarerUser = resData["is_carer_user"]
+  # photo_upload1 = request.FILES.get('photo_upload')
+  photo_upload = request.FILES['photo_upload']
+
+  # create_date = datetime.now().strftime("%Y-%m-%d")
+
+  if 'user_id' in resData and 'is_carer_user' in resData:
+    # try:
+    isPatient = False
+
+    if isCarerUser == '0':
+      isPatient = True
+    
+    createNewRecord = chat_record.objects.create(
+      create_user = create_user,
+      content = '',
+      content_type = 'image',
+      media_url = photo_upload,
+      is_carer_user = isPatient,
+    )
+    if createNewRecord:
+      createNewRecordId = createNewRecord.id
+
+      return Response({
+        "status": "create",
+        "record_id": createNewRecordId,
+      }, status=200)
+    # except:
+    #   # 遇到任何問題則回傳error
+    #   return Response('error', status=500)
+  else:
+    return Response('error', status=500)
+
+
+
+  # savePhotoUrls = []
+  # # print('settings.GS_BUCKET_NAME', settings.GS_BUCKET_NAME)
+  # for img in photo_upload:
+  #   savePhoto = se_photo_upload.objects.create(attribute='se_report_translate', src=img)
+  #   saveReport.upload.add(savePhoto)
+  #   savePhotoUrls.append(f'https://storage.googleapis.com/{settings.GS_BUCKET_NAME}/media/{str
+  #                                                                                          (savePhoto.src)}')

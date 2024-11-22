@@ -1,39 +1,42 @@
 <template>
     <v-dialog v-model="uploadImage" max-width="500px" scrollable>
       <v-card>
-        <v-card-title class="headline text-center">
+        <v-card-title class="font-large font-weight-bold text-center">
           請上傳傷口照片
         </v-card-title>
-  
+
         <v-card-text>
             <v-container
                 class="uploader-area"
                 :class="{ 'is-dragging': fileOnDrag }"
-                @dragenter.prevent="handleDragEnter"
-                @dragleave.prevent="handleDragLeave"
-                @drop.prevent="handleDragDrop"
-                @click="triggerFileInput" 
                 >
+                <!-- @click="triggerFileInput" -->
                 <!-- @click="triggerFileInput" 點擊作用區 -->
                 <!-- 隱藏的 input -->
-                <input
+                
+                <!-- 預覽圖顯示區 -->
+                <div v-show="filePreviewSrc" class="uploader-preview">
+                  <v-btn class="uploader-remove-btn" @click='handleResetInput'>x</v-btn>
+                  <v-img :src="filePreviewSrc" contain></v-img>
+                </div>
+
+                <div v-show="!filePreviewSrc">
+                  <input
                     ref="fileInput"
                     type="file"
                     accept="image/jpeg, image/png"
-                    style="display: none;"
-                    @change="handleInputChange"
-                />
-
-                <!-- 預覽圖顯示區 -->
-                <div v-if="filePreviewSrc" class="uploader-preview">
-                    <v-img :src="filePreviewSrc" contain></v-img>
-                </div>
-
-                <!-- 防呆訊息顯示區 -->
-                <div v-else class="uploader-interface">
+                    class="uploader-input"
+                    @dragenter='handleDragEnter'
+                    @dragleave='handleDragEnter'
+                    @dragdrop='handleDragDrop'
+                    @change='handleInputChange'/>
+                 
+                  <!-- 防呆訊息顯示區 -->
+                  <div class="uploader-interface">
                     <v-icon size="40" color="#dcdcdc">mdi-cloud-upload-outline</v-icon>
                     <p :class="{ 'error-message': showErrorMsg }">{{ fileTips }}</p>
                     <p class="text-caption text-grey--text">僅支援 JPG/PNG 格式，最大 8 MB</p>
+                  </div>
                 </div>
             </v-container>
         </v-card-text>
@@ -55,6 +58,8 @@
   </template>
   
   <script>
+  import axios from "axios";
+
   export default {
     props: {
       activeUpload: Boolean
@@ -73,14 +78,44 @@
       };
     },
     methods: {
+        startUpload() {
+          // 發送 POST 圖片訊息
+          const formData = new FormData();
+          const userId = '1'
+          const ts = new Date().getTime();
+          console.log('this.file', this.file)
+
+          formData.append('user_id', userId);
+          formData.append('is_carer_user', '1'); // 0
+          formData.append('photo_upload', this.file, `${userId}_${ts}.${this.file.type.split('/')[1]}`);
+
+          axios.post('http://127.0.0.1:8000/api/chat/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+            .then((response) => {
+              console.log('Message sent successfully:', response.data);
+            })
+            .catch((err) => {
+              console.error('Error sending message:', err);
+            });
+        },
+
         triggerFileInput() {
             // 點擊觸發隱藏的文件選擇器
             this.$refs.fileInput.click();
         },
+        handleResetInput() {
+          console.log('handleResetInput', this.$refs.fileInput)
+          this.$refs.fileInput.value = '';
+          this.filePreviewSrc = '';
+          this.fileTips = this.$options.data().fileTips;
+        },
         handleInputChange(event) {
             const file = event.target.files[0];
             if (file) {
-            this.handleUploadFile(file);
+              this.handleUploadFile(file);
             }
         },
         handleUploadFile(file) {
@@ -88,22 +123,25 @@
             this.showErrorMsg = false;
 
             if (file.type === "image/jpeg" || file.type === "image/png") {
-            const _URL = window.URL || window.webkitURL;
-            const img = new Image();
-            img.src = _URL.createObjectURL(file);
-            img.onload = () => {
+              const _URL = window.URL || window.webkitURL;
+              const img = new Image();
+              img.src = _URL.createObjectURL(file);
+
+              img.onload = () => {
                 if (file.size < 8000 * 1024) {
-                this.fileTips = file.name;
-                this.canUpload = true;
-                this.filePreviewSrc = img.src; // 設置圖片預覽
+                  this.fileTips = file.name;
+                  this.canUpload = true;
+                  this.filePreviewSrc = img.src; // 設置圖片預覽
+                  this.file = file; // 設置上傳檔案物件
                 } else {
-                this.showErrorMsg = true;
-                this.fileTips = "檔案過大，需小於8MB";
+                  this.showErrorMsg = true;
+                  this.fileTips = "檔案過大，需小於8MB";
+                  this.file = null;
                 }
-            };
+              };
             } else {
-            this.showErrorMsg = true;
-            this.fileTips = "不正確的檔案類型";
+              this.showErrorMsg = true;
+              this.fileTips = "不正確的檔案類型";
             }
         },
         handleDragEnter(event) {
@@ -129,9 +167,6 @@
         handleClose() {
             this.uploadImage = false;
         },
-        startUpload() {
-            // 開始上傳邏輯
-        },
     },
   };
   </script>
@@ -144,8 +179,24 @@
     border-radius: 8px;
     padding: 16px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: border-color 0.2s ease;
     min-height: 200px; /* 增加區域高度 */
+  }
+/* 
+  .headline {
+    font-size: 13px;
+  } */
+
+  .uploader-input {
+    position: absolute;
+    top: 0;
+    text-indent: -9999px;
+    width: 100%;
+    height: 100%;
+    left: 0;
   }
   
   .uploader-area.is-dragging {
@@ -155,10 +206,21 @@
   .uploader-preview {
     display: flex;
     justify-content: center;
-    margin-top: 16px;
+    width: 100%;
   }
 
-    .image-preview {
+  .uploader-remove-btn {
+    position: absolute;
+    z-index: 30;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+
+  .image-preview {
     width: 400px; /* 固定寬度為 400px */
     height: calc(400px * 0.75); /* 高度為寬度的 75% (4:3 比例) */
     object-fit: contain; /* 確保圖片完整呈現 */
