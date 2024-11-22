@@ -19,7 +19,7 @@
           class="photo-item"
           @click.stop="openImagePopup(photo.src)"
         >
-          <v-img :src="photo.src" class="photo-image">
+          <v-img :src="photo.src" contain class="photo-image">
             <v-card-title class="text-h6 white--text">
               <v-row
                 class="flex-column"

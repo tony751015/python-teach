@@ -6,7 +6,7 @@
         <v-btn small @click="close" class="close-btn">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-img :src="image" class="popup-img"></v-img>
+        <v-img contain :src="image" class="popup-img"></v-img>
       </v-card>
     </v-dialog>
   </template>
