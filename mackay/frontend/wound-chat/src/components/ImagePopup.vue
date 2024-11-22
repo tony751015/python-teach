@@ -1,7 +1,7 @@
 <!-- ImagePopup.vue -->
 
 <template>
-    <v-dialog v-model="localVisible" max-width="none" persistent>
+    <v-dialog v-model="localVisible" max-width="none" persistent :key="localVisible">
       <v-card class="image-popup">
         <v-btn small @click="close" class="close-btn">
           <v-icon>mdi-close</v-icon>
@@ -52,7 +52,13 @@
           }
         })
       }
-    }
+    },
+    beforeDestroy() {
+      const dialogContent = document.querySelector('.v-dialog__content')
+      if (dialogContent) {
+        dialogContent.style.display = 'none'
+      }
+}
   }
   </script>
   
@@ -61,15 +67,17 @@
     
     /* width: calc(9/12 * 100vw); 
     height: 100vh; */
-    width: 80%;
+    width: 75%;
     border: 10px solid #f5f5f5;
     position: relative;
     margin: auto;
  }
 
  .popup-img {
-    width: 100%;
-    height: auto;
+     width: 100%;
+     height: 0;
+     padding-top: calc(100% * (3 / 4));
+     object-fit: contain;
  }
 
  .close-btn {

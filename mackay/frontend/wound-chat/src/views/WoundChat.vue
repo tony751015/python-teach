@@ -97,32 +97,12 @@
           <chat-windows class="chatWindows" ref="chatWindows"></chat-windows>
         </v-col>
 
-        <!-- 右側：商品區域 -->
-        <v-col cols="4" class="product-section pt-3">
-          <v-toolbar flat dense>
-            <!-- <v-toolbar-title>商品列表</v-toolbar-title> -->
-            <v-text-field
-              v-model="searchProduct"
-              append-icon="mdi-magnify"
-              label="搜尋商品"
-              dense
-              hide-details
-              outlined
-              clearable
-            ></v-text-field>
-          </v-toolbar>
-          <v-list>
-            <v-list-item v-for="(product, index) in products" :key="index" class="pt-1">
-              <v-list-item-avatar>
-                <v-img :src="product.image"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="font-weight-bold secondary--text">{{ product.name }}</v-list-item-title>
-                <v-list-item-subtitle>{{ product.description }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-col>
+        <!-- 右側：照片列表區域 -->
+        <wound-photos
+          :albums="albums"
+          :current-album.sync="currentAlbum"
+          @update:current-album="updateCurrentAlbum"
+        ></wound-photos>
       </v-row>
     </v-container>
   </v-app>
@@ -130,10 +110,12 @@
 
 <script>
 import ChatWindows from '../components/ChatWindows.vue';
+import WoundPhotos from '../components/WoundPhotos.vue';
 
 export default {
   components: {
-    ChatWindows
+    ChatWindows,
+    WoundPhotos
   },
   data() {
     return {
@@ -142,17 +124,25 @@ export default {
       searchChat: '', // 搜尋框中的文字
       searchResults: [], // 儲存搜尋結果
       noResults: false, // 用於顯示沒有搜尋結果的訊息
-      searchProduct: '',
       topBarNavList: ['One', 'Two', 'Three'],
       chatRecord: [],
-      products: [
-        { name: '商品名', description: '介紹內容123321', image: 'https://cdn.vuetifyjs.com/images/cards/house.jpg' },
-        { name: '商品名', description: '介紹內容123321', image: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg' },
-        { name: '商品名', description: '介紹內容123321', image: 'https://cdn.vuetifyjs.com/images/cards/fashion.jpg' }
-      ]
+      albums: [
+        { name: '已上傳傷口照片', photos: [{ id: 1, src: 'https://via.placeholder.com/300x150' }, { id: 2, src: 'https://via.placeholder.com/200x250' }, { id: 5, src: 'https://via.placeholder.com/200x250' }, { id: 6, src: 'https://via.placeholder.com/200x250' }, { id: 7, src: 'https://via.placeholder.com/200x250' }] },
+        { name: 'AI傷口範圍偵測', photos: [{ id: 3, src: 'https://via.placeholder.com/250x150' }, { id: 4, src: 'https://via.placeholder.com/300x250' }] },
+      ],
+      currentAlbum: 0,
     };
   },
+  computed: {
+    currentPhotos() {
+      return this.albums[this.currentAlbum]?.photos || [];
+    },
+  },
   methods: {
+    updateCurrentAlbum(newAlbumIndex) {
+      this.currentAlbum = newAlbumIndex;
+    },
+   
     // 當輸入改變時，更新搜尋結果
     onInput() {
       this.performSearch();
@@ -195,7 +185,7 @@ export default {
       }
 
       this.searchResults = []; // 清空搜尋結果
-    }
+    },
   },
   mounted() {
     if (localStorage.getItem('userName')) {
@@ -264,6 +254,8 @@ export default {
   cursor: pointer;
   text-align: center;
 }
+
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
