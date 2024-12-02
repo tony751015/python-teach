@@ -17,6 +17,7 @@ export default new Vuetify({
         success: '#4CAF50',
         warning: '#da8200',
 
+        'main-green': '#2D9CA0',
         'v-light': '#eee',
         'v-dark': '#242526',
         'v-dark2': '#161616',

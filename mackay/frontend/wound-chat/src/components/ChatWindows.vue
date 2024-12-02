@@ -37,7 +37,7 @@
           @keyup.enter="sendMessage"
           class="message-input mb-13 mx-3"
         ></v-text-field>
-        <v-btn @click="openUploadImage" color="primary">
+        <v-btn @click="openUploadImage" color="primary" class="upload-btn main-green">
           <v-icon>mdi-image-plus</v-icon>
         上傳傷口照片
         </v-btn>
@@ -322,6 +322,9 @@ export default {
   color: #ccc;
   margin-top: 15px;
   margin-bottom: 15px;
+}
+.v-btn.upload-btn{
+  height: 55px;
 }
 /* width */
 ::-webkit-scrollbar {

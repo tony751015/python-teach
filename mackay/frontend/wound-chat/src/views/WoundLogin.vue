@@ -85,17 +85,17 @@
 
 
     <v-footer
-      color="v-dark"
+      color="point-1"
       fixed
     >
-      <v-card-text class="white--text text-center">
+      <v-card-text class=" text-center">
         <div class="caption">© 2020, MacKay Memorial Hospital     本網站內容為馬偕紀念醫院所有，未經許可請勿轉載。</div>
         <div class="caption">台灣基督長老教會馬偕醫療財團法人馬偕紀念醫院 著作權所有，並保留一切權利。</div>
       </v-card-text>
-      <v-card-text class="white--text text-center py-0 mb-4">
-        <a class="white--text px-2 caption bdR" href="">馬偕醫院首頁</a>
-        <a class="white--text px-2 caption bdR" href="">FB粉專</a>
-        <a class="white--text px-2 caption" href="">LINE官方帳號</a>
+      <v-card-text class="black--text text-center py-0 mb-4">
+        <a class="black--text px-2 caption bdR" href="">馬偕醫院首頁</a>
+        <a class="black--text px-2 caption bdR" href="">FB粉專</a>
+        <a class="black--text px-2 caption" href="">LINE官方帳號</a>
       </v-card-text>
     </v-footer>
   </v-app>

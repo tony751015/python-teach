@@ -1,14 +1,14 @@
 <template>
   <v-app>
     <!-- Topbar 區域 -->
-    <v-app-bar color="primary" elevation="1" dense>
+    <v-app-bar color="main-green" elevation="1" dense>
       <v-responsive class="d-sm-none">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </v-responsive>
-      <v-avatar left size="40">
-        <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
-      </v-avatar>
-      <header class="chat-title text-h6 font-weight-black">星禾互聯</header>
+      
+        <!-- <v-img src="../assets/logo_dr.png" class="main-logo"></v-img> -->
+        <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
+      <!-- <header class="chat-title text-h6 font-weight-black">星禾互聯</header> -->
       <v-spacer>
         <template>
           <v-tabs align-with-title background-color="transparent">
@@ -203,6 +203,10 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+.main-logo{
+  height: 100%;
+  padding: 10px 0px;
 }
 .fill-height {
   height: calc(100vh - 48px);
