@@ -248,7 +248,7 @@ export default {
   background-color: white;
   border: 1px solid #e0e0e0;
   position: absolute;
-  top: 44px;;
+  top: 47px;;
   z-index: 1003;
   width: 97%;
   border-radius: 4px;

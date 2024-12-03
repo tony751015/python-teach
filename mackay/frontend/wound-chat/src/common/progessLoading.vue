@@ -6,14 +6,14 @@
   width="300"
 >
   <v-card
-    color="primary"
-    dark
+    color="point-1"
+    
   >
-    <v-card-text>
+    <v-card-text class="loading-text">
       {{ showText }}
       <v-progress-linear
         indeterminate
-        color="white"
+        color="main-green"
         class="mb-0"
       ></v-progress-linear>
     </v-card-text>
@@ -37,4 +37,8 @@
   }
 </script>
 
-<style scoped></style>
+<style scoped>
+  .loading-text {
+    color:#2D9CA0 !important;
+  }
+</style>

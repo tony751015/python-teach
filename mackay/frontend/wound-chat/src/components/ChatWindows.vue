@@ -20,8 +20,9 @@
           :content_type="msg.content_type"
           :user_name="msg.user_name"
           :content="msg.content"
+          :media_url="msg.media_url"
           :isFirstDate="msg.isFirstDate"
-          @image-click="openImagePopup(msg.content)" 
+          @image-click="openImagePopup(msg.media_url)" 
         ></chat-message>
       </div>
     </div>
@@ -38,7 +39,7 @@
           class="message-input mb-13 mx-3"
         ></v-text-field>
         <v-btn @click="openUploadImage" color="primary" class="upload-btn main-green">
-          <v-icon>mdi-image-plus</v-icon>
+          <v-icon>mdi-paperclip</v-icon>
         上傳傷口照片
         </v-btn>
       </v-layout>
@@ -95,9 +96,9 @@ export default {
   },
   created() {
     this.activeProgress = true;
-    setTimeout(() => {
+    // setTimeout(() => {
       this.fetchMessages();
-    }, 2000);
+    // }, 500);
     // if (this.$route.query.code && this.$route.query.state) {
 
     //   axios.post('http://127.0.0.1:8000/api/member/line_login', {

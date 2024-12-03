@@ -2,18 +2,21 @@
   <div>
     <div class="date-divider text-center grey--text">{{ isFirstDate }}</div>
     <v-row :class="[is_carer_user ? 'justify-start' : 'justify-end']" style="margin: 0;">
-      <v-col cols="auto">
+      <v-col cols="auto" v-if="content_type === 'text'">
         <v-card 
           :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
           flat>
           <v-card-text
-            v-if="content_type === 'text'"
             class="font-weight-bold" v-html="contentRegexMatchURL"></v-card-text>
-          
-          <v-card-text 
-            v-else-if="content_type === 'image'">
-            <img :src="content" @click="$emit('image-click', content)" />
-          </v-card-text>
+        </v-card>
+        
+      </v-col>
+      <v-col cols="5"  v-else-if="content_type === 'image'">
+        <v-card 
+          color = "point-1"
+          :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
+          flat>
+            <img :src="media_url" @click="$emit('image-click', media_url)" />
         </v-card>
       </v-col>
     </v-row>  
@@ -40,6 +43,10 @@ export default {
       required: true
     },
     content: {
+      type: String,
+      required: true
+    },
+    media_url: {
       type: String,
       required: true
     },

@@ -67,7 +67,7 @@
     
     /* width: calc(9/12 * 100vw); 
     height: 100vh; */
-    width: 75%;
+    width: 65%;
     border: 10px solid #f5f5f5;
     position: relative;
     margin: auto;
