@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
+import ChatList from '../views/ChatList.vue'
 import WoundChat from '../views/WoundChat.vue'
 import WoundLogin from '@/views/WoundLogin.vue'
 
@@ -21,15 +22,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path:'/chat',
-    name:'woundChat',
-    component: WoundChat
-  },
-  {
     path:'/',
     name:'woundLogin',
     component: WoundLogin
+  },
+  {
+    path: '/chat',
+    name: 'ChatList',
+    component: ChatList
+  },
+  {
+    path: '/chat/:id',
+    name: 'WoundChat',
+    component: WoundChat
   }
+  
 ]
 
 const router = new VueRouter({

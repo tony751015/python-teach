@@ -22,7 +22,7 @@
           :content="msg.content"
           :media_url="msg.media_url"
           :isFirstDate="msg.isFirstDate"
-          @image-click="openImagePopup(msg.media_url)" 
+          @image-click="openImagePopup('/media/'+msg.media_url)" 
         ></chat-message>
       </div>
     </div>
@@ -137,10 +137,11 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
+      const id = this.$route.params.id;
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(GET_API_URL,{
         params: {
-          user_id: '1',
+          user_id: id,
           page: this.page,
           size: 3
         }
@@ -148,6 +149,9 @@ export default {
         .then((res) => {
           if (!res.data.count) {
             this.detectError = true;
+            setTimeout(() => {
+              this.$router.push({ name: 'ChatList' });
+            }, 500);
           } else {
             // console.log(JSON.stringify(res.data));
             this.preloader = false;
@@ -172,6 +176,9 @@ export default {
         })
         .catch((err) => {
           this.detectError = true;
+          setTimeout(() => {
+            this.$router.push({ name: 'ChatList' });
+          }, 500);
           console.error(err);
         });
     },

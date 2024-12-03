@@ -131,7 +131,7 @@ export default {
         }
       });
     } else {
-      this.preloading = true;
+      this.preloading = false
     }
 
   },
@@ -223,9 +223,6 @@ export default {
 }
 .bdR{
   border-right: 1px solid #fff;
-}
-.ProgressLoader{
-  box-shadow: 1px 1px 5px #181717 !important;
 }
 @media screen and (max-width: 767px){
   .colRight .pa-5{

@@ -70,7 +70,7 @@ const VUEX_FEATURE = {
             // this.showAlertBlock('success');
           }
 
-          this.$router.push({name: 'woundChat'});
+          this.$router.push({name: 'ChatList'});
         })
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
@@ -89,7 +89,13 @@ const VUEX_FEATURE = {
       localStorage.removeItem('mackay');
       localStorage.removeItem('userName');
       localStorage.removeItem('userThumb');
-      this.$router.push('/');
+      this.updateAlert({
+        show: true,
+        status: 'error',
+      });
+      setTimeout(() => {
+        this.$router.push('/');
+      }, 1000);
     }
   },
 
