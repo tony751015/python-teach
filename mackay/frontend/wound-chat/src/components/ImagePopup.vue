@@ -6,7 +6,8 @@
         <v-btn small @click="close" class="close-btn">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-img contain :src="image" class="popup-img"></v-img>
+        <!-- <v-img fill :src="image" class="popup-img"></v-img> -->
+        <img :src="image" class="popup-img" alt="">
       </v-card>
     </v-dialog>
   </template>
@@ -75,9 +76,11 @@
 
  .popup-img {
      width: 100%;
-     height: 0;
-     padding-top: calc(100% * (3 / 4));
-     object-fit: contain;
+     /* height: 0; */
+     /* padding-top: calc(100% * (3 / 4)); */
+     object-fit: fill;
+     aspect-ratio: 4/3;
+  ;
  }
 
  .close-btn {

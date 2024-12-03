@@ -3,8 +3,9 @@
       <v-card>
         <v-card-title class="font-large font-weight-bold text-center">
           請上傳傷口照片
+          <span class="font-weight-regular font-small grey--text">僅支援JPG、PNG圖片格式(檔案限8MB內)</span>
         </v-card-title>
-
+        
         <v-card-text>
             <v-container
                 class="uploader-area"
@@ -16,7 +17,9 @@
                 
                 <!-- 預覽圖顯示區 -->
                 <div v-show="filePreviewSrc" class="uploader-preview">
-                  <v-btn class="uploader-remove-btn" @click='handleResetInput'>x</v-btn>
+                  <v-btn class="uploader-remove-btn" @click='handleResetInput'>
+                    <v-icon color="primary">mdi-trash-can-outline</v-icon>
+                  </v-btn>
                   <v-img :src="filePreviewSrc" contain></v-img>
                 </div>
 
@@ -42,15 +45,15 @@
         </v-card-text>
   
         <v-card-actions class="justify-end">
-          <v-btn text color="grey" @click="handleClose">關閉</v-btn>
-          <v-btn color="primary" :disabled="!canUpload" @click="startUpload">
+          <v-btn text color="v-dark" @click="handleClose">取消</v-btn>
+          <v-btn color="primary" text :disabled="!canUpload" @click="startUpload">
             <v-progress-circular
               v-if="showLoading"
               indeterminate
               color="white"
               size="20"
             ></v-progress-circular>
-            <span v-else>傳送</span>
+            <span v-else>確認上傳</span>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -96,6 +99,7 @@
           })
             .then((response) => {
               console.log('Message sent successfully:', response.data);
+              this.uploadImage = false;
             })
             .catch((err) => {
               console.error('Error sending message:', err);
@@ -108,6 +112,7 @@
         },
         handleResetInput() {
           console.log('handleResetInput', this.$refs.fileInput)
+          this.canUpload = false;
           this.$refs.fileInput.value = '';
           this.filePreviewSrc = '';
           this.fileTips = this.$options.data().fileTips;
@@ -209,13 +214,13 @@
     width: 100%;
   }
 
-  .uploader-remove-btn {
+  .v-btn.uploader-remove-btn {
     position: absolute;
     z-index: 30;
-    top: 10px;
+    bottom: 10px;
     right: 10px;
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    min-width: unset;
     border-radius: 50%;
     background-color: #fff;
   }

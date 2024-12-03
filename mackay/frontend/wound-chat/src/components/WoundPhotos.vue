@@ -1,44 +1,45 @@
 <template>
   <v-col cols="4" class="photo-section">
     <v-toolbar flat dense>
-      <v-btn
-        v-for="(album, index) in albums"
-        :key="index"
-        outlined
-        :color="currentAlbum === index ? 'primary' : ''"
-        @click="switchAlbum(index)"
+      <v-tabs
+        v-model="localCurrentAlbum"
+        centered
+        grow
+        show-arrows
       >
-        {{ album.name }}
-      </v-btn>
+        <v-tab
+            :color="localCurrentAlbum === 0 ? 'primary' : ''"
+            @click="updateCurrentAlbum(0)"
+          >
+          <v-icon>mdi-upload</v-icon>
+          已上傳傷口照片
+        </v-tab>
+        <v-tab
+            :color="localCurrentAlbum === 1 ? 'primary' : ''"
+            @click="updateCurrentAlbum(1)"
+          >
+          <v-icon>mdi-magnify-expand</v-icon>
+          AI傷口範圍偵測
+        </v-tab>
+      </v-tabs>
     </v-toolbar>
     <div class="photo-grid">
-      <v-hover v-slot="{ hover }" v-for="(photo, index) in currentPhotos" :key="index">
-        <v-card
-          :elevation="hover ? 12 : 2"
-          :class="{ 'on-hover': hover }"
-          class="photo-item"
-          @click.stop="openImagePopup(photo.src)"
-        >
-          <v-img :src="photo.src" contain class="photo-image">
-            <v-card-title class="text-h6 white--text">
-              <v-row
-                class="flex-column"
-                justify="space-between"
-              >
-                <div class="align-self-center">
-                  <v-btn
-                    v-if="hover"
-                    color="error"
-                    icon
-                    @click.stop="confirmDelete(photo.id)"
-                  >
-                    <v-icon>mdi-trash-can-outline</v-icon>
-                  </v-btn>
-                </div>
-              </v-row>
-            </v-card-title>
-          </v-img>
-        </v-card>
+      <v-hover v-slot="{ hover }" 
+       v-for="(photo, index) in currentPhotos" 
+       :key="index">
+        <div class="photo-item" 
+         @click="openImagePopup(photo.src)">
+          <img :src="photo.src">
+          <v-card-title class="text-h6 white--text" style="">
+            <v-row class="flex-column" justify="space-between">
+              <div class="align-self-center">
+                <v-btn v-if="hover" color="primary" class="delete-btn" icon @click.stop="confirmDelete(photo.id)">
+                  <v-icon>mdi-trash-can-outline</v-icon>
+                </v-btn>
+              </div>
+            </v-row>
+          </v-card-title>
+        </div>
       </v-hover>
     </div>
     <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup>
@@ -71,6 +72,7 @@ export default {
   return {
     selectedImage: '',
     imagePopupVisible: false,
+    localCurrentAlbum: this.currentAlbum
   };
 },
   methods: {
@@ -97,6 +99,10 @@ export default {
         album.photos = album.photos.filter((photo) => photo.id !== photoId);
       }
     },
+    updateCurrentAlbum(index) {
+      this.localCurrentAlbum = index
+      this.$emit('update:currentAlbum', index)
+    }
   }
 };
 </script>
@@ -105,7 +111,9 @@ export default {
   height: 100%;
   overflow-y: auto;
 }
-
+.delete-btn{
+  background-color: #fff !important;
+}
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -114,16 +122,19 @@ export default {
 }
 
 .photo-item {
+  width: 100%; 
+  aspect-ratio: 4/3; 
   position: relative;
-  width: 100%;
-  aspect-ratio: 4/3; /* 設定寬高比為 4:3 */
-  transition: opacity .4s ease-in-out;
-  box-shadow: unset;
 }
-
-.photo-item:hover {
+.photo-item img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: fill;
+  border-radius: 8px;
+}
+.photo-item:hover img{
   opacity: 0.6;
-  box-shadow: unset;
+  /* box-shadow: unset; */
  }
 
 .photo-wrapper {
@@ -133,13 +144,15 @@ export default {
   right: 0;
   bottom: 0;
 }
-
-.photo-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* 設定填充方式為 contain */
-  border-radius: 8px;
+.v-application .text-h6 {
+  /* line-height: 4rem; */
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
 }
+
 
 .photo-hover-overlay {
   position: absolute;

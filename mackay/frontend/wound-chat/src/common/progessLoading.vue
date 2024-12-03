@@ -7,7 +7,7 @@
 >
   <v-card
     color="point-1"
-    
+    elevation="1"
   >
     <v-card-text class="loading-text">
       {{ showText }}
@@ -38,6 +38,9 @@
 </script>
 
 <style scoped>
+  .v-dialog {
+    box-shadow: 1px 1px 5px #181717 !important;
+  }
   .loading-text {
     color:#2D9CA0 !important;
   }
