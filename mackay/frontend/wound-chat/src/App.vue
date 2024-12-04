@@ -67,20 +67,20 @@ export default {
     timer: '',
   }),
 
-  created() {
+  // created() {
+  //   console.log('this.$route.name', this.$route.name);
+  //   if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
+  //     this.detectAutoLoginProcess();
+  //   }
+  // },
+
+  mounted() {
+    console.log('this.$route', this.$route);
     console.log('this.$route.name', this.$route.name);
     if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
       this.detectAutoLoginProcess();
     }
   },
-
-  // mounted() {
-  //   if (this.userLogin) {
-  //     this.$router.push({
-  //       name: 'woundChat'
-  //     })
-  //   }
-  // },
 
   methods: {
     detectAutoLoginProcess() {

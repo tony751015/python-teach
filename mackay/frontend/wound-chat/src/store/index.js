@@ -30,6 +30,9 @@ export default new Vuex.Store({
     UPDATE_USER_PROFILE(st, payload) {
       st.user_profile = payload;
     },
+    UPDATE_USER_ID(st, payload) {
+      st.user_profile.id = payload;
+    },
     UPDATE_USER_LOGIN(st, payload) {
       st.user_login = payload;
     },

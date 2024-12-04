@@ -139,8 +139,9 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
+      console.log('fetchMessages', this.storeUserId, this.$route.params.id);
       if (this.storeUserId !== this.$route.params.id) {
-        // alert('Wrong User');
+        alert('Wrong User');
         this.routerRedirectTo404();
         return;
       }

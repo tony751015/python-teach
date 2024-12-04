@@ -25,6 +25,7 @@ const VUEX_FEATURE = {
     ...mapMutations({
       updateUserProfile: 'UPDATE_USER_PROFILE',
       updateUserLogin: 'UPDATE_USER_LOGIN',
+      updateUserId: 'UPDATE_USER_ID',
       updateAlert: 'UPDATE_ALERT',
     }),
 
@@ -62,6 +63,7 @@ const VUEX_FEATURE = {
             }
 
             this.updateUserProfile(USER_PROFILE);
+            this.updateUserId(USER_PROFILE.id);
             this.updateUserLogin(true);
             this.updateAlert({
               show: true,
@@ -70,6 +72,7 @@ const VUEX_FEATURE = {
 
             console.log('LOGIN STATUS: ', this.userLogin);
             console.log('USER_PROFILE: ', USER_PROFILE);
+            // localStorage.setItem('userId', USER_PROFILE.id);  
             localStorage.setItem('userName', USER_PROFILE.name);
             localStorage.setItem('userThumb', USER_PROFILE.thumb);
             // this.showAlertBlock('success');
@@ -80,6 +83,7 @@ const VUEX_FEATURE = {
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
           this.updateUserProfile({});
+          this.updateUserId('');
           this.updateUserLogin(false);
           this.updateAlert({
             show: true,
