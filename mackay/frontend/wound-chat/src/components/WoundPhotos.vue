@@ -113,6 +113,16 @@ export default {
 }
 .delete-btn{
   background-color: #fff !important;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+}
+.delete-btn .v-icon{
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
 }
 .photo-grid {
   display: grid;
@@ -125,6 +135,8 @@ export default {
   width: 100%; 
   aspect-ratio: 4/3; 
   position: relative;
+  margin-bottom: -0.5rem;
+  cursor: pointer;
 }
 .photo-item img {
   width: 100%; 
