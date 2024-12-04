@@ -13,7 +13,7 @@
           style="height: 150px; width: 100%;">
           <v-layout align-center class="justify-center">
             <v-img 
-            max-width="70%"
+            max-width="100%"
             class="aling-center loginLogo" src="../assets/trm01.png"></v-img>
           </v-layout>
           

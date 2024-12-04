@@ -17,6 +17,7 @@ export default new Vuex.Store({
       return st.user_profile;
     },
     exportUserId(st) {
+      console.log('exportUserId: ', st.user_profile.id);
       return st.user_profile.id;
     },
     exportUserLogin(st) {
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     },
     UPDATE_USER_ID(st, payload) {
       st.user_profile.id = payload;
+      console.log('UPDATE_USER_ID: ', st.user_profile.id);
     },
     UPDATE_USER_LOGIN(st, payload) {
       st.user_login = payload;

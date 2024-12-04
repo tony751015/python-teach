@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Topbar 區域 -->
-    <v-app-bar color="main-green" elevation="1" dense>
+    <v-app-bar color="main-green" elevation="0" dense>
       <v-responsive class="d-sm-none">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </v-responsive>

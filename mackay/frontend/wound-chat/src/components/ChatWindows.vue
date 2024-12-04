@@ -23,7 +23,9 @@
           :media_url="msg.media_url"
           :isFirstDate="msg.isFirstDate"
           @image-click="openImagePopup(`${SERVER_PATH}media/${msg.media_url}`)" 
+          @image-click2="openImagePopup(msg.media_url)" 
         ></chat-message>
+        <!-- image-click2解決測試時路徑用 -->
       </div>
     </div>
     <div>
@@ -38,7 +40,7 @@
           @keyup.enter="sendMessage"
           class="message-input mb-13 mx-3"
         ></v-text-field>
-        <v-btn @click="openUploadImage" color="primary" class="upload-btn main-green">
+        <v-btn @click="openUploadImage" elevation="0" color="primary" class="upload-btn main-green">
           <v-icon>mdi-paperclip</v-icon>
         上傳傷口照片
         </v-btn>
@@ -56,7 +58,7 @@
       </v-card>
     </v-dialog> -->
     <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup>
-    <UploadImage :key="activeImgKey" :activeUpload="uploadImage" @close="closeUploadImage" @update:visible="updateVisible"></UploadImage>
+    <UploadImage :key="activeImgKey" :activeUpload="uploadImage" @close="closeUploadImage" @update:visible="updateVisible" @message-uploaded="handleMessageUploaded"></UploadImage>
   </v-container>
 </template>
 
@@ -286,7 +288,12 @@ export default {
     },
     closeUploadImage() {
       this.uploadImage = false;
-    }
+    },
+    handleMessageUploaded(messageData) {
+      console.log('Message uploaded:', messageData);
+      // 在這裡更新 this.messages 陣列
+      this.messages.push(messageData);
+    },
   }
 };
 </script>

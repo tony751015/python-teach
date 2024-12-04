@@ -100,6 +100,16 @@
             .then((response) => {
               console.log('Message sent successfully:', response.data);
               this.uploadImage = false;
+              const user_name = localStorage.getItem('user_name') || '您';
+              const messageData = {
+                is_carer_user: false,
+                user_name: user_name,
+                media_url: this.filePreviewSrc,
+                content_type: 'image2',
+                content: '',
+                isFirstDate: '',
+              };
+              this.$emit('message-uploaded', messageData);
             })
             .catch((err) => {
               console.error('Error sending message:', err);
@@ -220,6 +230,7 @@
     bottom: 10px;
     right: 10px;
     width: 40px;
+    height: 40px;
     min-width: unset;
     border-radius: 50%;
     background-color: #fff;

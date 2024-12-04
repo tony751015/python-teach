@@ -19,6 +19,15 @@
             <img :src="`${SERVER_PATH}media/${media_url}`" @click="$emit('image-click', `${SERVER_PATH}media/${media_url}`)" />
         </v-card>
       </v-col>
+      <!-- <v-col cols="5"  v-else-if="content_type === 'image2'">是解決 -->
+      <v-col cols="5"  v-else-if="content_type === 'image2'">
+        <v-card 
+          color = "point-1"
+          :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
+          flat>
+            <img :src="media_url" @click="$emit('image-click2', media_url)" />
+        </v-card>
+      </v-col>
     </v-row>  
   </div>
   

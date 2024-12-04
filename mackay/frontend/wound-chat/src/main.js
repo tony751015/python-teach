@@ -51,7 +51,12 @@ const VUEX_FEATURE = {
           if (getJWT) {
             // alert('JWT存在');
             console.log('JWT content: ', getJWT)
-            localStorage.setItem('mackay', JSON.stringify(getJWT));
+            const localStorageSaveObj = {
+              jwt: getJWT,
+              user_id: res.data.user_id,
+            };
+            
+            localStorage.setItem('mackay', JSON.stringify(localStorageSaveObj));
 
             const decoded = jwt_decode(getJWT);
 

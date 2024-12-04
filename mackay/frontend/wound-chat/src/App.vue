@@ -85,10 +85,12 @@ export default {
   methods: {
     detectAutoLoginProcess() {
       const getJWT = localStorage.getItem('mackay');
+      const getJWTData = JSON.parse(localStorage.getItem('mackay'));
 
+      // console.log('getJWTData_id', getJWTData.user_id);
       if (getJWT) {
         // alert('JWT存在');
-        console.log('JWT content: ', getJWT)
+        // console.log('JWT content: ', getJWT)
         const decoded = jwt_decode(getJWT);
         const { exp } = decoded;
         // const iat = Number(decoded.iat);
@@ -103,6 +105,7 @@ export default {
           }
 
           this.updateUserProfile(USER_PROFILE);
+          this.updateUserId(getJWTData.user_id);
           this.updateUserLogin(true);
           this.updateAlert({
             show: true,
