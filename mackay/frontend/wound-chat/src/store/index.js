@@ -16,6 +16,9 @@ export default new Vuex.Store({
     exportUserProfile(st) {
       return st.user_profile;
     },
+    exportUserId(st) {
+      return st.user_profile.id;
+    },
     exportUserLogin(st) {
       return st.user_login;
     },

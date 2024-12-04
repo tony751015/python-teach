@@ -1,12 +1,12 @@
 <template>
   <v-app>
-        <v-alert class="login-alert"
-          v-if='alert.show'
-          dense
-          transition="scale-transition"
-          :value="alert_timeout"
-          :type="alert.status"> {{ alert.status === 'success' ? '登入成功!' : '自動登出' }}
-        </v-alert>
+    <v-alert class="login-alert"
+      v-if='alert.show'
+      dense
+      transition="scale-transition"
+      :value="alert_timeout"
+      :type="alert.status"> {{ alert.status === 'success' ? '登入成功!' : '自動登出' }}
+    </v-alert>
       
     
     <!-- <v-app-bar
@@ -68,7 +68,8 @@ export default {
   }),
 
   created() {
-    if (this.$router.name !== 'woundLogin' && !this.$route.query.code && !this.$route.query.state) {
+    console.log('this.$route.name', this.$route.name);
+    if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
       this.detectAutoLoginProcess();
     }
   },

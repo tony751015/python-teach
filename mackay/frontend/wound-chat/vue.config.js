@@ -1,4 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
+
+console.log('Check-ENV: ', process.env);
+
 module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
@@ -6,7 +9,7 @@ module.exports = defineConfig({
 
   devServer: {
     open: true,
-    host: '127.0.0.1',
+    host: process.env.VUE_APP_IP4,
     // host: '0.0.0.0',
     port: 3000,
 

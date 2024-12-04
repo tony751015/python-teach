@@ -71,6 +71,7 @@ def line_fast_login(request):
       # 更新 last_login 欄位為當前時間
       getMember.last_login = timezone.now() + timedelta(hours=8)
       getMember.save()
+      getUserAuthId = getMember.id
       # return Response('ok', status=200)
 
   except User.DoesNotExist:
@@ -85,16 +86,17 @@ def line_fast_login(request):
         last_login=timezone.now() + timedelta(hours=8)  # 新增使用者時設定 last_login
       )
 
-      newCreateID = createUser.id
+      getUserAuthId = createUser.id
 
       chat_room.objects.create(
-        user_id=newCreateID,
-        room_path=f"{newCreateID}-{newUUID4}"
+        user_id=getUserAuthId,
+        room_path=f"{getUserAuthId}-{newUUID4}"
       )
 
   return Response({
      "status": "ok",
      "jwt_token": jwtTokenId,
+     "user_id": getUserAuthId,
   }, status=200)
 
 

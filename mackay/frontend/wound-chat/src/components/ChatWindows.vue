@@ -77,27 +77,29 @@ export default {
   },
   data() {
     return {
-      page: 1,
       newMessage: '',
-      preloader: true,
-      imagePopupVisible: false,
       selectedImage: '',
       messages: [],
-      detectError: false,
+      
       user_name: '',  // 儲存使用者名稱
-      infiniteId: 1,
-
+      user_id: null,
+      
+      preloader: true,
+      imagePopupVisible: false,
       activeProgress: false,
-      activeKey: 1,
-
+      detectError: false,
       uploadImage: false,
-      activeImgKey: 1
+      
+      page: 1,
+      activeImgKey: 1,
+      activeKey: 1,
+      infiniteId: 1,
     };
   },
   created() {
     this.activeProgress = true;
     // setTimeout(() => {
-      this.fetchMessages();
+    this.$route.params.id ? this.fetchMessages() : this.routerRedirectTo404();
     // }, 500);
     // if (this.$route.query.code && this.$route.query.state) {
 
@@ -114,7 +116,7 @@ export default {
     //     });
     // }
   },
-  mounted() {
+  // mounted() {
     // 頁面初次加載時滾動到底部
     // this.$nextTick(() => {
     //   const chatWindow = this.$refs.chatWindow;
@@ -122,8 +124,8 @@ export default {
     //     chatWindow.scrollTop = chatWindow.scrollHeight;
     //   }
     // });
-  },
-  watch: {
+  // },
+  // watch: {
     // messages() {
     //   // 當 messages 更新時，滾動到底部
     //   this.$nextTick(() => {
@@ -133,64 +135,73 @@ export default {
     //     }
     //   });
     // }
-  },
+  // },
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-      const id = this.$route.params.id;
+      if (this.storeUserId !== this.$route.params.id) {
+        // alert('Wrong User');
+        this.routerRedirectTo404();
+        return;
+      }
+
+      console.log('fetchMessages 1', this.storeUserId)
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(GET_API_URL,{
         params: {
-          user_id: id,
+          user_id: this.storeUserId,
           page: this.page,
           size: 3
         }
       })
         .then((res) => {
           if (!res.data.count) {
-            this.detectError = true;
-            setTimeout(() => {
-              this.$router.push({ name: 'ChatList' });
-            }, 500);
+            this.user_name = '';
           } else {
-            // console.log(JSON.stringify(res.data));
-            this.preloader = false;
-            console.log('fetchMessages', this.page);
-
-            this.messages = res.data.results.slice().reverse();
             this.user_name = res.data.results[0].user_name;
             localStorage.setItem('user_name', this.user_name);
-            this.page += 1;
-            this.infiniteId += 1;
-
-            // 頁面初次加載時滾動到底部
-            this.$nextTick(() => {
-              this.activeProgress = false;
-              this.activeKey += 1;
-              const chatWindow = this.$refs.chatWindow;
-              if (chatWindow) {
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-              }
-            });
           }
+
+          // console.log(JSON.stringify(res.data));
+          this.preloader = false;
+          // console.log('fetchMessages 2', this.page);
+          this.messages = res.data.results.slice().reverse();
+          // this.user_name = res.data.results[0].user_name;
+          // localStorage.setItem('user_name', this.user_name);
+          this.page += 1;
+          this.infiniteId += 1;
+
+          if (!res.data.count) {
+            this.user_name = '';
+          } else {
+            this.user_name = res.data.results[0].user_name;
+            localStorage.setItem('user_name', this.user_name);
+          }
+
+          // 頁面初次加載時滾動到底部
+          this.$nextTick(() => {
+            this.activeProgress = false;
+            this.activeKey += 1;
+            const chatWindow = this.$refs.chatWindow;
+            if (chatWindow) {
+              chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+          });
         })
         .catch((err) => {
           this.detectError = true;
-          setTimeout(() => {
-            this.$router.push({ name: 'ChatList' });
-          }, 500);
+          // setTimeout(() => {
+          //   this.$router.push({ name: 'chat-list' });
+          // }, 500);
           console.error(err);
         });
     },
 
     infiniteHandler($state) {
-      console.log('check 1')
-
       if (!this.preloader) {
-        console.log('check 2')
         axios.get(GET_API_URL, {
           params: {
-            user_id: '1',
+            user_id: this.storeUserId,
             page: this.page,
             size: 3
           },
@@ -242,7 +253,7 @@ export default {
 
         // 發送 POST 請求到後端
         axios.post('http://127.0.0.1:8000/api/chat/control', {
-          user_id: '1',
+          user_id: this.storeUserId,
           is_carer_user: false,  // 自己發送的訊息
           content: messageData.content,
           content_type: 'text'

@@ -16,7 +16,7 @@
           color = "point-1"
           :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
           flat>
-            <img :src="'/media/'+media_url" @click="$emit('image-click', '/media/'+media_url)" />
+            <img :src="`${SERVER_PATH}media/${media_url}`" @click="$emit('image-click', `${SERVER_PATH}media/${media_url}`)" />
         </v-card>
       </v-col>
     </v-row>  

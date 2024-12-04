@@ -153,7 +153,7 @@ export default {
         .then((response) => {
           // 跳轉到 /woundChat
           console.log('Login successfully:', response.data);
-          this.$router.push('/woundChat');
+          this.$router.push({ name: 'chat-room' });
         })
         .catch((err) => {
           console.error('Error sending message:', err);

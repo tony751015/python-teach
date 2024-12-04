@@ -9,6 +9,7 @@ from .models import chat_record
 from django.db.models import Q, F, Func, Value, CharField
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
+from mackay.settings import DEBUG
 
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
@@ -91,8 +92,12 @@ def chat_record_list(request):
 
         # 上面完成後 在更新currentLoopDate 為當前Loop日期
         currentLoopDate = itemsDate
-
+        if DEBUG:
+          print('check 1', currentLoopDate)
         eachUserId = User.objects.get(id=user_id) # 取得每筆資料的User檔案，因為id是唯一，所以用GET
+        if DEBUG:
+          print('check 2', eachUserId)
+
         getUserName = eachUserId.name # 會員名稱
         getUserGender = eachUserId.gender # 會員性別
         # 每筆資料額外添加 user_name / gender的資料
@@ -136,13 +141,13 @@ def chat_record_list(request):
       
       # 發生其他錯誤時
       except:
-        return Response('error', status=500)
+        return Response('error 1', status=500)
       
     else:
       return Response('need params', status=500)
     
-  except:
-    return Response('error', status=500)
+  except Exception as e:
+    return Response(e, status=500)
     
 
 
@@ -198,8 +203,6 @@ def chat_record_control(request):
       # except:
       #   return Response('error', status=500)
       
-    
-
       # 如果是找多筆資料，用content_type去找
       try:
         getManyRecord = chat_record.objects.filter(Q(content_type='text'))

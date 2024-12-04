@@ -16,10 +16,10 @@ import { mapGetters, mapMutations } from 'vuex';
 import * as jwt_decode from 'jwt-decode';
 
 const VUEX_FEATURE = {
-  // data: () => ({
-  //   alertShow: false,
-  //   alertStatus: '',
-  // }),
+  data: () => ({
+    SERVER_PATH: process.env.VUE_APP_SERVER_PATH,
+    VUE_PATH: process.env.VUE_APP_PATH,
+  }),
 
   methods: {
     ...mapMutations({
@@ -27,6 +27,10 @@ const VUEX_FEATURE = {
       updateUserLogin: 'UPDATE_USER_LOGIN',
       updateAlert: 'UPDATE_ALERT',
     }),
+
+    routerRedirectTo404() {
+      this.$router.push({name: 'error404'});
+    },
 
     // showAlertBlock(status) {
     //   this.alertShow = true;
@@ -54,6 +58,7 @@ const VUEX_FEATURE = {
               name: decoded.name,
               line_id: decoded.sub,
               thumb: decoded.picture,
+              id: res.data.user_id
             }
 
             this.updateUserProfile(USER_PROFILE);
@@ -70,7 +75,7 @@ const VUEX_FEATURE = {
             // this.showAlertBlock('success');
           }
 
-          this.$router.push({name: 'ChatList'});
+          this.$router.push({name: 'chat-list'});
         })
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
@@ -103,6 +108,7 @@ const VUEX_FEATURE = {
     ...mapGetters({
       userProfile: 'exportUserProfile',
       userLogin: 'exportUserLogin',
+      storeUserId: 'exportUserId',
       alert: 'exportAlert',
     }),
   },

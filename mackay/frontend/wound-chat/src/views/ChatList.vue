@@ -1,3 +1,3 @@
 <template>
-    <div>chatList</div>
+    <div>chat-list</div>
 </template>
