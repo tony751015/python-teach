@@ -83,8 +83,15 @@
     methods: {
         startUpload() {
           // 發送 POST 圖片訊息
+          let userId
+          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+          if (this.$route.params.id) {
+            userId = this.$route.params.id
+          }else {
+            userId = getJWTData.user_id
+          }
           const formData = new FormData();
-          const userId = this.$route.params.id
+          // const userId = getUserIdCheck
           const ts = new Date().getTime();
           console.log('this.file', this.file)
 

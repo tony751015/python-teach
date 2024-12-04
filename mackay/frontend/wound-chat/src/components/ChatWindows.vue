@@ -141,18 +141,30 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
+      let userId
+          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+          if (this.$route.params.id) {
+            userId = this.$route.params.id
+          }else {
+            userId = getJWTData.user_id
+          }
       console.log('fetchMessages', this.storeUserId, this.$route.params.id);
       // if (this.storeUserId !== this.$route.params.id) {
       //   alert('Wrong User');
       //   this.routerRedirectTo404();
       //   return;
       // }
+      if (userId !== this.$route.params.id) {
+        alert('Wrong User');
+        this.routerRedirectTo404();
+        return;
+      }
 
-      console.log('fetchMessages 1', this.storeUserId)
+      console.log('fetchMessages 1', userId)
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(GET_API_URL,{
         params: {
-          user_id: this.$route.params.id,
+          user_id: userId,
           page: this.page,
           size: 3
         }
@@ -201,10 +213,17 @@ export default {
     },
 
     infiniteHandler($state) {
+      let userId
+          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+          if (this.$route.params.id) {
+            userId = this.$route.params.id
+          }else {
+            userId = getJWTData.user_id
+          }
       if (!this.preloader) {
         axios.get(GET_API_URL, {
           params: {
-            user_id: this.$route.params.id,
+            user_id: userId,
             page: this.page,
             size: 3
           },
@@ -233,6 +252,13 @@ export default {
     },
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
+      let userId
+          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+          if (this.$route.params.id) {
+            userId = this.$route.params.id
+          }else {
+            userId = getJWTData.user_id
+          }
       if (this.newMessage.trim() !== '') {
         const user_name = localStorage.getItem('user_name') || '您';
         const messageData = {
@@ -256,7 +282,7 @@ export default {
 
         // 發送 POST 請求到後端
         axios.post('http://127.0.0.1:8000/api/chat/control', {
-          user_id: this.$route.params.id,
+          user_id: userId,
           is_carer_user: false,  // 自己發送的訊息
           content: messageData.content,
           content_type: 'text'
