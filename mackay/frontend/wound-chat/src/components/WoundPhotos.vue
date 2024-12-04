@@ -120,9 +120,9 @@ export default {
   height: 20px;
 }
 .delete-btn .v-icon{
-  width: 15px;
-  height: 15px;
-  font-size: 15px;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
 }
 .photo-grid {
   display: grid;
