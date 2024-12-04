@@ -84,7 +84,7 @@
         startUpload() {
           // 發送 POST 圖片訊息
           const formData = new FormData();
-          const userId = '1'
+          const userId = this.$route.params.id
           const ts = new Date().getTime();
           console.log('this.file', this.file)
 
