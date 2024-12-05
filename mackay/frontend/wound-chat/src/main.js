@@ -28,6 +28,42 @@ const VUEX_FEATURE = {
       updateUserId: 'UPDATE_USER_ID',
       updateAlert: 'UPDATE_ALERT',
     }),
+    autoRelogin() {
+      const getJwt = localStorage.getItem('mackay');
+      const getJwtJson = JSON.parse(getJwt)
+      console.log('Check JWT', getJwtJson)
+
+      if (getJwt) {
+        const decoded = jwt_decode(getJwtJson.jwt);
+
+        const USER_PROFILE = {
+          name: decoded.name,
+          line_id: decoded.sub,
+          thumb: decoded.picture,
+          id: getJwtJson.user_id
+        }
+
+        console.log('autoRelogin', USER_PROFILE);
+
+        this.updateUserProfile(USER_PROFILE);
+        this.updateUserId(USER_PROFILE.id);
+        this.updateUserLogin(true);
+        this.updateAlert({
+          show: true,
+          status: 'success',
+        });
+      } else {
+        this.updateUserProfile(null);
+        this.updateUserId(null);
+        this.updateUserLogin(false);
+        this.updateAlert({
+          show: true,
+          status: 'error',
+        });
+
+        this.$router.push('/');
+      }
+    },
 
     routerRedirectTo404() {
       this.$router.push({name: 'error404'});

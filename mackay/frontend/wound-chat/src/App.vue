@@ -67,17 +67,18 @@ export default {
     timer: '',
   }),
 
-  // created() {
-  //   console.log('this.$route.name', this.$route.name);
-  //   if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
-  //     this.detectAutoLoginProcess();
-  //   }
-  // },
+  created() {
+    this.autoRelogin();
+    // console.log('this.$route.name', this.$route.name);
+    // if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
+    //   this.detectAutoLoginProcess();
+    // }
+  },
 
   mounted() {
     console.log('this.$route', this.$route);
     console.log('this.$route.name', this.$route.name);
-    if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
+    if (this.$route.path.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
       this.detectAutoLoginProcess();
     }
   },

@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
-import ChatList from '../views/ChatList.vue'
-import WoundChat from '../views/WoundChat.vue'
-import WoundLogin from '../views/WoundLogin.vue'
+// import ChatList from '../views/ChatList.vue'
+// import WoundChat from '../views/WoundChat.vue'
+// import WoundLogin from '../views/WoundLogin.vue'
 
-// const ChatList = () => import('../views/ChatList.vue');
-// const WoundChat = () => import('../views/WoundChat.vue');
-// const WoundLogin = () => import('../views/WoundLogin.vue');
+const ChatList = () => import('../views/ChatList.vue');
+const WoundChat = () => import('../views/WoundChat.vue');
+const WoundLogin = () => import('../views/WoundLogin.vue');
 const Error404 = () => import('../views/Error404.vue');
 
 Vue.use(VueRouter)

@@ -85,8 +85,8 @@
           // 發送 POST 圖片訊息
           let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.$route.params.id) {
-            userId = this.$route.params.id
+          if (this.storeUserId) {
+            userId = this.storeUserId
           }else {
             userId = getJWTData.user_id
           }

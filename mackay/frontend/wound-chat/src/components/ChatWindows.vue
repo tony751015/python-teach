@@ -143,19 +143,19 @@ export default {
     fetchMessages() {
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.$route.params.id) {
-            userId = this.$route.params.id
+          if (this.storeUserId) {
+            userId = this.storeUserId
           }else {
             userId = getJWTData.user_id
           }
-      console.log('fetchMessages', this.storeUserId, this.$route.params.id);
-      // if (this.storeUserId !== this.$route.params.id) {
+      console.log('fetchMessages', this.storeUserId, this.storeUserId);
+      // if (this.storeUserId !== this.storeUserId) {
       //   alert('Wrong User');
       //   this.routerRedirectTo404();
       //   return;
       // }
-      if (userId !== this.$route.params.id) {
-        alert('Wrong User');
+      if (userId != this.$route.params.id) {
+        // alert('Wrong User');
         this.routerRedirectTo404();
         return;
       }
@@ -218,8 +218,8 @@ export default {
     infiniteHandler($state) {
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.$route.params.id) {
-            userId = this.$route.params.id
+          if (this.storeUserId) {
+            userId = this.storeUserId
           }else {
             userId = getJWTData.user_id
           }
@@ -257,8 +257,8 @@ export default {
     sendMessage() {
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.$route.params.id) {
-            userId = this.$route.params.id
+          if (this.storeUserId) {
+            userId = this.storeUserId
           }else {
             userId = getJWTData.user_id
           }
