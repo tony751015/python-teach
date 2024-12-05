@@ -194,14 +194,17 @@ export default {
           }
 
           // 頁面初次加載時滾動到底部
-          this.$nextTick(() => {
-            this.activeProgress = false;
-            this.activeKey += 1;
-            const chatWindow = this.$refs.chatWindow;
-            if (chatWindow) {
-              chatWindow.scrollTop = chatWindow.scrollHeight;
-            }
-          });
+          setTimeout(() => {
+            this.$nextTick(() => {
+              this.activeProgress = false;
+              this.activeKey += 1;
+              const chatWindow = this.$refs.chatWindow;
+              if (chatWindow) {
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+              }
+            });
+          },500)
+          
         })
         .catch((err) => {
           this.detectError = true;

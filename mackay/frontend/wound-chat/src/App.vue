@@ -112,6 +112,7 @@ export default {
             status: 'success',
           });
         }
+        this.$router.push('/chat/'+getJWTData.user_id);
       } else {
         // alert('JWT不存在');
         this.updateUserProfile({});
@@ -121,9 +122,9 @@ export default {
           status: 'error',
         });
 
-        // this.$router.push({
-        //   name: 'woundLogin'
-        // })
+        this.$router.push({
+          name: 'woundLogin'
+        })
       }
       // setTimeout(() => {
       //   this.alert_timeout = false;

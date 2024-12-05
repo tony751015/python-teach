@@ -83,7 +83,9 @@ const VUEX_FEATURE = {
             // this.showAlertBlock('success');
           }
 
-          this.$router.push({name: 'chat-list'});
+          // this.$router.push({name: 'chat-list'});
+
+          this.$router.push('/chat/'+res.data.user_id);
         })
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
