@@ -203,7 +203,7 @@ export default {
                 chatWindow.scrollTop = chatWindow.scrollHeight;
               }
             });
-          },500)
+          },1000)
           
         })
         .catch((err) => {

@@ -10,7 +10,7 @@
         </v-col> -->
         <v-col 
           cols="12" 
-          style="height: 150px; width: 100%;">
+          style="height: 180px; width: 100%;">
           <v-layout align-center class="justify-center">
             <v-img 
             max-width="100%"

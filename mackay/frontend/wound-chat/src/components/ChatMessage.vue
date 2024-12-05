@@ -124,7 +124,7 @@ img {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
-  margin-top: 10px;
+  // margin-top: 10px;
   cursor: pointer;
 }
 </style>
