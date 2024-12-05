@@ -149,7 +149,7 @@ export default {
             userId = getJWTData.user_id
           }
       console.log('fetchMessages', this.storeUserId, this.storeUserId);
-      // if (this.storeUserId !== this.storeUserId) {
+      // if (this.storeUserId !== this.$route.params.id) {
       //   alert('Wrong User');
       //   this.routerRedirectTo404();
       //   return;
