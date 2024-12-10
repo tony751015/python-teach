@@ -5,7 +5,7 @@
       dense
       transition="scale-transition"
       :value="alert_timeout"
-      :type="alert.status"> {{ alert.status === 'success' ? '登入成功!' : '自動登出' }}
+      :type="alert.status"> {{ alert.message }}
     </v-alert>
       
     
@@ -88,7 +88,7 @@ export default {
       const getJWT = localStorage.getItem('mackay');
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));
 
-      // console.log('getJWTData_id', getJWTData.user_id);
+      console.log('getJWTData_id', getJWTData.user_id);
       if (getJWT) {
         // alert('JWT存在');
         // console.log('JWT content: ', getJWT)
@@ -111,6 +111,7 @@ export default {
           this.updateAlert({
             show: true,
             status: 'success',
+            message: '登入成功!'
           });
         }
         this.$router.push('/chat/'+getJWTData.user_id);
@@ -121,6 +122,7 @@ export default {
         this.updateAlert({
           show: true,
           status: 'error',
+          message: '請重新登入!'
         });
 
         this.$router.push({

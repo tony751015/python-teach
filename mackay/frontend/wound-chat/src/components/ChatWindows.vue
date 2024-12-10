@@ -141,6 +141,7 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
+      // console.log(JSON.stringify( this.userProfile.name));
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
           if (this.storeUserId) {
@@ -174,7 +175,7 @@ export default {
             this.user_name = '';
           } else {
             this.user_name = res.data.results[0].user_name;
-            localStorage.setItem('user_name', this.user_name);
+            // localStorage.setItem('user_name', this.user_name);
           }
 
           // console.log(JSON.stringify(res.data));
@@ -190,7 +191,7 @@ export default {
             this.user_name = '';
           } else {
             this.user_name = res.data.results[0].user_name;
-            localStorage.setItem('user_name', this.user_name);
+            // localStorage.setItem('user_name', this.user_name);
           }
 
           // 頁面初次加載時滾動到底部
@@ -263,10 +264,12 @@ export default {
             userId = getJWTData.user_id
           }
       if (this.newMessage.trim() !== '') {
-        const user_name = localStorage.getItem('user_name') || '您';
+        const user_name = this.userProfile.name || '您';
+        // console.log('user_name', user_name);
         const messageData = {
           is_carer_user: false,
           user_name: user_name,
+          media_url: '',
           content: this.newMessage,
           content_type: 'text',
           isFirstDate:''

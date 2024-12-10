@@ -107,7 +107,8 @@
             .then((response) => {
               console.log('Message sent successfully:', response.data);
               this.uploadImage = false;
-              const user_name = localStorage.getItem('user_name') || '您';
+              const user_name = this.userProfile.name || '您';
+              // console.log('user_name', user_name); 
               const messageData = {
                 is_carer_user: false,
                 user_name: user_name,

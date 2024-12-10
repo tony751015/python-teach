@@ -40,7 +40,8 @@ const VUEX_FEATURE = {
           name: decoded.name,
           line_id: decoded.sub,
           thumb: decoded.picture,
-          id: getJwtJson.user_id
+          id: getJwtJson.user_id,
+          super_user: getJwtJson.super_user
         }
 
         console.log('autoRelogin', USER_PROFILE);
@@ -51,6 +52,7 @@ const VUEX_FEATURE = {
         this.updateAlert({
           show: true,
           status: 'success',
+          message: '登入成功!'
         });
       } else {
         this.updateUserProfile(null);
@@ -59,6 +61,7 @@ const VUEX_FEATURE = {
         this.updateAlert({
           show: true,
           status: 'error',
+          message: '請重新登入!'
         });
 
         this.$router.push('/');
@@ -90,6 +93,7 @@ const VUEX_FEATURE = {
             const localStorageSaveObj = {
               jwt: getJWT,
               user_id: res.data.user_id,
+              super_user: res.data.super_user
             };
             
             localStorage.setItem('mackay', JSON.stringify(localStorageSaveObj));
@@ -100,7 +104,8 @@ const VUEX_FEATURE = {
               name: decoded.name,
               line_id: decoded.sub,
               thumb: decoded.picture,
-              id: res.data.user_id
+              id: res.data.user_id,
+              super_user: res.data.super_user
             }
 
             this.updateUserProfile(USER_PROFILE);
@@ -109,19 +114,24 @@ const VUEX_FEATURE = {
             this.updateAlert({
               show: true,
               status: 'success',
+              message: '登入成功!'
             });
 
             console.log('LOGIN STATUS: ', this.userLogin);
             console.log('USER_PROFILE: ', USER_PROFILE);
             // localStorage.setItem('userId', USER_PROFILE.id);  
-            localStorage.setItem('userName', USER_PROFILE.name);
-            localStorage.setItem('userThumb', USER_PROFILE.thumb);
+            // localStorage.setItem('userName', USER_PROFILE.name);
+            // localStorage.setItem('userThumb', USER_PROFILE.thumb);
             // this.showAlertBlock('success');
           }
 
           // this.$router.push({name: 'chat-list'});
-
-          this.$router.push('/chat/'+res.data.user_id);
+          if (res.data.super_user == true){
+            this.$router.push('/chat');
+          }else{
+            this.$router.push('/chat/'+res.data.user_id);
+          }
+          
         })
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
@@ -131,6 +141,7 @@ const VUEX_FEATURE = {
           this.updateAlert({
             show: true,
             status: 'error',
+            message: '請重新登入!'
           });
           localStorage.removeItem('mackay');
         });
@@ -143,7 +154,8 @@ const VUEX_FEATURE = {
       localStorage.removeItem('userThumb');
       this.updateAlert({
         show: true,
-        status: 'error',
+        status: 'success',
+        message: '登出成功!'
       });
       setTimeout(() => {
         this.$router.push('/');

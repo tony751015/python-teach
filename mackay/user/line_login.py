@@ -72,6 +72,7 @@ def line_fast_login(request):
       getMember.last_login = timezone.now() + timedelta(hours=8)
       getMember.save()
       getUserAuthId = getMember.id
+      getSuperUser = getMember.is_superuser
       # return Response('ok', status=200)
 
   except User.DoesNotExist:
@@ -87,6 +88,7 @@ def line_fast_login(request):
       )
 
       getUserAuthId = createUser.id
+      getSuperUser = createUser.is_superuser
 
       chat_room.objects.create(
         user_id=getUserAuthId,
@@ -97,6 +99,7 @@ def line_fast_login(request):
      "status": "ok",
      "jwt_token": jwtTokenId,
      "user_id": getUserAuthId,
+     "super_user": getSuperUser
   }, status=200)
 
 

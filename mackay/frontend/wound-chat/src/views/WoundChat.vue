@@ -188,11 +188,11 @@ export default {
     },
   },
   mounted() {
-    if (localStorage.getItem('userName')) {
-      this.username = localStorage.getItem('userName');
+    if (this.userProfile.name) {
+      this.username = this.userProfile.name;
     }
-    if (localStorage.getItem('userThumb')) {
-      this.thumb_avatar = localStorage.getItem('userThumb');
+    if (this.userProfile.thumb) {
+      this.thumb_avatar = this.userProfile.thumb;
     }
   }
 };
