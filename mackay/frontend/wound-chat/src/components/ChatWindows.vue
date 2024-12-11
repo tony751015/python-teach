@@ -1,7 +1,7 @@
 <template>
   <v-container class="chat-container">
     <v-dialog v-model="detectError" width="200">
-      <v-alert dense type="error">發生錯誤</v-alert>
+      <v-alert dense type="error"> 發生錯誤 </v-alert>
     </v-dialog>
 
     <div class="px-3">
@@ -23,7 +23,7 @@
           :media_url="msg.media_url"
           :isFirstDate="msg.isFirstDate"
           @image-click="openImagePopup(`${SERVER_PATH}media/${msg.media_url}`)" 
-          @image-click2="openImagePopup(msg.media_url)" 
+          @image-click2="openImagePopup(msg.media_url)"
         ></chat-message>
         <!-- image-click2解決測試時路徑用 -->
       </div>
@@ -57,8 +57,21 @@
         <v-img :src="selectedImage" class="popup-img"></v-img>
       </v-card>
     </v-dialog> -->
-    <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup>
-    <UploadImage :key="activeImgKey" :activeUpload="uploadImage" @close="closeUploadImage" @update:visible="updateVisible" @message-uploaded="handleMessageUploaded"></UploadImage>
+    <ImagePopup
+      :key="`imgpop-${popImgKey}`"
+      :image="selectedImage"
+      :visible="imagePopupVisible"
+      @close="closeImagePopup">
+    </ImagePopup>
+
+    <UploadImage 
+      :key="`imgupload-${uploadImgKey}`"
+      :activeUpload="uploadImage"
+      @close="closeUploadImage"
+      @update:visible="updateVisible"
+      @message-uploaded="handleMessageUploaded">
+    </UploadImage>
+
   </v-container>
 </template>
 
@@ -93,7 +106,8 @@ export default {
       uploadImage: false,
       
       page: 1,
-      activeImgKey: 1,
+      popImgKey: 1,
+      uploadImgKey: 1,
       activeKey: 1,
       infiniteId: 1,
     };
@@ -305,18 +319,21 @@ export default {
     openImagePopup(imageUrl) {
       this.selectedImage = imageUrl;
       this.imagePopupVisible = true;
+      this.popImgKey += 1
+      console.log('openImagePopup', this.imagePopupVisible)
     },
     // 關閉圖片彈窗
-    closeImagePopup() {
-      this.imagePopupVisible = false;
+    closeImagePopup(value) {
+      this.imagePopupVisible = value;
       this.selectedImage = '';
+      this.popImgKey += 1
     },
     updateVisible(val) {
       this.imagePopupVisible = val
     },
     openUploadImage() {
       this.uploadImage = true;
-      this.activeImgKey += 1
+      this.uploadImgKey += 1
     },
     closeUploadImage() {
       this.uploadImage = false;

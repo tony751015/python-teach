@@ -190,6 +190,11 @@ export default {
 .row {
   margin: 0 !important;
 }
+
+.v-dialog {
+  /* v-dialog樣式寫在這裡。 */
+}
+
 .login-alert{
   position: fixed;
   top: 50px;  

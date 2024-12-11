@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.response import Response
 from django.db.models.functions import TruncDate
 # 抓取chat的 model.py 的 chat_record table
-from .models import chat_record
+from .models import chat_record, chat_room
 from django.db.models import Q, F, Func, Value, CharField
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
@@ -63,6 +63,15 @@ def chat_record_list(request):
       recordQuery = chat_record.objects.filter(Q(create_user=user_id)).annotate(
         create_date_truncated=TruncDate('create_date')
       )
+
+      try:
+        findChatRoom = chat_room.objects.get(user_id=user_id)
+      except chat_room.DoesNotExist:
+        return Response('no found', status=404)
+      except:
+        return Response('error', status=404)
+      
+      chatRoomPath = findChatRoom.room_path
       recordCount = recordQuery.count() # 找到的資料數量
       # recordData = recordQuery.order_by('-create_date').annotate(record_id=F('id')).values_list('record_id', 'content', 'content_type', 'create_date', 'is_carer_user') # 取出指定Field
 
@@ -92,11 +101,8 @@ def chat_record_list(request):
 
         # 上面完成後 在更新currentLoopDate 為當前Loop日期
         currentLoopDate = itemsDate
-        if DEBUG:
-          print('check 1', currentLoopDate)
         eachUserId = User.objects.get(id=user_id) # 取得每筆資料的User檔案，因為id是唯一，所以用GET
-        if DEBUG:
-          print('check 2', eachUserId)
+
 
         getUserName = eachUserId.name # 會員名稱
         getUserGender = eachUserId.gender # 會員性別
@@ -116,9 +122,10 @@ def chat_record_list(request):
       try:
         p = Paginator(recordData, size) 
         page1 = p.page(page)
-        final = page1.object_list 
+        final = page1.object_list
         results = {
           "count": recordCount,
+          "room_path": chatRoomPath,
           "results": final
         }
         return Response(results, status=200)
@@ -127,6 +134,7 @@ def chat_record_list(request):
       except PageNotAnInteger:
         results = {
           "count": recordCount,
+          "room_path": chatRoomPath,
           "results": []
         }
         return Response(results, status=200)
@@ -135,6 +143,7 @@ def chat_record_list(request):
       except EmptyPage:
         results = {
           "count": recordCount,
+          "room_path": chatRoomPath,
           "results": []
         }
         return Response(results, status=200)
