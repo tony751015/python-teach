@@ -73,6 +73,8 @@ def line_fast_login(request):
       getMember.save()
       getUserAuthId = getMember.id
       getSuperUser = getMember.is_superuser
+      getRoomPath = chat_room.objects.get(user_id=getUserAuthId).room_path
+      print(getRoomPath)
       # return Response('ok', status=200)
 
   except User.DoesNotExist:
@@ -90,16 +92,18 @@ def line_fast_login(request):
       getUserAuthId = createUser.id
       getSuperUser = createUser.is_superuser
 
-      chat_room.objects.create(
+      creatChatRoom = chat_room.objects.create(
         user_id=getUserAuthId,
         room_path=f"{getUserAuthId}-{newUUID4}"
       )
+      getRoomPath = creatChatRoom.room_path
 
   return Response({
      "status": "ok",
      "jwt_token": jwtTokenId,
      "user_id": getUserAuthId,
-     "super_user": getSuperUser
+     "super_user": getSuperUser,
+     "room_path": getRoomPath
   }, status=200)
 
 

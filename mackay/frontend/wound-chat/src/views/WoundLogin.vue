@@ -22,13 +22,13 @@
         <v-col cols="12" md="12" class="v-col colRight">
           
           <v-card class="pa-5 text-center">
-            <v-card-title class="headline font-weight-bold text-center custom-title">傷造口遠距照護諮詢平台</v-card-title>
+            <v-card-title class="headline font-weight-bold text-center custom-title">Online platform for wound ostomy care</v-card-title>
             <v-chip 
              closed 
              close-label
              color="v-dark"
              class="white--text mb-3"
-             >會員快速登入</v-chip>
+             >Quick login</v-chip>
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
@@ -55,7 +55,7 @@
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
-                  <span style="flex: 1; text-align: center;">LINE 快速登入 / 註冊</span>
+                  <span style="flex: 1; text-align: center;">Log in/Sign up with LINE</span>
                 </v-btn>
 
                 <v-btn 
@@ -70,7 +70,7 @@
                     <!-- <v-icon left>mdi-google</v-icon> -->
                      <v-img left class="iconImg" src="../assets/google.png"></v-img>
                   </div>
-                  <span style="flex: 1; text-align: center;">Google 快速登入 / 註冊</span>
+                  <span style="flex: 1; text-align: center;">Log in/Sign up with GOOGLE</span>
                 </v-btn>
               </template>
             </v-card-text>

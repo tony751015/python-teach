@@ -1,3 +1,205 @@
 <template>
-    <div>chat-list</div>
-</template>
+    <div>
+      <!-- Topbar 區域 -->
+      <v-app-bar color="main-green" elevation="0" dense>
+        <v-responsive class="d-sm-none">
+          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        </v-responsive>
+        
+        <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
+        <v-spacer>
+          <template>
+            <v-tabs align-with-title background-color="transparent">
+            </v-tabs>
+          </template>
+        </v-spacer>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal">
+              <v-avatar size="30">
+                <v-img :src="thumb_avatar"></v-img>
+              </v-avatar>
+              <span class="ml-2">{{ username }}</span>
+              <v-icon right>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-list dense>
+            <v-list-item>
+              <v-list-item-title class="logoutBtn" @click="logout">log out</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-app-bar>
+      
+      <!-- 主要內容區塊 -->
+      <v-container class="chat-list-container">
+        <!-- 搜尋區域 -->
+        <v-text-field
+          v-model="searchQuery"
+          prepend-icon="mdi-magnify"
+          label="Search for a chat"
+          dense
+          outlined
+          color="main-green"
+          placeholder="Search for a chat"
+          hide-details
+        ></v-text-field>
+        
+        <!-- 用戶列表 -->
+        <v-list>
+          <v-subheader>病患總數 {{ patientCount }}</v-subheader>
+          
+          <v-list-item
+            v-for="patient in filteredPatients"
+            :key="patient.id"
+            class="patient-item"
+          >
+            <v-list-item-avatar size="56">
+              <v-img :src="patient.user_avatar || 'default-avatar.jpg'"></v-img>
+            </v-list-item-avatar>
+            
+            <v-list-item-content>
+              <v-list-item-title>{{ patient.user_name }}</v-list-item-title>
+              <v-list-item-subtitle>
+                <span v-if="patient.last_message && patient.last_message.content_type === 'text'">
+                  {{ patient.last_message.content }}
+                </span>
+                <span v-else-if="patient.last_message && patient.last_message.content_type === 'image'">
+                  傳送了一張圖片
+                  <v-btn icon @click="openImagePopup(`${SERVER_PATH}media/${patient.last_message.media_url}`)">
+                    <v-icon>mdi-image</v-icon>
+                  </v-btn>
+                </span>
+                <span v-else>
+                  無訊息
+                </span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            
+            <v-list-item-action>
+              <v-btn icon>
+                <v-icon>mdi-pin</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
+        <!-- 圖片彈出組件 -->
+      <ImagePopup
+       :key="`imgpop-${popImgKey}`" 
+       :visible="imageDialog" 
+       :image="imageSrc" 
+       @close="closeImagePopup">
+      </ImagePopup>
+      </v-container>
+  
+      
+    </div>
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  import ImagePopup from '../components/ImagePopup.vue';
+  
+  export default {
+    components: {
+      ImagePopup
+    },
+    data() {
+      return {
+        username: '使用者',
+        thumb_avatar: '',
+        searchQuery: '',
+        imageDialog: false,
+        imageSrc: '',
+        popImgKey: 1,
+        patients: [],
+        patientCount: 0
+      };
+    },
+    computed: {
+      filteredPatients() {
+        return this.patients.filter(patient => 
+          patient.user_name.includes(this.searchQuery) || 
+          patient.user_id.toString().includes(this.searchQuery)
+        );
+      }
+    },
+    methods: {
+      openImagePopup(imageUrl) {
+        console.log('openImagePopup', imageUrl);
+        this.imageSrc = imageUrl;
+        this.imageDialog = true;
+        this.popImgKey += 1;
+      },
+      closeImagePopup() {
+        this.imageDialog = false;
+        this.imageSrc = '';
+        this.popImgKey += 1;
+      }
+    },
+    mounted() {
+      const userId = this.storeUserId;
+      axios.put('http://127.0.0.1:8000/api/chat/room', {
+        user_id: userId,
+        page: "1",
+        size: "5"
+      })
+      .then(response => {
+        this.patients = response.data.results;
+        this.patientCount = response.data.count;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  
+      if (this.userProfile.name) {
+        this.username = this.userProfile.name;
+      }
+      if (this.userProfile.thumb) {
+        this.thumb_avatar = this.userProfile.thumb;
+      }
+    }
+  };
+  </script>
+  
+  <style scoped>
+  .chat-list-container {
+    height: calc(100vh - 48px);
+    overflow: auto;
+  }
+  .v-toolbar__content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .main-logo {
+    height: 100%;
+    padding: 10px 0px;
+  }
+  .patient-item:hover {
+    background-color: #f0f0f0;
+  }
+  .logoutBtn {
+    cursor: pointer;
+    text-align: center;
+  }
+  .image-popup {
+    background-color: rgba(0, 0, 0, 0.8); 
+    width: calc(9/12 * 100vw); 
+    height: 100vh;
+    position: relative;
+  }
+  
+  .popup-img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    z-index: 101;
+  }
+  </style>

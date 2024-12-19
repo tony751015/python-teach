@@ -35,7 +35,7 @@
         </template>
         <v-list dense>
           <v-list-item>
-            <v-list-item-title class="logoutBtn" @click="logout">登出</v-list-item-title>
+            <v-list-item-title class="logoutBtn" @click="logout">log out</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -61,10 +61,11 @@
             <v-text-field
               v-model="searchChat"
               prepend-icon="mdi-magnify"
-              label="搜尋對話"
+              label="Search for a chat"
               dense
               outlined
-              placeholder="搜尋對話"
+              color="main-green"
+              placeholder="Search for a chat"
               hide-details
               @keyup.enter="performSearch"
               @input="onInput"
@@ -88,7 +89,7 @@
               <template v-else>
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>沒有搜尋結果</v-list-item-title>
+                    <v-list-item-title>No records found</v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
               </template>

@@ -12,14 +12,14 @@
             @click="updateCurrentAlbum(0)"
           >
           <v-icon>mdi-upload</v-icon>
-          已上傳傷口照片
+          Uploaded wound photo
         </v-tab>
         <v-tab
             :color="localCurrentAlbum === 1 ? 'primary' : ''"
             @click="updateCurrentAlbum(1)"
           >
           <v-icon>mdi-magnify-expand</v-icon>
-          AI傷口範圍偵測
+          AI wound area detection
         </v-tab>
       </v-tabs>
     </v-toolbar>
@@ -42,7 +42,13 @@
         </div>
       </v-hover>
     </div>
-    <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup>
+    <!-- <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup> -->
+    <ImagePopup
+      :key="`imgpop-${popImgKey}`"
+      :image="selectedImage"
+      :visible="imagePopupVisible"
+      @close="closeImagePopup">
+    </ImagePopup>
   </v-col>
 </template>
 
@@ -71,6 +77,7 @@ export default {
   data() {
   return {
     selectedImage: '',
+    popImgKey: 1,
     imagePopupVisible: false,
     localCurrentAlbum: this.currentAlbum
   };
@@ -81,11 +88,13 @@ export default {
     if (event.target.classList.contains('v-btn')) return;
       this.selectedImage = imageUrl;
       this.imagePopupVisible = true;
+      this.popImgKey += 1;
     },
     // 關閉圖片彈窗
     closeImagePopup() {
       this.imagePopupVisible = false;
       this.selectedImage = '';
+      this.popImgKey += 1;
     },
     updateVisible(val) {
       this.imagePopupVisible = val

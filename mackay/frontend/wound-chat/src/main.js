@@ -41,7 +41,8 @@ const VUEX_FEATURE = {
           line_id: decoded.sub,
           thumb: decoded.picture,
           id: getJwtJson.user_id,
-          super_user: getJwtJson.super_user
+          super_user: getJwtJson.super_user,
+          room_path: getJwtJson.room_path
         }
 
         console.log('autoRelogin', USER_PROFILE);
@@ -52,7 +53,7 @@ const VUEX_FEATURE = {
         this.updateAlert({
           show: true,
           status: 'success',
-          message: '登入成功!'
+          message: 'Login successful!'
         });
       } else {
         this.updateUserProfile(null);
@@ -61,7 +62,7 @@ const VUEX_FEATURE = {
         this.updateAlert({
           show: true,
           status: 'error',
-          message: '請重新登入!'
+          message: 'Please log in again!'
         });
 
         this.$router.push('/');
@@ -93,7 +94,8 @@ const VUEX_FEATURE = {
             const localStorageSaveObj = {
               jwt: getJWT,
               user_id: res.data.user_id,
-              super_user: res.data.super_user
+              super_user: res.data.super_user,
+              room_path: res.data.room_path
             };
             
             localStorage.setItem('mackay', JSON.stringify(localStorageSaveObj));
@@ -105,7 +107,8 @@ const VUEX_FEATURE = {
               line_id: decoded.sub,
               thumb: decoded.picture,
               id: res.data.user_id,
-              super_user: res.data.super_user
+              super_user: res.data.super_user,
+              room_path: res.data.room_path
             }
 
             this.updateUserProfile(USER_PROFILE);
@@ -114,7 +117,7 @@ const VUEX_FEATURE = {
             this.updateAlert({
               show: true,
               status: 'success',
-              message: '登入成功!'
+              message: 'Login successful!'
             });
 
             console.log('LOGIN STATUS: ', this.userLogin);
@@ -129,7 +132,7 @@ const VUEX_FEATURE = {
           if (res.data.super_user == true){
             this.$router.push('/chat');
           }else{
-            this.$router.push('/chat/'+res.data.user_id);
+            this.$router.push('/chat/'+res.data.room_path);
           }
           
         })
@@ -141,7 +144,7 @@ const VUEX_FEATURE = {
           this.updateAlert({
             show: true,
             status: 'error',
-            message: '請重新登入!'
+            message: 'Please log in again!'
           });
           localStorage.removeItem('mackay');
         });
@@ -155,7 +158,7 @@ const VUEX_FEATURE = {
       this.updateAlert({
         show: true,
         status: 'success',
-        message: '登出成功!'
+        message: 'Logged out successfully!'
       });
       setTimeout(() => {
         this.$router.push('/');

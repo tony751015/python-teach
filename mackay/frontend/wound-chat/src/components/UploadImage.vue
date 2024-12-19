@@ -2,8 +2,8 @@
     <v-dialog v-model="uploadImage" max-width="500px" scrollable>
       <v-card>
         <v-card-title class="font-large font-weight-bold text-center">
-          請上傳傷口照片
-          <span class="font-weight-regular font-small grey--text">僅支援JPG、PNG圖片格式(檔案限8MB內)</span>
+          Please upload a photo
+          <span class="font-weight-regular font-small grey--text">Only accept JPG and PNG image files(Maximum file size: 8MB)</span>
         </v-card-title>
         
         <v-card-text>
@@ -38,14 +38,14 @@
                   <div class="uploader-interface">
                     <v-icon size="40" color="#dcdcdc">mdi-cloud-upload-outline</v-icon>
                     <p :class="{ 'error-message': showErrorMsg }">{{ fileTips }}</p>
-                    <p class="text-caption text-grey--text">僅支援 JPG/PNG 格式，最大 8 MB</p>
+                    <p class="text-caption text-grey--text">Only accept JPG and PNG image files，Maximum file size: 8MB</p>
                   </div>
                 </div>
             </v-container>
         </v-card-text>
   
         <v-card-actions class="justify-end">
-          <v-btn text color="v-dark" @click="handleClose">取消</v-btn>
+          <v-btn text color="v-dark" @click="handleClose">Cancel</v-btn>
           <v-btn color="primary" text :disabled="!canUpload" @click="startUpload">
             <v-progress-circular
               v-if="showLoading"
@@ -53,7 +53,7 @@
               color="white"
               size="20"
             ></v-progress-circular>
-            <span v-else>確認上傳</span>
+            <span v-else>Submit upload</span>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -73,7 +73,7 @@
         file: null, // 上傳檔案物件
         filePreviewSrc: "", // 圖片預覽 URL
         fileOnDrag: false, // 是否處於拖曳狀態
-        fileTips: "拖曳或點擊上傳圖片", // 提示訊息
+        fileTips: "Drag and drop or click to upload images", // 提示訊息
         showErrorMsg: false, // 是否顯示錯誤訊息
         canUpload: false, // 是否允許上傳
         showLoading: false, // 傳送按鈕的載入狀態
@@ -158,13 +158,13 @@
                   this.file = file; // 設置上傳檔案物件
                 } else {
                   this.showErrorMsg = true;
-                  this.fileTips = "檔案過大，需小於8MB";
+                  this.fileTips = "File size must be under 8MB";
                   this.file = null;
                 }
               };
             } else {
               this.showErrorMsg = true;
-              this.fileTips = "不正確的檔案類型";
+              this.fileTips = "File format is not supported";
             }
         },
         handleDragEnter(event) {

@@ -111,7 +111,7 @@ export default {
           this.updateAlert({
             show: true,
             status: 'success',
-            message: '登入成功!'
+            message: 'Login successful!'
           });
         }
         this.$router.push('/chat/'+getJWTData.user_id);
@@ -122,7 +122,7 @@ export default {
         this.updateAlert({
           show: true,
           status: 'error',
-          message: '請重新登入!'
+          message: 'Please log in again!'
         });
 
         this.$router.push({

@@ -6,7 +6,9 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <!-- <v-img fill :src="image" class="popup-img"></v-img> -->
-      <img :src="image" class="popup-img" alt="">
+       <div class="imgbox">
+        <img :src="image" class="popup-img" alt="">
+       </div>
     </v-card>
   </v-dialog>
 </template>
@@ -74,21 +76,29 @@ export default {
     /* width: calc(9/12 * 100vw); 
     height: 100vh; */
     /* width: 65%; */
-    border: 10px solid #f5f5f5;
+    /* border: 10px solid #f5f5f5; */
     position: relative;
     margin: auto;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    
  }
-
+ .imgbox {
+    width: 100%;
+    height: 100%;
+    border: 10px solid #f5f5f5;
+    aspect-ratio: 4/3;
+    overflow: auto;
+ }
  .popup-img {
     width: 100%;
-    object-fit: fill;
-    aspect-ratio: 4/3;
+    /* object-fit: fill; */
  }
 
  .close-btn {
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: 0px;
+    right: 0px;
     /* color: white; */
     z-index: 104;
     box-shadow: unset;

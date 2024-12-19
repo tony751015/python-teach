@@ -1,7 +1,7 @@
 <template>
   <v-container class="chat-container">
     <v-dialog v-model="detectError" width="200">
-      <v-alert dense type="error"> 發生錯誤 </v-alert>
+      <v-alert dense type="error"> Error </v-alert>
     </v-dialog>
 
     <div class="px-3">
@@ -9,8 +9,8 @@
       
       <div ref="chatWindow" class="chat-window">
         <infinite-loading direction="top" @infinite="infiniteHandler" :identifier='infiniteId'>
-          <div slot="no-more">沒有更多留言了</div>
-          <div slot="no-results">沒有更多留言了</div>
+          <div slot="no-more">There are no more comments</div>
+          <div slot="no-results">There are no more comments</div>
         </infinite-loading>
 
         <chat-message
@@ -32,9 +32,9 @@
       <v-layout row>
         <v-text-field
           v-model="newMessage"
-          placeholder="請輸入留言"
+          placeholder="Type your message here"
           outlined
-          hint="Shift + Enter 換行 Enter 發送訊息"
+          hint="Shift + Enter for a new line, Enter to send: "
           persistent-hint
           append-icon="mdi-emoticon-outline"
           @keyup.enter="sendMessage"
@@ -42,7 +42,7 @@
         ></v-text-field>
         <v-btn @click="openUploadImage" elevation="0" color="primary" class="upload-btn main-green">
           <v-icon>mdi-paperclip</v-icon>
-        上傳傷口照片
+          Upload a wound photo
         </v-btn>
       </v-layout>
       
@@ -169,7 +169,8 @@ export default {
       //   this.routerRedirectTo404();
       //   return;
       // }
-      if (userId != this.$route.params.id) {
+      const chatRoomId = this.$route.params.id.split('-')[0];
+      if (userId != chatRoomId) {
         // alert('Wrong User');
         this.routerRedirectTo404();
         return;

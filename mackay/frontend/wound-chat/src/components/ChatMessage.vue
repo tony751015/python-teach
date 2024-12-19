@@ -11,7 +11,7 @@
         </v-card>
         
       </v-col>
-      <v-col cols="5"  v-else-if="content_type === 'image'">
+      <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image'">
         <v-card 
           color = "point-1"
           :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
@@ -20,7 +20,7 @@
         </v-card>
       </v-col>
       <!-- <v-col cols="5"  v-else-if="content_type === 'image2'">是解決 -->
-      <v-col cols="5"  v-else-if="content_type === 'image2'">
+      <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image2'">
         <v-card 
           color = "point-1"
           :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
@@ -91,7 +91,16 @@ export default {
   max-width: 75%;
   padding: 0;
 }
-
+.img_col{
+  display: flex;
+  justify-content: flex-end;
+}
+.img_col .v-card{
+  line-height: 0 !important;
+}
+.img_col img{
+  max-height: 450px;
+}
 .v-card__text {
   padding: 10px 15px;
   overflow-wrap: break-word;
