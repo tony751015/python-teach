@@ -83,59 +83,65 @@
             </v-list-item-action>
           </v-list-item> -->
           <v-list-item
-          v-for="patient in filteredPatients"
-          :key="patient.id"
-          class="patient-item"
-        >
-          <v-list-item-avatar size="56">
-            <v-img :src="patient.user_avatar || 'default-avatar.jpg'"></v-img>
-          </v-list-item-avatar>
+            v-for="patient in filteredPatients"
+            :key="patient.id"
+            class="patient-item"
+          >
+            <v-list-item-avatar size="56">
+              <v-img :src="patient.user_avatar || require('@/assets/user.png')"></v-img>
+            </v-list-item-avatar>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ patient.user_name }}</v-list-item-title>
-            <v-list-item-subtitle>
-              <span
-                v-if="
-                  patient.last_message &&
-                  patient.last_message.content_type === 'text'
-                "
-              >
-                {{ patient.last_message.content }}
-              </span>
-              <span
-                v-else-if="
-                  patient.last_message &&
-                  patient.last_message.content_type === 'image'
-                "
-              >
-                傳送了一張圖片
-                <v-btn
-                  icon
-                  @click="openImagePopup(
-                    `${SERVER_PATH}media/${patient.last_message.media_url}`
-                  )"
+            <v-list-item-content>
+              <v-list-item-title>{{ patient.user_name }}</v-list-item-title>
+              <v-list-item-subtitle>
+                <span
+                  v-if="
+                    patient.last_message &&
+                    patient.last_message.content_type === 'text'
+                  "
                 >
-                  <v-icon>mdi-image</v-icon>
-                </v-btn>
-              </span>
-              <span v-else>無訊息</span>
-            </v-list-item-subtitle>
-          </v-list-item-content>
+                  {{ patient.last_message.content }}
+                </span>
+                <span
+                  v-else-if="
+                    patient.last_message &&
+                    patient.last_message.content_type === 'image'
+                  "
+                >
+                  傳送了一張圖片
+                  <v-btn
+                    icon
+                    @click="openImagePopup(
+                      `${SERVER_PATH}media/${patient.last_message.media_url}`
+                    )"
+                  >
+                    <v-icon>mdi-image</v-icon>
+                  </v-btn>
+                </span>
+                <span v-else>無訊息</span>
+              </v-list-item-subtitle>
+            </v-list-item-content>
 
-          <v-list-item-action>
-            <v-btn icon>
-              <v-icon>mdi-pin</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-        <infinite-loading 
-          @infinite="loadMorePatients"
-          spinner="bubbles"
-          direction="bottom"
-        >
-          <span slot="no-more">No more data</span>
-          <span slot="no-results">No results found</span>
-        </infinite-loading>
+            <v-list-item-action>
+              <v-btn 
+                fab 
+                elevation="0"
+                :color="patient.pin ? 'main-green' : ''"
+                @click="togglePin(patient)"
+              >
+                <v-icon :color="patient.pin ? 'white' : ''">mdi-pin</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+          <infinite-loading 
+            :identifier="infiniteId"
+            @infinite="loadMorePatients"
+            spinner="bubbles"
+            direction="bottom"
+          >
+            <span slot="no-more">No more data</span>
+            <span slot="no-results">No results found</span>
+          </infinite-loading>
         </v-list>
         <!-- 圖片彈出組件 -->
       <ImagePopup
@@ -170,7 +176,8 @@
         patientCount: 0,
         currentPage: 1,
         pageSize: 2, // 每頁資料數量
-        infiniteId: +new Date() // 確保重置 infinite-loading
+        infiniteId: +new Date(), // 確保重置 infinite-loading
+        pinnedPatients: [], // 存儲已經 pin 的病患 ID
       };
     },
     computed: {
@@ -215,6 +222,47 @@
           console.error("Error loading more patients:", error);
           $state.complete();
         });
+      },
+      togglePin(patient) {
+        const newPinState = !patient.pin;
+        patient.pin = newPinState;
+        axios.put('http://127.0.0.1:8000/api/chat/update_pin', {
+          user_id: this.storeUserId,
+          pin: newPinState,
+          room_path: patient.room_path
+        })
+        .then(() => {
+          if (newPinState) {
+            this.updateAlert({
+              show: true,
+              status: 'success',
+              message: 'Item pinned!'
+            });
+          } else {
+            this.updateAlert({
+              show: true,
+              status: 'success',
+              message: 'Item unpinned!'
+            });
+          }
+          this.reloadPatients();
+        })
+        .catch(error => {
+          console.error("Error updating pin state:", error);
+        });
+      },
+      reloadPatients() {
+        this.currentPage = 1;
+        this.patients = [];
+        this.infiniteId += 1; // 重置 infinite-loading
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.loadMorePatients({
+              loaded: () => {},
+              complete: () => {}
+            });
+          }, 300);
+        });
       }
     },
     mounted() {
@@ -258,6 +306,7 @@
   }
   .patient-item:hover {
     background-color: #f0f0f0;
+    border-radius: 5px;
   }
   .logoutBtn {
     cursor: pointer;
@@ -282,4 +331,11 @@
     color: white;
     z-index: 101;
   }
+  .v-btn:before {
+  opacity: 0 !important;
+}
+
+.v-ripple__container {
+  opacity: 0 !important;
+}
   </style>

@@ -173,6 +173,11 @@ export default {
         this.alert_timeout = true;
         setTimeout(() => {
           this.alert_timeout = false;
+          this.updateAlert({
+            show: false,
+            status: '',
+            message: ''
+          });
         }, 3000);
       }
     },
