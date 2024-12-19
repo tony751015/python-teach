@@ -49,7 +49,7 @@
         <v-list>
           <v-subheader>病患總數 {{ patientCount }}</v-subheader>
           
-          <v-list-item
+          <!-- <v-list-item
             v-for="patient in filteredPatients"
             :key="patient.id"
             class="patient-item"
@@ -81,7 +81,61 @@
                 <v-icon>mdi-pin</v-icon>
               </v-btn>
             </v-list-item-action>
-          </v-list-item>
+          </v-list-item> -->
+          <v-list-item
+          v-for="patient in filteredPatients"
+          :key="patient.id"
+          class="patient-item"
+        >
+          <v-list-item-avatar size="56">
+            <v-img :src="patient.user_avatar || 'default-avatar.jpg'"></v-img>
+          </v-list-item-avatar>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ patient.user_name }}</v-list-item-title>
+            <v-list-item-subtitle>
+              <span
+                v-if="
+                  patient.last_message &&
+                  patient.last_message.content_type === 'text'
+                "
+              >
+                {{ patient.last_message.content }}
+              </span>
+              <span
+                v-else-if="
+                  patient.last_message &&
+                  patient.last_message.content_type === 'image'
+                "
+              >
+                傳送了一張圖片
+                <v-btn
+                  icon
+                  @click="openImagePopup(
+                    `${SERVER_PATH}media/${patient.last_message.media_url}`
+                  )"
+                >
+                  <v-icon>mdi-image</v-icon>
+                </v-btn>
+              </span>
+              <span v-else>無訊息</span>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+
+          <v-list-item-action>
+            <v-btn icon>
+              <v-icon>mdi-pin</v-icon>
+            </v-btn>
+          </v-list-item-action>
+        </v-list-item>
+        <infinite-loading 
+          @infinite="loadMorePatients"
+          spinner="bubbles"
+          direction="bottom"
+        >
+          <span slot="no-more">No more data</span>
+          <span slot="no-results">No results found</span>
+        </infinite-loading>
         </v-list>
         <!-- 圖片彈出組件 -->
       <ImagePopup
@@ -113,7 +167,10 @@
         imageSrc: '',
         popImgKey: 1,
         patients: [],
-        patientCount: 0
+        patientCount: 0,
+        currentPage: 1,
+        pageSize: 2, // 每頁資料數量
+        infiniteId: +new Date() // 確保重置 infinite-loading
       };
     },
     computed: {
@@ -135,22 +192,45 @@
         this.imageDialog = false;
         this.imageSrc = '';
         this.popImgKey += 1;
+      },
+      loadMorePatients($state) {
+        console.log("Loading more patients...");
+        axios.put('http://127.0.0.1:8000/api/chat/room', {
+          user_id: this.storeUserId,
+          page: this.currentPage,
+          size: this.pageSize
+        })
+        .then(response => {
+          console.log(response.data.results);
+          if (response.data.results.length) {
+            this.patients.push(...response.data.results);
+            this.patientCount = response.data.count;
+            this.currentPage += 1;
+            $state.loaded();
+          } else {
+            $state.complete();
+          }
+        })
+        .catch(error => {
+          console.error("Error loading more patients:", error);
+          $state.complete();
+        });
       }
     },
     mounted() {
-      const userId = this.storeUserId;
-      axios.put('http://127.0.0.1:8000/api/chat/room', {
-        user_id: userId,
-        page: "1",
-        size: "5"
-      })
-      .then(response => {
-        this.patients = response.data.results;
-        this.patientCount = response.data.count;
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+      // const userId = this.storeUserId;
+      // axios.put('http://127.0.0.1:8000/api/chat/room', {
+      //   user_id: userId,
+      //   page: "1",
+      //   size: "5"
+      // })
+      // .then(response => {
+      //   this.patients = response.data.results;
+      //   this.patientCount = response.data.count;
+      // })
+      // .catch(error => {
+      //   console.error('Error fetching data:', error);
+      // });
   
       if (this.userProfile.name) {
         this.username = this.userProfile.name;
