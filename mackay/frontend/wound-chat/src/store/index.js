@@ -33,6 +33,9 @@ export default new Vuex.Store({
       st.user_profile = payload;
     },
     UPDATE_USER_ID(st, payload) {
+      // if (st.user_profile) {
+      //   st.user_profile.id = payload;
+      // }
       st.user_profile.id = payload;
       // console.log('UPDATE_USER_ID: ', st.user_profile.id);
     },

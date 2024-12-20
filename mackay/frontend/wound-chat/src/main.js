@@ -30,6 +30,7 @@ const VUEX_FEATURE = {
     }),
     autoRelogin() {
       const getJwt = localStorage.getItem('mackay');
+
       const getJwtJson = JSON.parse(getJwt)
       console.log('Check JWT', getJwtJson)
 
@@ -47,9 +48,12 @@ const VUEX_FEATURE = {
 
         console.log('autoRelogin', USER_PROFILE);
 
+        this.updateUserLogin(true);
         this.updateUserProfile(USER_PROFILE);
         this.updateUserId(USER_PROFILE.id);
-        this.updateUserLogin(true);
+        // if (USER_PROFILE) {
+        //   this.updateUserId(USER_PROFILE.id);
+        // }
         this.updateAlert({
           show: true,
           status: 'success',
