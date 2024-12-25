@@ -42,7 +42,7 @@
         ></v-text-field>
         <v-btn @click="openUploadImage" elevation="0" color="primary" class="upload-btn main-green">
           <v-icon>mdi-paperclip</v-icon>
-          Upload a wound photo
+          Upload
         </v-btn>
       </v-layout>
       
@@ -158,13 +158,13 @@ export default {
       // console.log(JSON.stringify( this.userProfile.name));
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.storeUserId) {
-            userId = this.storeUserId
+          if (this.userProfile.id) {
+            userId = this.userProfile.id
           }else {
             userId = getJWTData.user_id
           }
-      console.log('fetchMessages', this.storeUserId, this.storeUserId);
-      // if (this.storeUserId !== this.$route.params.id) {
+      console.log('fetchMessages', this.userProfile.id, this.userProfile.id);
+      // if (this.userProfile.id !== this.$route.params.id) {
       //   alert('Wrong User');
       //   this.routerRedirectTo404();
       //   return;
@@ -234,8 +234,8 @@ export default {
     infiniteHandler($state) {
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.storeUserId) {
-            userId = this.storeUserId
+          if (this.userProfile.id) {
+            userId = this.userProfile.id
           }else {
             userId = getJWTData.user_id
           }
@@ -273,8 +273,8 @@ export default {
     sendMessage() {
       let userId
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.storeUserId) {
-            userId = this.storeUserId
+          if (this.userProfile.id) {
+            userId = this.userProfile.id
           }else {
             userId = getJWTData.user_id
           }

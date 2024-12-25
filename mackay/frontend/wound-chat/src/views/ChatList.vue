@@ -37,17 +37,17 @@
     <v-text-field
       v-model="searchQuery"
       prepend-icon="mdi-magnify"
-      label="Search for a chat"
+      label="Search for a patient"
       dense
       outlined
       color="main-green"
-      placeholder="Search for a chat"
+      placeholder="Search for a patient"
       hide-details
     ></v-text-field>
     
     <!-- 用戶列表 -->
     <v-list>
-      <v-subheader>病患總數 {{ patientCount }}</v-subheader>
+      <v-subheader>Patient census: {{ patientCount }}</v-subheader>
       
       <!-- <v-list-item
         v-for="patient in filteredPatients"
@@ -93,7 +93,10 @@
           </v-list-item-avatar>
   
           <v-list-item-content>
-            <v-list-item-title>{{ patient.user_name }}</v-list-item-title>
+            <v-list-item-title>
+              {{ patient.user_name }}
+              <span class="grey--text text--lighten-1 font-small">{{ '(' + patient.user_id + ')'}}</span>
+            </v-list-item-title>
             <v-list-item-subtitle>
               <span
                 v-if="
@@ -111,12 +114,16 @@
               >
                 傳送了一張圖片
                 <v-btn
-                  icon
+                  outlined
+                  color="main-green"
+                  small
+                  class="px-1"
                   @click="openImagePopup(
                     `${SERVER_PATH}media/${patient.last_message.media_url}`
                   )"
                 >
-                  <v-icon>mdi-image</v-icon>
+                  <v-icon class="font-normal">mdi-magnify</v-icon>
+                  photo
                 </v-btn>
               </span>
               <span v-else>無訊息</span>
@@ -141,8 +148,8 @@
           spinner="bubbles"
           direction="bottom"
         >
-          <span slot="no-more">No more data</span>
-          <span slot="no-results">No results found</span>
+          <div slot="no-more" class="infini-note grey--text text--lighten-1 font-small">No more data</div>
+          <div slot="no-results" class="infini-note grey--text text--lighten-1 font-small">No results found</div>
         </infinite-loading>
       </template>
       
@@ -211,7 +218,7 @@
       },
       initPatientsList() {
         axios.put('http://127.0.0.1:8000/api/chat/room', {
-          user_id: this.storeUserId,
+          user_id: this.userProfile.id,
           page: this.currentPage,
           size: this.pageSize
         })
@@ -240,7 +247,7 @@
         if (!this.preloading) {
           console.log("Loading more patients...");
           axios.put('http://127.0.0.1:8000/api/chat/room', {
-            user_id: this.storeUserId,
+            user_id: this.userProfile.id,
             page: this.currentPage,
             size: this.pageSize
           })
@@ -271,7 +278,7 @@
         const newPinState = !patient.pin;
         patient.pin = newPinState;
         axios.put('http://127.0.0.1:8000/api/chat/update_pin', {
-          user_id: this.storeUserId,
+          user_id: this.userProfile.id,
           pin: newPinState,
           room_path: patient.room_path
         })
@@ -334,7 +341,7 @@
       // }
     },
     mounted() {
-      // const userId = this.storeUserId;
+      // const userId = this.userProfile.id;
       // axios.put('http://127.0.0.1:8000/api/chat/room', {
       //   user_id: userId,
       //   page: "1",
@@ -406,4 +413,7 @@
 .v-ripple__container {
   opacity: 0 !important;
 }
+.infini-note {
+  margin-top: 15px;          
+}   
   </style>

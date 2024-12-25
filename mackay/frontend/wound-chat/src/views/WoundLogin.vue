@@ -22,13 +22,13 @@
         <v-col cols="12" md="12" class="v-col colRight">
           
           <v-card class="pa-5 text-center">
-            <v-card-title class="headline font-weight-bold text-center custom-title">Online platform for wound ostomy care</v-card-title>
+            <v-card-title class="headline font-weight-bold text-center custom-title">Online Platform System</v-card-title>
             <v-chip 
              closed 
              close-label
              color="v-dark"
              class="white--text mb-3"
-             >Quick login</v-chip>
+             >Quick login (Log in/Sign up)</v-chip>
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
@@ -55,7 +55,7 @@
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
-                  <span style="flex: 1; text-align: center;">Log in/Sign up with LINE</span>
+                  <span style="flex: 1; text-align: center;">LINE</span>
                 </v-btn>
 
                 <v-btn 
@@ -70,7 +70,7 @@
                     <!-- <v-icon left>mdi-google</v-icon> -->
                      <v-img left class="iconImg" src="../assets/google.png"></v-img>
                   </div>
-                  <span style="flex: 1; text-align: center;">Log in/Sign up with GOOGLE</span>
+                  <span style="flex: 1; text-align: center;">GOOGLE</span>
                 </v-btn>
               </template>
             </v-card-text>
@@ -89,13 +89,13 @@
       fixed
     >
       <v-card-text class=" text-center">
-        <div class="caption">© 2020, MacKay Memorial Hospital     本網站內容為馬偕紀念醫院所有，未經許可請勿轉載。</div>
-        <div class="caption">台灣基督長老教會馬偕醫療財團法人馬偕紀念醫院 著作權所有，並保留一切權利。</div>
+        <div class="caption">© 2020, MacKay Memorial Hospital. All rights reserved. No part of this website may be reproduced without written permission.</div>
+        <div class="caption">Copyright © 2020, Mackay Memorial Hospital, Taiwan Christian Church Presbyterian Mackay Medical Foundation. All rights reserved.</div>
       </v-card-text>
       <v-card-text class="black--text text-center py-0 mb-4">
-        <a class="black--text px-2 caption bdR" href="">馬偕醫院首頁</a>
-        <a class="black--text px-2 caption bdR" href="">FB粉專</a>
-        <a class="black--text px-2 caption" href="">LINE官方帳號</a>
+        <a class="black--text px-2 caption bdR" href="">Homepage</a>
+        <a class="black--text px-2 caption bdR" href="">Facebook</a>
+        <a class="black--text px-2 caption" href="">LINE</a>
       </v-card-text>
     </v-footer>
   </v-app>

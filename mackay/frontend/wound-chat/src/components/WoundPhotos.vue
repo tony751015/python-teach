@@ -125,8 +125,8 @@ export default {
   position: absolute;
   top: 5px;
   right: 5px;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 }
 .delete-btn .v-icon{
   width: 20px;

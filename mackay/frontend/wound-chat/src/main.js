@@ -25,52 +25,65 @@ const VUEX_FEATURE = {
     ...mapMutations({
       updateUserProfile: 'UPDATE_USER_PROFILE',
       updateUserLogin: 'UPDATE_USER_LOGIN',
-      updateUserId: 'UPDATE_USER_ID',
+      // updateUserId: 'UPDATE_USER_ID',
       updateAlert: 'UPDATE_ALERT',
     }),
     autoRelogin() {
-      const getJwt = localStorage.getItem('mackay');
+      const isLoginWithJwt = localStorage.getItem('isLoginWithJwt');
+      if (isLoginWithJwt) {
+        // alert('isLoginWithJwt2');
+        const getJwt = localStorage.getItem('mackay');
 
-      const getJwtJson = JSON.parse(getJwt)
-      console.log('Check JWT', getJwtJson)
+        const getJwtJson = JSON.parse(getJwt)
+        console.log('Check JWT', getJwtJson)
 
-      if (getJwt) {
-        const decoded = jwt_decode(getJwtJson.jwt);
+        if (getJwt) {
+          const decoded = jwt_decode(getJwtJson.jwt);
 
-        const USER_PROFILE = {
-          name: decoded.name,
-          line_id: decoded.sub,
-          thumb: decoded.picture,
-          id: getJwtJson.user_id,
-          super_user: getJwtJson.super_user,
-          room_path: getJwtJson.room_path
+          const USER_PROFILE = {
+            name: decoded.name,
+            line_id: decoded.sub,
+            thumb: decoded.picture,
+            id: getJwtJson.user_id,
+            super_user: getJwtJson.super_user,
+            room_path: getJwtJson.room_path
+          }
+
+          console.log('autoRelogin', USER_PROFILE);
+
+          this.updateUserLogin(true);
+          this.updateUserProfile(USER_PROFILE);
+          // this.updateUserId(USER_PROFILE.id);
+          // if (USER_PROFILE) {
+          //   this.updateUserId(USER_PROFILE.id);
+          // }
+          this.updateAlert({
+            show: true,
+            status: 'success',
+            message: 'Login successful!'
+          });
+        } else {
+          this.updateUserProfile(null);
+          // this.updateUserId(null);
+          this.updateUserLogin(false);
+          this.updateAlert({
+            show: true,
+            status: 'error',
+            message: 'Please login again!'
+          });
+
+          this.$router.push('/');
         }
-
-        console.log('autoRelogin', USER_PROFILE);
-
-        this.updateUserLogin(true);
-        this.updateUserProfile(USER_PROFILE);
-        this.updateUserId(USER_PROFILE.id);
-        // if (USER_PROFILE) {
-        //   this.updateUserId(USER_PROFILE.id);
-        // }
-        this.updateAlert({
-          show: true,
-          status: 'success',
-          message: 'Login successful!'
-        });
-      } else {
-        this.updateUserProfile(null);
-        this.updateUserId(null);
-        this.updateUserLogin(false);
+      }else{
+        this.updateUserProfile(null);  
+        this.updateUserLogin(false);      
         this.updateAlert({
           show: true,
           status: 'error',
-          message: 'Please log in again!'
+          message: 'Please login again!'
         });
-
-        this.$router.push('/');
       }
+     
     },
 
     routerRedirectTo404() {
@@ -103,7 +116,7 @@ const VUEX_FEATURE = {
             };
             
             localStorage.setItem('mackay', JSON.stringify(localStorageSaveObj));
-
+            localStorage.setItem('isLoginWithJwt', true);
             const decoded = jwt_decode(getJWT);
 
             const USER_PROFILE = {
@@ -116,14 +129,14 @@ const VUEX_FEATURE = {
             }
 
             this.updateUserProfile(USER_PROFILE);
-            this.updateUserId(USER_PROFILE.id);
+            // this.updateUserId(USER_PROFILE.id);
             this.updateUserLogin(true);
             this.updateAlert({
               show: true,
               status: 'success',
               message: 'Login successful!'
             });
-
+            
             console.log('LOGIN STATUS: ', this.userLogin);
             console.log('USER_PROFILE: ', USER_PROFILE);
             // localStorage.setItem('userId', USER_PROFILE.id);  
@@ -143,7 +156,7 @@ const VUEX_FEATURE = {
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
           this.updateUserProfile({});
-          this.updateUserId('');
+          // this.updateUserId('');
           this.updateUserLogin(false);
           this.updateAlert({
             show: true,
