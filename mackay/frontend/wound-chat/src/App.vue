@@ -68,7 +68,7 @@ export default {
   }),
 
   created() {
-    // this.autoRelogin();
+   
     // console.log('this.$route.name', this.$route.name);
     // if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
     //   this.detectAutoLoginProcess();
@@ -76,18 +76,15 @@ export default {
   },
 
   mounted() {
-    // this.autoRelogin();
+    this.autoRelogin();
     console.log('this.$route', this.$route);
     console.log('this.$route.name', this.$route.name);
     if (this.$route.path.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
       this.detectAutoLoginProcess();
     }
   },
-  updated() {
-    this.autoRelogin();
-    
-  },
-
+  
+  
   methods: {
     detectAutoLoginProcess() {
       const getJWT = localStorage.getItem('mackay');

@@ -29,6 +29,7 @@ const VUEX_FEATURE = {
       updateAlert: 'UPDATE_ALERT',
     }),
     autoRelogin() {
+      // alert('autoRelogin');
       const isLoginWithJwt = localStorage.getItem('isLoginWithJwt');
       if (isLoginWithJwt) {
         // alert('isLoginWithJwt2');
@@ -73,15 +74,26 @@ const VUEX_FEATURE = {
           });
 
           this.$router.push('/');
+          alert('route to login2');
         }
       }else{
-        this.updateUserProfile(null);  
-        this.updateUserLogin(false);      
-        this.updateAlert({
-          show: true,
-          status: 'error',
-          message: 'Please login again!'
-        });
+        setTimeout(() => {
+          const isLoginWithJwt = localStorage.getItem('isLoginWithJwt');
+          // alert(isLoginWithJwt)
+          if (!isLoginWithJwt) {
+            this.updateUserProfile(null);
+            this.updateUserLogin(false);
+            this.updateAlert({
+              show: true,
+              status: 'error',
+              message: 'Please login again!'
+            });
+            if (this.$route.path != '/'){
+              this.$router.push('/');
+            }
+          }    
+        }, 800);
+        
       }
      
     },
@@ -170,8 +182,7 @@ const VUEX_FEATURE = {
     },
     logout() {
       localStorage.removeItem('mackay');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userThumb');
+      localStorage.removeItem('isLoginWithJwt');
       this.updateAlert({
         show: true,
         status: 'success',
@@ -187,7 +198,7 @@ const VUEX_FEATURE = {
     ...mapGetters({
       userProfile: 'exportUserProfile',
       userLogin: 'exportUserLogin',
-      storeUserId: 'exportUserId',
+      // storeUserId: 'exportUserId',
       alert: 'exportAlert',
     }),
   },
