@@ -2,8 +2,8 @@
     <v-dialog v-model="uploadImage" max-width="500px" scrollable>
       <v-card>
         <v-card-title class="font-large font-weight-bold text-center">
-          Please upload a photo
-          <span class="font-weight-regular font-small grey--text">Only accept JPG and PNG image files(Maximum file size: 8MB)</span>
+          Please upload a photo of the wound
+          <span class="font-weight-regular font-small grey--text">Only accept JPG and PNG image files(Max: 8MB)</span>
         </v-card-title>
         
         <v-card-text>
@@ -38,7 +38,7 @@
                   <div class="uploader-interface">
                     <v-icon size="40" color="#dcdcdc">mdi-cloud-upload-outline</v-icon>
                     <p :class="{ 'error-message': showErrorMsg }">{{ fileTips }}</p>
-                    <p class="text-caption text-grey--text">Only accept JPG and PNG image files，Maximum file size: 8MB</p>
+                    <p class="text-caption text-grey--text">Only accept JPG and PNG image files，Max: 8MB</p>
                   </div>
                 </div>
             </v-container>
