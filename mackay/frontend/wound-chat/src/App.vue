@@ -76,12 +76,12 @@ export default {
   },
 
   mounted() {
-    this.autoRelogin();
     console.log('this.$route', this.$route);
     console.log('this.$route.name', this.$route.name);
     if (this.$route.path.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
       this.detectAutoLoginProcess();
     }
+    this.autoRelogin();
   },
   
   
@@ -113,7 +113,7 @@ export default {
           this.updateAlert({
             show: true,
             status: 'success',
-            message: 'Login successful!'
+            message: 'Login ok!'
           });
         }
         this.$router.push('/chat/'+getJWTData.user_id);

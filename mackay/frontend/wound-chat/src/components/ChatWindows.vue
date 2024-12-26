@@ -39,7 +39,11 @@
           append-icon="mdi-emoticon-outline"
           @keyup.enter="sendMessage"
           class="message-input mb-13 mx-3"
-        ></v-text-field>
+        >
+        </v-text-field>
+        <v-btn @click="sendMessage" elevation="0" color="white" class="send-btn px-1 mr-1" >
+            <v-icon color="main-green">mdi-send</v-icon>
+        </v-btn>
         <v-btn @click="openUploadImage" elevation="0" color="primary" class="upload-btn main-green">
           <v-icon>mdi-paperclip</v-icon>
           Upload
@@ -155,26 +159,35 @@ export default {
   methods: {
     // 獲取訊息列表
     fetchMessages() {
-      // console.log(JSON.stringify( this.userProfile.name));
       let userId
-          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.userProfile.id) {
-            userId = this.userProfile.id
-          }else {
-            userId = getJWTData.user_id
-          }
-      console.log('fetchMessages', this.userProfile.id, this.userProfile.id);
+      let fetch_user_id
+      const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+      if (this.userProfile.super_user){
+         fetch_user_id = this.storeUserId
+      }else {
+         fetch_user_id = this.userProfile.id
+      }
+      if (fetch_user_id) {
+        userId = fetch_user_id
+      }else {
+        userId = getJWTData.user_id
+      }
+      console.log('fetchMessages', this.userProfile.id, this.storeUserId);
       // if (this.userProfile.id !== this.$route.params.id) {
       //   alert('Wrong User');
       //   this.routerRedirectTo404();
       //   return;
       // }
       const chatRoomId = this.$route.params.id.split('-')[0];
-      if (userId != chatRoomId) {
-        // alert('Wrong User');
-        this.routerRedirectTo404();
-        return;
-      }
+      
+      if (!this.userProfile.super_user) {
+            if (userId != chatRoomId) {
+              // alert('Wrong User');
+              this.routerRedirectTo404();
+              return;
+            
+          }
+        }
 
       console.log('fetchMessages 1', userId)
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
@@ -233,12 +246,18 @@ export default {
 
     infiniteHandler($state) {
       let userId
-          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.userProfile.id) {
-            userId = this.userProfile.id
-          }else {
-            userId = getJWTData.user_id
-          }
+      let fetch_user_id
+      const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+      if (this.userProfile.super_user){
+         fetch_user_id = this.storeUserId
+      }else {
+         fetch_user_id = this.userProfile.id
+      }
+      if (fetch_user_id) {
+        userId = fetch_user_id
+      }else {
+        userId = getJWTData.user_id
+      }
       if (!this.preloader) {
         axios.get(GET_API_URL, {
           params: {
@@ -271,12 +290,18 @@ export default {
     },
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
-      let userId;
+      let userId
+      let fetch_user_id
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-      if (this.userProfile.id) {
-        userId = this.userProfile.id;
-      } else {
-        userId = getJWTData.user_id;
+      if (this.userProfile.super_user){
+         fetch_user_id = this.storeUserId
+      }else {
+         fetch_user_id = this.userProfile.id
+      }
+      if (fetch_user_id) {
+        userId = fetch_user_id
+      }else {
+        userId = getJWTData.user_id
       }
       if (this.newMessage.trim() !== '') {
         const user_name = this.userProfile.name || '您';
@@ -383,7 +408,9 @@ export default {
   width: 100%;
   height: auto;
 }
-
+.layout {
+  align-items: baseline;
+}
 .close-btn {
   position: absolute;
   top: 10px;
@@ -391,7 +418,9 @@ export default {
   color: white;
   z-index: 101;
 }
-
+.v-btn.send-btn:hover{
+  background-color: #fff !important;
+}
 .v-dialog__content {
   z-index: 100;
 }

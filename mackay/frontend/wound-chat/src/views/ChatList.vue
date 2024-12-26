@@ -96,7 +96,7 @@
                       photo
                     </v-btn>
                   </span>
-                  <span v-else>無訊息</span>
+                  <span v-else>no message</span>
                 </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
@@ -107,7 +107,7 @@
                   small
                   class="px-1"
                   @click.stop="goChatroom(patient)"
-                >chatroom
+                >Open Chat
                   <v-icon>mdi-arrow-right-bold</v-icon>
                 </v-btn>
               </v-list-item-action>
@@ -163,6 +163,7 @@
   import axios from 'axios';
   import ImagePopup from '../components/ImagePopup.vue';
   import WoundPhotos from '../components/WoundPhotos.vue';
+  import { mapMutations } from 'vuex';
 // import { reject, resolve } from 'core-js/fn/promise';
   
   export default {
@@ -198,9 +199,11 @@
     },
     computed: {
       filteredPatients() {
+        // 根據使用者輸入的搜尋字串過濾病患列表
+        // 如果病患的名字或 ID 包含搜尋字串，則保留該病患
         return this.patients.filter(patient => 
-          patient.user_name.includes(this.searchQuery) || 
-          patient.user_id.toString().includes(this.searchQuery)
+            patient.user_name.includes(this.searchQuery) || 
+            patient.user_id.toString().includes(this.searchQuery)
         );
       }
     },
@@ -349,9 +352,20 @@
       },
       goChatroom(patient) {
         console.log('goChatroom', patient);
-        this.$router.push({ path: `/chat/${patient.room_path}` });
+        this.UPDATE_USER_ID(patient.user_id);
+
+        // 取得 localStorage 中的 mackay
+        const mackayData = JSON.parse(localStorage.getItem('mackay') || '{}');
         
-      }
+        // 更新 user_id
+        mackayData.user_id = patient.user_id;
+        
+        // 將更新後的物件存回 localStorage
+        localStorage.setItem('mackay', JSON.stringify(mackayData));
+
+        this.$router.push({ path: `/chat/${patient.room_path}` });
+      },
+      ...mapMutations(['UPDATE_USER_ID'])
     },
     mounted() {
       // const userId = this.userProfile.id;

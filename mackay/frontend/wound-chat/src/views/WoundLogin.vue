@@ -28,7 +28,7 @@
              close-label
              color="v-dark"
              class="white--text mb-3"
-             >Quick login (Log in/Sign up)</v-chip>
+             >Quick log in/Sign up</v-chip>
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
@@ -55,7 +55,7 @@
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
-                  <span style="flex: 1; text-align: center;">LINE</span>
+                  <span style="flex: 1; text-align: center;">LINE Account</span>
                 </v-btn>
 
                 <v-btn 
@@ -70,7 +70,7 @@
                     <!-- <v-icon left>mdi-google</v-icon> -->
                      <v-img left class="iconImg" src="../assets/google.png"></v-img>
                   </div>
-                  <span style="flex: 1; text-align: center;">GOOGLE</span>
+                  <span style="flex: 1; text-align: center;">GOOGLE Account</span>
                 </v-btn>
               </template>
             </v-card-text>

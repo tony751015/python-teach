@@ -25,7 +25,7 @@ const VUEX_FEATURE = {
     ...mapMutations({
       updateUserProfile: 'UPDATE_USER_PROFILE',
       updateUserLogin: 'UPDATE_USER_LOGIN',
-      // updateUserId: 'UPDATE_USER_ID',
+      updateUserId: 'UPDATE_USER_ID',
       updateAlert: 'UPDATE_ALERT',
     }),
     autoRelogin() {
@@ -54,18 +54,18 @@ const VUEX_FEATURE = {
 
           this.updateUserLogin(true);
           this.updateUserProfile(USER_PROFILE);
-          // this.updateUserId(USER_PROFILE.id);
-          // if (USER_PROFILE) {
-          //   this.updateUserId(USER_PROFILE.id);
-          // }
+          this.updateUserId(USER_PROFILE.id);
+          if (USER_PROFILE) {
+            this.updateUserId(USER_PROFILE.id);
+          }
           this.updateAlert({
             show: true,
             status: 'success',
-            message: 'Login successful!'
+            message: 'Login ok!'
           });
         } else {
           this.updateUserProfile(null);
-          // this.updateUserId(null);
+          this.updateUserId(null);
           this.updateUserLogin(false);
           this.updateAlert({
             show: true,
@@ -82,6 +82,7 @@ const VUEX_FEATURE = {
           // alert(isLoginWithJwt)
           if (!isLoginWithJwt) {
             this.updateUserProfile(null);
+            this.updateUserId(null);
             this.updateUserLogin(false);
             this.updateAlert({
               show: true,
@@ -92,7 +93,7 @@ const VUEX_FEATURE = {
               this.$router.push('/');
             }
           }    
-        }, 800);
+        }, 1000);
         
       }
      
@@ -141,12 +142,12 @@ const VUEX_FEATURE = {
             }
 
             this.updateUserProfile(USER_PROFILE);
-            // this.updateUserId(USER_PROFILE.id);
+            this.updateUserId(USER_PROFILE.id);
             this.updateUserLogin(true);
             this.updateAlert({
               show: true,
               status: 'success',
-              message: 'Login successful!'
+              message: 'Login ok!'
             });
             
             console.log('LOGIN STATUS: ', this.userLogin);
@@ -168,7 +169,7 @@ const VUEX_FEATURE = {
         .catch((err) => {
           console.error('LINE LOGIN Failed:', err);
           this.updateUserProfile({});
-          // this.updateUserId('');
+          this.updateUserId('');
           this.updateUserLogin(false);
           this.updateAlert({
             show: true,
@@ -186,7 +187,7 @@ const VUEX_FEATURE = {
       this.updateAlert({
         show: true,
         status: 'success',
-        message: 'Logged out successfully!'
+        message: 'Logged out ok!'
       });
       setTimeout(() => {
         this.$router.push('/');
@@ -198,7 +199,7 @@ const VUEX_FEATURE = {
     ...mapGetters({
       userProfile: 'exportUserProfile',
       userLogin: 'exportUserLogin',
-      // storeUserId: 'exportUserId',
+      storeUserId: 'exportUserId',
       alert: 'exportAlert',
     }),
   },

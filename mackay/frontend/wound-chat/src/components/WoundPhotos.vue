@@ -34,7 +34,7 @@
             <v-card-title class="text-h6 white--text" style="">
               <v-row class="flex-column" justify="space-between">
                 <div class="align-self-center">
-                  <v-btn v-if="hover" color="primary" class="delete-btn" icon @click.stop="confirmDelete(photo.id)">
+                  <v-btn v-if="hover && !userProfile.super_user" color="primary" class="delete-btn" icon @click.stop="confirmDelete(photo.id)">
                     <v-icon>mdi-trash-can-outline</v-icon>
                   </v-btn>
                 </div>
@@ -183,44 +183,44 @@ export default {
     //   });
     // },
     loadMorePhotos($state) {
-      if (!this.hasMore || this.selectedPatientId === -1) {
-        $state.complete();
-        return;
-      }
-      axios.get('http://127.0.0.1:8000/api/chat/photo', {
-        params: {
-          user_id: this.selectedPatientId,
-          page: this.page,
-          size: this.size
-        }
-      })
-      .then(response => {
-        if (this.localCurrentAlbum === 0) {
-          const newPhotos = response.data.results.map(photo => ({
-            id: photo.record_id,
-            src: photo.media_url
-          }));
-          console.log(response.data.results);
-          if (newPhotos.length > 0) {
-            if (this.page === 1) {
-              this.albums = [{ photos: newPhotos }];
-            } else {
-              this.albums[0].photos.push(...newPhotos);
-            }
-            this.page += 1; // 增加頁數
-            $state.loaded();
-          } else {
-            // alert('沒有更多照片');
-            this.hasMore = false; // 如果沒有新數據，設置 hasMore 為 false
+        console.log($state);
+        if (!this.hasMore || this.selectedPatientId === -1) {
             $state.complete();
-          }
+            return;
         }
-      })
-      .catch(error => {
-        console.error('Error fetching photos:', error);
-        this.hasMore = false; // 在發生錯誤時停止加載
-        $state.complete();
-      });
+        axios.get('http://127.0.0.1:8000/api/chat/photo', {
+            params: {
+                user_id: this.selectedPatientId,
+                page: this.page,
+                size: this.size
+            }
+        })
+        .then(response => {
+            if (this.localCurrentAlbum === 0) {
+                const newPhotos = response.data.results.map(photo => ({
+                    id: photo.record_id,
+                    src: photo.media_url
+                }));
+                console.log(response.data.results);
+                if (newPhotos.length > 0) {
+                    if (this.page === 1) {
+                        this.albums = [{ photos: newPhotos }];
+                    } else {
+                        this.albums[0].photos.push(...newPhotos);
+                    }
+                    this.page += 1; // 增加頁數
+                    if ($state) $state.loaded();
+                } else {
+                    this.hasMore = false; // 如果沒有新數據，設置 hasMore 為 false
+                    if ($state) $state.complete();
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching photos:', error);
+            this.hasMore = false; // 在發生錯誤時停止加載
+            if ($state) $state.complete();
+        });
     },
     // loadMorePhotos($state) {
     //   console.log(this.hasMore);
@@ -253,7 +253,7 @@ export default {
       this.$emit('update:currentAlbum', index);
     },
     confirmDelete(photoId) {
-      if (confirm('確定要刪除這張照片嗎？')) {
+      if (confirm('Are you sure you want to delete this photo？')) {
         axios.delete(`http://127.0.0.1:8000/api/chat/photo`, {
           data: {
             user_id: this.selectedPatientId,
@@ -263,18 +263,32 @@ export default {
         .then(() => {
           const album = this.albums[this.currentAlbum];
           album.photos = album.photos.filter((photo) => photo.id !== photoId);
-          alert('照片已刪除');
+          alert('The photo has been deleted.');
         })
         .catch(error => {
           console.error('Error deleting photo:', error);
-          alert('刪除失敗，請重試');
+          alert('Deletion failed. Please try again.');
         });
       }
     },
     updateCurrentAlbum(index) {
       this.localCurrentAlbum = index;
       this.$emit('update:currentAlbum', index);
+    },
+    reloadAlbums() {
+      // alert('reloadAlbums');
+        this.page = 1;
+        this.hasMore = true;
+        this.albums = [];
+        if (this.$refs.infiniteLoading) {
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+        }
+        this.loadMorePhotos();
     }
+  },
+  mounted() {
+    // 監聽根實例上的 'upload-success' 事件，當事件觸發時調用 reloadAlbums 方法
+    this.$root.$on('upload-success', this.reloadAlbums);
   }
 };
 </script>

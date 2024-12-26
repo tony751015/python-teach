@@ -116,6 +116,7 @@
               isFirstDate: '',
             };
             this.$emit('message-uploaded', messageData);
+            this.$root.$emit('upload-success');
           })
           .catch((err) => {
             console.error('Error sending message:', err);
