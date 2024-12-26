@@ -273,18 +273,18 @@ def chat_upload_photo(request):
   # create_date = datetime.now().strftime("%Y-%m-%d")
 
   if 'user_id' in resData and 'is_carer_user' in resData:
-    # try:
-    isPatient = False
+    # # try:
+    # isPatient = False
 
-    if isCarerUser == '0':
-      isPatient = True
+    # if isCarerUser == '0':
+    #   isPatient = True
     
     createNewRecord = chat_record.objects.create(
       create_user = create_user,
       content = '',
       content_type = 'image',
       media_url = photo_upload,
-      is_carer_user = isPatient,
+      is_carer_user = isCarerUser,
     )
     if createNewRecord:
       createNewRecordId = createNewRecord.id

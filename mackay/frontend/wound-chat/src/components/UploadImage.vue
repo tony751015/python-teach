@@ -82,46 +82,44 @@
     },
     methods: {
         startUpload() {
-          // 發送 POST 圖片訊息
-          let userId
+          let userId;
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
           if (this.storeUserId) {
-            userId = this.storeUserId
-          }else {
-            userId = getJWTData.user_id
+            userId = this.storeUserId;
+          } else {
+            userId = getJWTData.user_id;
           }
+          const isCarerUser = this.userProfile.super_user === true ? '1' : '0';
+
           const formData = new FormData();
-          // const userId = getUserIdCheck
           const ts = new Date().getTime();
-          console.log('this.file', this.file)
+          console.log('this.file', this.file);
 
           formData.append('user_id', userId);
-          formData.append('is_carer_user', '1'); // 0
+          formData.append('is_carer_user', isCarerUser); // 根據 super_user 設置
           formData.append('photo_upload', this.file, `${userId}_${ts}.${this.file.type.split('/')[1]}`);
-
           axios.post('http://127.0.0.1:8000/api/chat/upload', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
           })
-            .then((response) => {
-              console.log('Message sent successfully:', response.data);
-              this.uploadImage = false;
-              const user_name = this.userProfile.name || '您';
-              // console.log('user_name', user_name); 
-              const messageData = {
-                is_carer_user: false,
-                user_name: user_name,
-                media_url: this.filePreviewSrc,
-                content_type: 'image2',
-                content: '',
-                isFirstDate: '',
-              };
-              this.$emit('message-uploaded', messageData);
-            })
-            .catch((err) => {
-              console.error('Error sending message:', err);
-            });
+          .then((response) => {
+            console.log('Message sent successfully:', response.data);
+            this.uploadImage = false;
+            const user_name = this.userProfile.name || '您';
+            const messageData = {
+              is_carer_user: isCarerUser === '1',
+              user_name: user_name,
+              media_url: this.filePreviewSrc,
+              content_type: 'image2',
+              content: '',
+              isFirstDate: '',
+            };
+            this.$emit('message-uploaded', messageData);
+          })
+          .catch((err) => {
+            console.error('Error sending message:', err);
+          });
         },
 
         triggerFileInput() {

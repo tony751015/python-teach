@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="date-divider text-center grey--text">{{ isFirstDate }}</div>
-    <v-row :class="[is_carer_user ? 'justify-start' : 'justify-end']" style="margin: 0;">
+    <v-row :class="alignmentClass" style="margin: 0;">
       <v-col cols="auto" v-if="content_type === 'text'">
         <v-card 
-          :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
+          :class="[messageClass, 'mr-4']"
           flat>
           <v-card-text
             class="font-weight-bold" v-html="contentRegexMatchURL"></v-card-text>
@@ -13,17 +13,16 @@
       </v-col>
       <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image'">
         <v-card 
-          color = "point-1"
-          :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
+          color="point-1"
+          :class="[messageClass, 'mr-4']"
           flat>
             <img :src="`${SERVER_PATH}media/${media_url}`" @click="$emit('image-click', `${SERVER_PATH}media/${media_url}`)" />
         </v-card>
       </v-col>
-      <!-- <v-col cols="5"  v-else-if="content_type === 'image2'">是解決 -->
       <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image2'">
         <v-card 
-          color = "point-1"
-          :class="[is_carer_user ? 'other-message': 'own-message', 'mr-4']"
+          color="point-1"
+          :class="[messageClass, 'mr-4']"
           flat>
             <img :src="media_url" @click="$emit('image-click2', media_url)" />
         </v-card>
@@ -76,6 +75,27 @@ export default {
         newContent = newContent.replace(urlRegex, `<a style="margin: 0 5px;" href="${matchURL[0]}" target="_blank">${matchURL[0]}</a>`);
       }
       return newContent;
+    },
+    alignmentClass() {
+      // alert(this.is_carer_user);
+      const isSuperUser = this.$root.userProfile?.super_user;
+      if (isSuperUser) {
+        return this.is_carer_user ? 'justify-end' : 'justify-start';
+        // return this.is_carer_user ? 'justify-start' : 'justify-end';
+      } else {
+        return this.is_carer_user ? 'justify-start' : 'justify-end';
+        // return this.is_carer_user ? 'justify-end' : 'justify-start';
+      }
+    },
+    messageClass() {
+      const isSuperUser = this.$root.userProfile?.super_user;
+      if (isSuperUser) {
+        return this.is_carer_user ? 'own-message' : 'other-message';
+        // return this.is_carer_user ? 'other-message' : 'own-message';
+      } else {
+        return this.is_carer_user ? 'other-message' : 'own-message';
+        // return this.is_carer_user ? 'own-message' : 'other-message';
+      }
     }
   },
 
@@ -91,10 +111,21 @@ export default {
   max-width: 75%;
   padding: 0;
 }
-.img_col{
-  display: flex;
-  justify-content: flex-end;
+.justify-start{
+  .img_col{
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0px;
+  }
 }
+.justify-end{
+  .img_col{
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 0px;
+  }
+}
+
 .img_col .v-card{
   line-height: 0 !important;
 }
