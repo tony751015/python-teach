@@ -10,7 +10,7 @@ export default new Vuex.Store({
     alert: {
       show: false,
       status: '',
-    }
+    },
   },
   getters: {
     exportUserProfile(st) {

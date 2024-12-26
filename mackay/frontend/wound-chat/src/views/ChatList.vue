@@ -32,147 +32,143 @@
   </v-app-bar>
   
   <!-- 主要內容區塊 -->
-  <v-container class="chat-list-container">
-    <!-- 搜尋區域 -->
-    <v-text-field
-      v-model="searchQuery"
-      prepend-icon="mdi-magnify"
-      label="Search for a patient"
-      dense
-      outlined
-      color="main-green"
-      placeholder="Search for a patient"
-      hide-details
-    ></v-text-field>
-    
-    <!-- 用戶列表 -->
-    <v-list>
-      <v-subheader>Patient census: {{ patientCount }}</v-subheader>
-      
-      <!-- <v-list-item
-        v-for="patient in filteredPatients"
-        :key="patient.id"
-        class="patient-item"
-      >
-        <v-list-item-avatar size="56">
-          <v-img :src="patient.user_avatar || 'default-avatar.jpg'"></v-img>
-        </v-list-item-avatar>
+  <v-container fluid class="fill-height">
+    <v-row>
+      <!-- 左側：用戶列表 -->
+      <v-col cols="8" class="chat-list-section">
+        <!-- 搜尋區域 -->
+        <v-text-field
+          v-model="searchQuery"
+          prepend-icon="mdi-magnify"
+          label="Search for a patient"
+          dense
+          outlined
+          color="main-green"
+          placeholder="Search for a patient"
+          hide-details
+        ></v-text-field>
         
-        <v-list-item-content>
-          <v-list-item-title>{{ patient.user_name }}</v-list-item-title>
-          <v-list-item-subtitle>
-            <span v-if="patient.last_message && patient.last_message.content_type === 'text'">
-              {{ patient.last_message.content }}
-            </span>
-            <span v-else-if="patient.last_message && patient.last_message.content_type === 'image'">
-              傳送了一張圖片
-              <v-btn icon @click="openImagePopup(`${SERVER_PATH}media/${patient.last_message.media_url}`)">
-                <v-icon>mdi-image</v-icon>
-              </v-btn>
-            </span>
-            <span v-else>
-              無訊息
-            </span>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-        
-        <v-list-item-action>
-          <v-btn icon>
-            <v-icon>mdi-pin</v-icon>
-          </v-btn>
-        </v-list-item-action>
-      </v-list-item> -->
-      <template v-if="!preloading">
-        <v-list-item
-          v-for="patient in filteredPatients"
-          :key="patient.id"
-          class="patient-item"
-        >
-          <v-list-item-avatar size="56">
-            <v-img :src="patient.user_avatar || require('@/assets/user.png')"></v-img>
-          </v-list-item-avatar>
+        <v-list>
+          <v-subheader>Patient census: {{ patientCount }}</v-subheader>
+          <template v-if="!preloading">
+            <v-list-item
+              v-for="patient in filteredPatients"
+              :key="patient.id"
+              class="patient-item"
+              @click="selectPatient(patient.user_id)"
+              :class="{ 'outlined': highlightedPatientId === patient.user_id }"
+            >
+              <v-list-item-avatar size="56">
+                <v-img :src="patient.user_avatar || require('@/assets/user.png')"></v-img>
+              </v-list-item-avatar>
   
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ patient.user_name }}
-              <span class="grey--text text--lighten-1 font-small">{{ '(' + patient.user_id + ')'}}</span>
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              <span
-                v-if="
-                  patient.last_message &&
-                  patient.last_message.content_type === 'text'
-                "
-              >
-                {{ patient.last_message.content }}
-              </span>
-              <span
-                v-else-if="
-                  patient.last_message &&
-                  patient.last_message.content_type === 'image'
-                "
-              >
-                傳送了一張圖片
-                <v-btn
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ patient.user_name }}
+                  <span class="grey--text text--lighten-1 font-small">{{ '(' + patient.user_id + ')'}}</span>
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                  <span
+                    v-if="
+                      patient.last_message &&
+                      patient.last_message.content_type === 'text'
+                    "
+                  >
+                    {{ patient.last_message.content }}
+                  </span>
+                  <span
+                    v-else-if="
+                      patient.last_message &&
+                      patient.last_message.content_type === 'image'
+                    "
+                  >
+                    傳送了一張圖片
+                    <v-btn
+                      outlined
+                      color="main-green"
+                      small
+                      class="px-1"
+                      @click.stop="openImagePopup(
+                        `${SERVER_PATH}media/${patient.last_message.media_url}`
+                      )"
+                    >
+                      <v-icon class="font-normal">mdi-magnify</v-icon>
+                      photo
+                    </v-btn>
+                  </span>
+                  <span v-else>無訊息</span>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-btn 
                   outlined
+                  elevation="0"
                   color="main-green"
                   small
                   class="px-1"
-                  @click="openImagePopup(
-                    `${SERVER_PATH}media/${patient.last_message.media_url}`
-                  )"
-                >
-                  <v-icon class="font-normal">mdi-magnify</v-icon>
-                  photo
+                  @click.stop="goChatroom(patient)"
+                >chatroom
+                  <v-icon>mdi-arrow-right-bold</v-icon>
                 </v-btn>
-              </span>
-              <span v-else>無訊息</span>
-            </v-list-item-subtitle>
-          </v-list-item-content>
-  
-          <v-list-item-action>
-            <v-btn 
-              fab 
-              elevation="0"
-              :color="patient.pin ? 'main-green' : ''"
-              @click="togglePin(patient)"
-            >
-              <v-icon :color="patient.pin ? 'white' : ''">mdi-pin</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
+              </v-list-item-action>
+              <v-list-item-action>
+                <v-btn 
+                  fab 
+                  elevation="0"
+                  :color="patient.pin ? 'main-green' : ''"
+                  @click.stop="togglePin(patient)"
+                >
+                  <v-icon :color="patient.pin ? 'white' : ''">mdi-pin</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
 
-        <infinite-loading 
-          :identifier="infiniteId"
-          @infinite="loadMorePatients"
-          spinner="bubbles"
-          direction="bottom"
-        >
-          <div slot="no-more" class="infini-note grey--text text--lighten-1 font-small">No more data</div>
-          <div slot="no-results" class="infini-note grey--text text--lighten-1 font-small">No results found</div>
-        </infinite-loading>
-      </template>
+            <infinite-loading 
+              :identifier="infiniteId"
+              @infinite="loadMorePatients"
+              spinner="bubbles"
+              direction="bottom"
+            >
+              <div slot="no-more" class="infini-note grey--text text--lighten-1 font-small">No more data</div>
+              <div slot="no-results" class="infini-note grey--text text--lighten-1 font-small">No results found</div>
+            </infinite-loading>
+          </template>
+          
+        </v-list>
+      </v-col>
+
+      <!-- 右側：照片列表區域 -->
       
-    </v-list>
-    <!-- 圖片彈出組件 -->
+        <wound-photos
+          :albums="albums"
+          :current-album.sync="currentAlbum"
+          :selected-patient-id="selectedPatientId"
+          @update:current-album="updateCurrentAlbum"
+        ></wound-photos>
+      
+    </v-row>
+  </v-container>
+
+  <!-- 圖片彈出組件 -->
   <ImagePopup
     :key="`imgpop-${popImgKey}`" 
     :visible="imageDialog" 
     :image="imageSrc" 
     @close="closeImagePopup">
   </ImagePopup>
-  </v-container>
 </div>
 </template>
   
 <script>
   import axios from 'axios';
   import ImagePopup from '../components/ImagePopup.vue';
+  import WoundPhotos from '../components/WoundPhotos.vue';
 // import { reject, resolve } from 'core-js/fn/promise';
   
   export default {
     components: {
-      ImagePopup
+      ImagePopup,
+      WoundPhotos
     },
 
     created() {
@@ -194,6 +190,10 @@
         pageSize: 1, // 每頁資料數量
         infiniteId: +new Date(), // 確保重置 infinite-loading
         pinnedPatients: [], // 存儲已經 pin 的病患 ID
+        selectedPatientId: -1, // 初始化為 -1
+        highlightedPatientId: null, // 用於追蹤當前選擇的病患
+        albums: [], // 初始化 albums 為空陣列
+        currentAlbum: 0, // 初始化 currentAlbum
       };
     },
     computed: {
@@ -316,8 +316,13 @@
           this.preloading = true;
           resolve();
         })
-      }
+      },
 
+      selectPatient(userId) {
+        this.selectedPatientId = userId;
+        this.highlightedPatientId = userId;
+        // 確保 selectedPatientId 的變化能夠被 WoundPhotos.vue 監聽到
+      },
       // reloadPatients() {
       //   // this.infiniteId += 1; // 重置 infinite-loading
       //   this.currentPage = 1;
@@ -339,6 +344,14 @@
       //     }
       //   });
       // }
+      updateCurrentAlbum(newAlbumIndex) {
+        this.currentAlbum = newAlbumIndex;
+      },
+      goChatroom(patient) {
+        console.log('goChatroom', patient);
+        this.$router.push({ path: `/chat/${patient.room_path}` });
+        
+      }
     },
     mounted() {
       // const userId = this.userProfile.id;
@@ -366,9 +379,21 @@
   </script>
   
   <style scoped>
-  .chat-list-container {
+  .fill-height {
     height: calc(100vh - 48px);
-    overflow: auto;
+    padding: unset;
+  }
+  .container.fill-height > .row{
+    height: 100%;
+  }
+  .chat-list-section {
+    border-right: 1px solid #ccc;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .photo-section {
+    height: 100%;
+    overflow-y: auto;
   }
   .v-toolbar__content {
     width: 100%;
@@ -416,4 +441,8 @@
 .infini-note {
   margin-top: 15px;          
 }   
+.outlined {
+  outline: 2px solid #2D9CA0;
+  border-radius: 5px;
+}
   </style>

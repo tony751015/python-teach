@@ -271,23 +271,24 @@ export default {
     },
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
-      let userId
-          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.userProfile.id) {
-            userId = this.userProfile.id
-          }else {
-            userId = getJWTData.user_id
-          }
+      let userId;
+      const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+      if (this.userProfile.id) {
+        userId = this.userProfile.id;
+      } else {
+        userId = getJWTData.user_id;
+      }
       if (this.newMessage.trim() !== '') {
         const user_name = this.userProfile.name || '您';
-        // console.log('user_name', user_name);
+        const isCarerUser = this.userProfile.super_user === true;
+
         const messageData = {
-          is_carer_user: false,
+          is_carer_user: isCarerUser,
           user_name: user_name,
           media_url: '',
           content: this.newMessage,
           content_type: 'text',
-          isFirstDate:''
+          isFirstDate: ''
         };
 
         // 發送到前端 UI
@@ -295,16 +296,16 @@ export default {
         this.newMessage = '';
         // 發送滾動到底部
         this.$nextTick(() => {
-            const chatWindow = this.$refs.chatWindow;
-            if (chatWindow) {
-              chatWindow.scrollTop = chatWindow.scrollHeight;
-            }
-          });
+          const chatWindow = this.$refs.chatWindow;
+          if (chatWindow) {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+          }
+        });
 
         // 發送 POST 請求到後端
         axios.post('http://127.0.0.1:8000/api/chat/control', {
           user_id: userId,
-          is_carer_user: false,  // 自己發送的訊息
+          is_carer_user: isCarerUser,  // 根據 super_user 設置
           content: messageData.content,
           content_type: 'text'
         })

@@ -308,3 +308,121 @@ def chat_upload_photo(request):
   #   saveReport.upload.add(savePhoto)
   #   savePhotoUrls.append(f'https://storage.googleapis.com/{settings.GS_BUCKET_NAME}/media/{str
   #                                                                                          (savePhoto.src)}')
+
+@api_view(['GET', 'DELETE'])
+@authentication_classes([])
+@permission_classes([])
+def chat_record_photo(request):
+    if request.method == 'GET':
+        try:
+            # 解析GET請求中的參數
+            serializer = request.GET
+            user_id = serializer['user_id']
+            page = serializer['page']
+            size = serializer['size']
+
+            # 檢查是否有提供必要的參數
+            if user_id or page or size:
+                # 取得某會員的圖片對話記錄，並使用TruncDate來截斷日期
+                recordQuery = chat_record.objects.filter(
+                    Q(create_user=user_id) & Q(content_type='image')
+                ).annotate(
+                    create_date_truncated=TruncDate('create_date')
+                )
+
+                try:
+                    # 嘗試取得該會員的聊天室路徑
+                    findChatRoom = chat_room.objects.get(user_id=user_id)
+                except chat_room.DoesNotExist:
+                    # 如果找不到聊天室，回傳404
+                    return Response('no found', status=404)
+                except:
+                    # 其他錯誤，回傳404
+                    return Response('error', status=404)
+
+                # 取得聊天室路徑和記錄數量
+                chatRoomPath = findChatRoom.room_path
+                recordCount = recordQuery.count()
+
+                # 排序資料並取得需要的欄位
+                filterData = recordQuery.order_by('-create_date').values_list('create_date_truncated', flat=True)
+                recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'media_url', 'create_date_truncated'))
+
+                # 設定一個變數來追蹤當前迴圈的日期
+                currentLoopDate = ''
+
+                # 迴圈處理每一筆資料
+                for items in recordData:
+                    itemsDate = items['create_date_truncated']
+                    # 如果當前日期與上次迴圈的日期不同，標記為isFirstDate
+                    if currentLoopDate != itemsDate:
+                        items['isFirstDate'] = itemsDate
+                    else:
+                        items['isFirstDate'] = ''
+                    # 更新currentLoopDate為當前日期
+                    currentLoopDate = itemsDate
+
+                try:
+                    # 使用Paginator進行分頁
+                    p = Paginator(recordData, size)
+                    current_page = p.page(page)
+                    final = current_page.object_list
+                    results = {
+                        "count": recordCount,
+                        "room_path": chatRoomPath,
+                        "results": final
+                    }
+                    return Response(results, status=200)
+
+                except PageNotAnInteger:
+                    # 如果頁碼不是整數，回傳空結果
+                    results = {
+                        "count": recordCount,
+                        "room_path": chatRoomPath,
+                        "results": []
+                    }
+                    return Response(results, status=200)
+
+                except EmptyPage:
+                    # 如果頁面超出範圍，回傳空結果
+                    results = {
+                        "count": recordCount,
+                        "room_path": chatRoomPath,
+                        "results": []
+                    }
+                    return Response(results, status=200)
+
+                except:
+                    # 其他錯誤，回傳500
+                    return Response('error 1', status=500)
+
+            else:
+                # 如果缺少必要參數，回傳500
+                return Response('need params', status=500)
+
+        except Exception as e:
+            # 捕捉所有其他例外，回傳500
+            return Response(e, status=500)
+
+    elif request.method == 'DELETE':
+        try:
+            # 解析DELETE請求中的參數
+            serializer = request.data
+            record_id = serializer.get('record_id')
+            user_id = serializer.get('user_id')  # 單個user_id
+
+            if record_id and user_id:
+                try:
+                    # 使用record_id和user_id進行過濾
+                    record = chat_record.objects.get(id=record_id, content_type='image', create_user=user_id)
+                    record.delete()
+                    return Response('deleted', status=200)
+                except chat_record.DoesNotExist:
+                    return Response('record not found', status=404)
+                except:
+                    return Response('error', status=500)
+            else:
+                return Response('need record_id and user_id', status=400)
+
+        except Exception as e:
+            return Response(e, status=500)

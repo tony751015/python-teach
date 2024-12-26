@@ -23,25 +23,32 @@
         </v-tab>
       </v-tabs>
     </v-toolbar>
-    <div class="photo-grid">
-      <v-hover v-slot="{ hover }" 
-       v-for="(photo, index) in currentPhotos" 
-       :key="index">
-        <div class="photo-item" 
-         @click="openImagePopup(photo.src)">
-          <img :src="photo.src">
-          <v-card-title class="text-h6 white--text" style="">
-            <v-row class="flex-column" justify="space-between">
-              <div class="align-self-center">
-                <v-btn v-if="hover" color="primary" class="delete-btn" icon @click.stop="confirmDelete(photo.id)">
-                  <v-icon>mdi-trash-can-outline</v-icon>
-                </v-btn>
-              </div>
-            </v-row>
-          </v-card-title>
-        </div>
-      </v-hover>
+    <div class="photo-zone">
+      <div class="photo-grid" infinite-wrapper>
+        <v-hover v-slot="{ hover }" 
+        v-for="(photo, index) in currentPhotos" 
+        :key="index">
+          <div class="photo-item" 
+          @click="openImagePopup(`${SERVER_PATH}media/${photo.src}`)">
+            <img :src="`${SERVER_PATH}media/${photo.src}`">
+            <v-card-title class="text-h6 white--text" style="">
+              <v-row class="flex-column" justify="space-between">
+                <div class="align-self-center">
+                  <v-btn v-if="hover" color="primary" class="delete-btn" icon @click.stop="confirmDelete(photo.id)">
+                    <v-icon>mdi-trash-can-outline</v-icon>
+                  </v-btn>
+                </div>
+              </v-row>
+            </v-card-title>
+          </div>
+        </v-hover>
+        <infinite-loading ref="infiniteLoading" force-use-infinite-wrapper=".photo-grid" @infinite="loadMorePhotos">
+          <div slot="no-more" class="infini-photo-note grey--text text--lighten-1 font-small">There are no more photo</div>
+          <div slot="no-results" class="infini-photo-note grey--text text--lighten-1 font-small">There are no more photo</div>
+        </infinite-loading>
+      </div>
     </div>
+    
     <!-- <ImagePopup :image="selectedImage" :visible="imagePopupVisible" @close="closeImagePopup" @update:visible="updateVisible"></ImagePopup> -->
     <ImagePopup
       :key="`imgpop-${popImgKey}`"
@@ -53,39 +60,182 @@
 </template>
 
 <script>
+import axios from 'axios';
 import ImagePopup from '@/components/ImagePopup.vue';
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   components: {
-    ImagePopup
+    ImagePopup,
+    InfiniteLoading
   },
   props: {
-    albums: {
-      type: Array,
-      required: true
-    },
     currentAlbum: {
       type: Number,
       required: true
+    },
+    selectedPatientId: {
+      type: [Number, null],
+      required: true
     }
+  },
+  data() {
+    return {
+      albums: [], // 初始化 albums 為空陣列
+      selectedImage: '',
+      popImgKey: 1,
+      imagePopupVisible: false,
+      localCurrentAlbum: this.currentAlbum,
+      page: 1, // 用於追蹤當前頁數
+      size: 2, // 每頁顯示的數量
+      hasMore: true, // 用於追蹤是否有更多數據
+      infiniteId: 0 // 用於重置 InfiniteLoading
+    };
   },
   computed: {
     currentPhotos() {
       return this.albums[this.currentAlbum]?.photos || [];
     }
   },
-  data() {
-  return {
-    selectedImage: '',
-    popImgKey: 1,
-    imagePopupVisible: false,
-    localCurrentAlbum: this.currentAlbum
-  };
-},
+  watch: {
+    selectedPatientId(newId) {
+      if (newId !== null && newId !== -1) {
+        this.page = 1;
+        this.hasMore = true;
+        this.albums = [];
+        if (this.$refs.infiniteLoading) {
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+        }
+        // this.loadPhotosForPatient(newId);
+      } else {
+        this.albums = []; // 如果 selectedPatientId 為 null 或 -1，清空 albums
+      }
+    }
+  },
   methods: {
-  // 開啟圖片彈窗
-     openImagePopup(imageUrl) {
-    if (event.target.classList.contains('v-btn')) return;
+    // loadPhotosForPatient(patientId) {
+    //   alert('loadPhotosForPatient');
+    //   return new Promise((resolve, reject) => {
+    //     if (patientId === -1) {
+    //       this.albums = [];
+    //       resolve();
+    //       return;
+    //     }
+    //     this.page = 1; // 重置頁數
+    //     axios.get(`http://127.0.0.1:8000/api/chat/photo`, {
+    //       params: {
+    //         user_id: patientId,
+    //         page: this.page,
+    //         size: this.size
+    //       }
+    //     })
+    //     .then(response => {
+    //       const newPhotos = response.data.results.map(photo => ({
+    //         id: photo.record_id,
+    //         src: photo.media_url
+    //       }));
+
+    //       this.albums = [{ photos: newPhotos }];
+    //       this.page = 2; // 下一次加載從第二頁開始
+    //       this.hasMore = newPhotos.length >= this.size;
+    //       resolve();
+    //     })
+    //     .catch(error => {
+    //       console.error('Error loading photos for patient:', error);
+    //       reject(error);
+    //     });
+    //   });
+    // },
+    // fetchPhotos() {
+    //   if (!this.hasMore || this.selectedPatientId === -1) {
+    //     return;
+    //   }
+    //   axios.get('http://127.0.0.1:8000/api/chat/photo', {
+    //     params: {
+    //       user_id: this.selectedPatientId,
+    //       page: this.page,
+    //       size: this.size
+    //     }
+    //   })
+    //   .then(response => {
+    //     if (this.localCurrentAlbum === 0) {
+    //       const newPhotos = response.data.results.map(photo => ({
+    //         id: photo.record_id,
+    //         src: photo.media_url
+    //       }));
+    //       console.log(response.data.results);
+    //       if (newPhotos.length > 0) {
+    //         if (this.page === 1) {
+    //           this.albums = [{ photos: newPhotos }];
+    //         } else {
+    //           this.albums[0].photos.push(...newPhotos);
+    //         }
+    //         this.page += 1; // 增加頁數
+    //       } else {
+    //         alert('沒有更多照片');
+    //         this.hasMore = false; // 如果沒有新數據，設置 hasMore 為 false
+    //       }
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.error('Error fetching photos:', error);
+    //     this.hasMore = false; // 在發生錯誤時停止加載
+    //   });
+    // },
+    loadMorePhotos($state) {
+      if (!this.hasMore || this.selectedPatientId === -1) {
+        $state.complete();
+        return;
+      }
+      axios.get('http://127.0.0.1:8000/api/chat/photo', {
+        params: {
+          user_id: this.selectedPatientId,
+          page: this.page,
+          size: this.size
+        }
+      })
+      .then(response => {
+        if (this.localCurrentAlbum === 0) {
+          const newPhotos = response.data.results.map(photo => ({
+            id: photo.record_id,
+            src: photo.media_url
+          }));
+          console.log(response.data.results);
+          if (newPhotos.length > 0) {
+            if (this.page === 1) {
+              this.albums = [{ photos: newPhotos }];
+            } else {
+              this.albums[0].photos.push(...newPhotos);
+            }
+            this.page += 1; // 增加頁數
+            $state.loaded();
+          } else {
+            // alert('沒有更多照片');
+            this.hasMore = false; // 如果沒有新數據，設置 hasMore 為 false
+            $state.complete();
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching photos:', error);
+        this.hasMore = false; // 在發生錯誤時停止加載
+        $state.complete();
+      });
+    },
+    // loadMorePhotos($state) {
+    //   console.log(this.hasMore);
+      
+    //   if (!this.hasMore || this.selectedPatientId === -1 || this.localCurrentAlbum === 1) {
+    //     $state.complete(); // 如果沒有更多數據或條件不符，停止加載
+    //     return;
+    //   }
+    //   this.fetchPhotos();
+    //   $state.complete(); 
+    //   $state.loaded();
+    // },
+    // 開啟圖片彈窗
+    openImagePopup(imageUrl) {
+      if (event.target.classList.contains('v-btn')) return;
       this.selectedImage = imageUrl;
       this.imagePopupVisible = true;
       this.popImgKey += 1;
@@ -97,24 +247,38 @@ export default {
       this.popImgKey += 1;
     },
     updateVisible(val) {
-      this.imagePopupVisible = val
+      this.imagePopupVisible = val;
     },
     switchAlbum(index) {
       this.$emit('update:currentAlbum', index);
     },
     confirmDelete(photoId) {
       if (confirm('確定要刪除這張照片嗎？')) {
-        const album = this.albums[this.currentAlbum];
-        album.photos = album.photos.filter((photo) => photo.id !== photoId);
+        axios.delete(`http://127.0.0.1:8000/api/chat/photo`, {
+          data: {
+            user_id: this.selectedPatientId,
+            record_id: photoId
+          }
+        })
+        .then(() => {
+          const album = this.albums[this.currentAlbum];
+          album.photos = album.photos.filter((photo) => photo.id !== photoId);
+          alert('照片已刪除');
+        })
+        .catch(error => {
+          console.error('Error deleting photo:', error);
+          alert('刪除失敗，請重試');
+        });
       }
     },
     updateCurrentAlbum(index) {
-      this.localCurrentAlbum = index
-      this.$emit('update:currentAlbum', index)
+      this.localCurrentAlbum = index;
+      this.$emit('update:currentAlbum', index);
     }
   }
 };
 </script>
+
 <style scoped>
 .photo-section {
   height: 100%;
@@ -133,11 +297,19 @@ export default {
   height: 20px;
   font-size: 20px;
 }
+.photo-zone {
+  padding: 10px;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+}
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 10px;
-  padding: 10px;
+  padding: 10px 0;
+  /* max-height: calc(100vh - 120px);
+  overflow-y: auto; */
+  position: relative;
 }
 
 .photo-item {
@@ -150,14 +322,21 @@ export default {
 .photo-item img {
   width: 100%; 
   height: 100%; 
-  object-fit: fill;
+  object-fit: contain;
   border-radius: 8px;
+  background-color: #e2e2e2;
 }
 .photo-item:hover img{
   opacity: 0.6;
   /* box-shadow: unset; */
  }
-
+.infini-photo-note {
+  position: absolute;
+  bottom: -20px;
+  left: 0; 
+  right: 0;
+  margin: auto;
+}
 .photo-wrapper {
   position: absolute;
   top: 0;
@@ -185,6 +364,4 @@ export default {
 .v-responsive__sizer {
   padding-bottom: 75%;
 }
-
-
 </style>

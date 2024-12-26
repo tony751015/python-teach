@@ -102,6 +102,7 @@
         <wound-photos
           :albums="albums"
           :current-album.sync="currentAlbum"
+          :selected-patient-id="userProfile.id"
           @update:current-album="updateCurrentAlbum"
         ></wound-photos>
       </v-row>
@@ -127,10 +128,7 @@ export default {
       noResults: false, // 用於顯示沒有搜尋結果的訊息
       topBarNavList: ['One', 'Two', 'Three'],
       chatRecord: [],
-      albums: [
-        { name: '已上傳傷口照片', photos: [{ id: 1, src: 'https://via.placeholder.com/300x150' }, { id: 2, src: 'https://via.placeholder.com/200x250' }, { id: 5, src: 'https://via.placeholder.com/200x250' }, { id: 6, src: 'https://via.placeholder.com/200x250' }, { id: 7, src: 'https://via.placeholder.com/200x250' }] },
-        { name: 'AI傷口範圍偵測', photos: [{ id: 3, src: 'https://via.placeholder.com/250x150' }, { id: 4, src: 'https://via.placeholder.com/300x250' }] },
-      ],
+      albums: [],
       currentAlbum: 0,
     };
   },
