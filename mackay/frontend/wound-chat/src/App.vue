@@ -108,8 +108,9 @@ export default {
     //   });
     //   return;
     // } 
-    this.autoRelogin();
-
+    this.initializeApp().then(() => {
+        this.autoRelogin();
+    });
   },
   
   
@@ -196,6 +197,18 @@ export default {
     //   }
     // }
     
+    async initializeApp() {
+        // 假設有一些異步操作需要完成
+        const mackayData = await this.loadLocalStorageData();
+        console.log('LocalStorage 已加載:', mackayData);
+    },
+
+    loadLocalStorageData() {
+        return new Promise((resolve) => {
+            const data = localStorage.getItem('mackay');
+            resolve(data);
+        });
+    }
   },
   watch: {
     'alert.show'(newVal) {
