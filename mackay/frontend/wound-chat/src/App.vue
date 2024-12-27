@@ -68,7 +68,7 @@ export default {
   }),
 
   created() {
-   
+  
     // console.log('this.$route.name', this.$route.name);
     // if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
     //   this.detectAutoLoginProcess();
@@ -78,10 +78,38 @@ export default {
   mounted() {
     console.log('this.$route', this.$route);
     console.log('this.$route.name', this.$route.name);
-    if (this.$route.path.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
-      this.detectAutoLoginProcess();
-    }
+    // if (this.$route.query.code && this.$route.query.state&& this.$route.name === 'woundLogin') {
+      // console.log('AAAAAAAAAA1: ', this.$route.name);
+    // const url = new URL("http://127.0.0.1:3000/");
+    // const loginPage = url.href;
+    // console.log('loginPage', loginPage);
+    // console.log('URL', location.href.code);
+    // if (loginPage === location.href && location.href.code && location.href.state) {
+    //   // this.detectAutoLoginProcess();
+    //   alert('reline callback')
+      
+    //   const LoginProcess = new Promise((resolve) => {
+    //     const done = this.userLoginProcess(this.$route.query.code, this.$route.query.state);
+    //     if (done) {
+    //       return resolve({
+    //         status: 'ok',
+    //         value: true,
+    //       });
+    //     }
+    //   })
+
+    //   LoginProcess.then((value) => {
+    //     if (value.status === 'ok') {
+    //       alert('test ok')
+    //       // this.activeKey += 1 ;
+    //       // this.preloading = value.value;
+    //       console.log('LOGIN STATUS END: ', this.userLogin);
+    //     }
+    //   });
+    //   return;
+    // } 
     this.autoRelogin();
+
   },
   
   
