@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -26,6 +26,11 @@ urlpatterns = [
     path('mvc/', chat_record_ssr), # 執行 chat_record_ssr
     path('mvc/<id>', chat_record_ssr_with_query), # 執行 chat_record_ssr_with_query
     path('', TemplateView.as_view(template_name='index.html')), # 如果無特殊任務，直接渲染靜態網頁
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    re_path('^.*$', TemplateView.as_view(template_name='index.html')),
+]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL + 'chat/', document_root=settings.MEDIA_ROOT + '/chat/')
