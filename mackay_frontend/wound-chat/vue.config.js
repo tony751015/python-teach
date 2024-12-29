@@ -7,6 +7,22 @@ module.exports = defineConfig({
     'vuetify'
   ],
 
+  publicPath: process.env.NODE_ENV === 'production' ? '/static/' : '/',
+  // css: {
+  //   sourceMap: true,
+  //   requireModuleExtension: true,
+  //   loaderOptions: {
+  //     css: {
+  //       modules: {
+  //         localIdentName: process.env.NODE_ENV === 'production' ? '[hash:base64:5]' : '[local]_[hash:base64:5]',
+  //       },
+  //     },
+  //     sass: {
+  //       prependData: () => `$BaseUrl: '${process.env.NODE_ENV === 'production' ? '/static/' : '/'}';`,
+  //     },
+  //   },
+  // },
+
   devServer: {
     open: true,
     host: process.env.VUE_APP_IP4,

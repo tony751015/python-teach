@@ -55,7 +55,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         'DIRS': [
-            os.path.join(FRONTEND_DIR, 'build'),
+            FRONTEND_DIR,
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -123,7 +123,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
 STATICFILES_DIRS = [
-    os.path.join(FRONTEND_DIR, 'build')
+    FRONTEND_DIR
 ]
 
 # Default primary key field type
