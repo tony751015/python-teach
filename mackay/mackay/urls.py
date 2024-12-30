@@ -25,12 +25,13 @@ urlpatterns = [
 
     path('mvc/', chat_record_ssr), # 執行 chat_record_ssr
     path('mvc/<id>', chat_record_ssr_with_query), # 執行 chat_record_ssr_with_query
-    path('', TemplateView.as_view(template_name='index.html')), # 如果無特殊任務，直接渲染靜態網頁
+    # path('', TemplateView.as_view(template_name='index.html')), # 如果無特殊任務，直接渲染靜態網頁
+    re_path('^.*$', TemplateView.as_view(template_name='index.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += [
-    re_path('^.*$', TemplateView.as_view(template_name='index.html')),
-]
+# urlpatterns += [
+#     re_path('^.*$', TemplateView.as_view(template_name='index.html')),
+# ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL + 'chat/', document_root=settings.MEDIA_ROOT + '/chat/')
