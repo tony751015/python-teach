@@ -10,10 +10,11 @@
         <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
       <!-- <header class="chat-title text-h6 font-weight-black">星禾互聯</header> -->
       <v-btn
+        v-if="userProfile.super_user"
         text
-        @click="goChatList()"      
+        @click="goChatList()"
       >
-        <v-icon>mdi-home</v-icon>         
+        <v-icon>mdi-arrow-left</v-icon>go list
       </v-btn>
       <v-spacer>
         <template>
