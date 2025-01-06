@@ -25,7 +25,7 @@ const VUEX_FEATURE = {
     ...mapMutations({
       updateUserProfile: 'UPDATE_USER_PROFILE',
       updateUserLogin: 'UPDATE_USER_LOGIN',
-      // updateUserId: 'UPDATE_USER_ID',
+      updateUserId: 'UPDATE_USER_ID',
       updateAlert: 'UPDATE_ALERT',
     }),
     autoRelogin() {

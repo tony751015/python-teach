@@ -104,6 +104,7 @@
             },
           })
           .then((response) => {
+            alert('Message sent successfully');
             console.log('Message sent successfully:', response.data);
             this.uploadImage = false;
             const user_name = this.userProfile.name || '您';

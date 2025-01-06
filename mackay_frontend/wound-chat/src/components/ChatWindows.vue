@@ -205,7 +205,7 @@ export default {
             // localStorage.setItem('user_name', this.user_name);
           }
 
-          // console.log(JSON.stringify(res.data));
+          console.log(JSON.stringify(res.data));
           this.preloader = false;
           // console.log('fetchMessages 2', this.page);
           this.messages = res.data.results.slice().reverse();

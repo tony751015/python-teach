@@ -110,6 +110,7 @@ def chat_record_list(request):
         items['user_name'] = getUserName
         items['gender'] = getUserGender
         # 替換原本create_date的資料內容
+        
 
       #   # 轉換格式
       #   newDateTime = oldDate.strftime('%Y-%m-%d') # 轉換格式 YYYY-MM-DD
