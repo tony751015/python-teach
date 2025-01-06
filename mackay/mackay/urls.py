@@ -8,9 +8,15 @@ from user.views import user_fast_login, load_user_chat_room, chat_room_update_pi
 from user.line_login import line_fast_login
 from chat.views import chat_record_list, chat_record_control, chat_record_ssr, chat_record_ssr_with_query, chat_upload_photo, chat_record_photo
 
+from django.views.static import serve
+from django.urls import re_path as url
+
 urlpatterns = [
     # path("admin/", admin.site.urls),
     # path("api/user/load_profile", load_user_profile),
+    url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}, name='static'),
+    url(r'^media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}),
+
     path("api/chat/control", chat_record_control),
     path("api/chat/list", chat_record_list),
     path("api/chat/photo", chat_record_photo),
@@ -33,5 +39,5 @@ urlpatterns = [
 #     re_path('^.*$', TemplateView.as_view(template_name='index.html')),
 # ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL + 'chat/', document_root=settings.MEDIA_ROOT + '/chat/')
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL + 'chat/', document_root=settings.MEDIA_ROOT + '/chat/')
