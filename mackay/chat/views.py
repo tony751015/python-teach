@@ -78,7 +78,7 @@ def chat_record_list(request):
       # 把recordQuery資料集先判斷create_date_truncated的順序作排列 (最新到舊)
       # 排序完後，在轉換id成自己希望的key name = record_id
       # 然後再取出想給前端的資料
-      filterData = recordQuery.order_by('-create_date').values_list('create_date_truncated', flat=True)
+      filterData = recordQuery.order_by('create_date').values_list('create_date_truncated', flat=True)
       # check2 = check1.order_by('-create_date_truncated')
 
       # recordData = list(recordQuery.values_list('create_date_truncated', flat=True).order_by('-create_date_truncated').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
@@ -119,7 +119,8 @@ def chat_record_list(request):
       #   items['gender'] = getUserGender
       #   # 替換原本create_date的資料內容
       #   items['create_date'] = newDateTime
-
+      # 反轉 recordData
+        recordData = list(reversed(recordData))
       try:
         p = Paginator(recordData, size) 
         page1 = p.page(page)
