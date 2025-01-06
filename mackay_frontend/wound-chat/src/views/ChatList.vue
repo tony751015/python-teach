@@ -89,7 +89,7 @@
                       small
                       class="px-1"
                       @click.stop="openImagePopup(
-                        `${SERVER_PATH}media/${patient.last_message.media_url}`
+                        `${SERVER_PATH}static/media/${patient.last_message.media_url}`
                       )"
                     >
                       <v-icon class="font-normal">mdi-magnify</v-icon>

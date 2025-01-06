@@ -29,8 +29,8 @@
         v-for="(photo, index) in filteredPhotos" 
         :key="index">
           <div class="photo-item" 
-          @click="openImagePopup(`${SERVER_PATH}media/${photo.src}`)">
-            <img :src="`${SERVER_PATH}media/${photo.src}`">
+          @click="openImagePopup(`${SERVER_PATH}static/media/${photo.src}`)">
+            <img :src="`${SERVER_PATH}static/media/${photo.src}`">
             <v-card-title class="text-h6 white--text" style="">
               <v-row class="flex-column" justify="space-between">
                 <div class="align-self-center">

@@ -9,6 +9,7 @@ const ChatList = () => import('../views/ChatList.vue');
 const WoundChat = () => import('../views/WoundChat.vue');
 const WoundLogin = () => import('../views/WoundLogin.vue');
 const Error404 = () => import('../views/Error404.vue');
+const Error500 = () => import('../views/Error500.vue');
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/404',
     name: 'error404',
     component: Error404,
+  },
+  {
+    path: '/500',
+    name: 'error500',
+    component: Error500,
   },
   {
     path: '*',

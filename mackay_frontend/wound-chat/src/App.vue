@@ -219,18 +219,18 @@ export default {
     //   }
     // }
     
-    async initializeApp() {
-        // 假設有一些異步操作需要完成
-        const mackayData = await this.loadLocalStorageData();
-        console.log('LocalStorage 已加載:', mackayData);
-    },
+    // async initializeApp() {
+    //     // 假設有一些異步操作需要完成
+    //     const mackayData = await this.loadLocalStorageData();
+    //     console.log('LocalStorage 已加載:', mackayData);
+    // },
 
-    loadLocalStorageData() {
-        return new Promise((resolve) => {
-            const data = localStorage.getItem('mackay');
-            resolve(data);
-        });
-    }
+    // loadLocalStorageData() {
+    //     return new Promise((resolve) => {
+    //         const data = localStorage.getItem('mackay');
+    //         resolve(data);
+    //     });
+    // }
   },
   watch: {
     'alert.show'(newVal) {
@@ -271,7 +271,7 @@ export default {
   z-index: 10000;
   left: 0;
   right: 0;
-  width: 200px;
+  width: 300px;
   margin: auto;
 }
 

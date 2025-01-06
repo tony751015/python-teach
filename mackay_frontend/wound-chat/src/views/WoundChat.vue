@@ -14,7 +14,7 @@
         text
         @click="goChatList()"
       >
-        <v-icon>mdi-arrow-left</v-icon>go list
+        <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>go list
       </v-btn>
       <v-spacer>
         <template>

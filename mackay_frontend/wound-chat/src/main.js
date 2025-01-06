@@ -156,6 +156,7 @@ const VUEX_FEATURE = {
             message: 'Please log in again!'
           });
           localStorage.removeItem('mackay');
+          this.$router.push('/500');
         });
 
       return true;

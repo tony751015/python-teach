@@ -16,7 +16,7 @@
           color="point-1"
           :class="[messageClass, 'mr-4']"
           flat>
-            <img :src="`${SERVER_PATH}media/${media_url}`" @click="$emit('image-click', `${SERVER_PATH}media/${media_url}`)" />
+            <img :src="`${SERVER_PATH}static/media/${media_url}`" @click="$emit('image-click', `${SERVER_PATH}media/${media_url}`)" />
         </v-card>
       </v-col>
       <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image2'">
