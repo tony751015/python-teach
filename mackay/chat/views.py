@@ -346,7 +346,7 @@ def chat_record_photo(request):
 
                 # 排序資料並取得需要的欄位
                 filterData = recordQuery.order_by('-create_date').values_list('create_date_truncated', flat=True)
-                recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'media_url', 'create_date_truncated'))
+                recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'media_url', 'is_carer_user' ,'create_date_truncated'))
 
                 # 設定一個變數來追蹤當前迴圈的日期
                 currentLoopDate = ''

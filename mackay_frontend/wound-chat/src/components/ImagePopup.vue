@@ -85,9 +85,9 @@ export default {
  }
  .imgbox {
     width: 100%;
-    height: 100%;
+    height: 70dvh;
     border: 10px solid #f5f5f5;
-    aspect-ratio: 4/3;
+    /* aspect-ratio: 4 / 3; */
     overflow: auto;
  }
  .popup-img {

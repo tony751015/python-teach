@@ -108,13 +108,35 @@ export default {
     //   });
     //   return;
     // } 
-    this.initializeApp().then(() => {
-        this.autoRelogin();
-    });
+    this.checkURL(location.href);
+    // this.initializeApp().then(() => {
+    //     this.autoRelogin();
+    // });
   },
   
   
   methods: {
+    checkURL(url) {
+      try {
+        const urlObj = new URL(url);
+
+        console.log('URL:', url);
+        console.log('Origin:', urlObj.origin);
+        console.log('Pathname:', urlObj.pathname);
+
+        // 檢查 domain 和 pathname，確保沒有任何路徑、字元或 query parameters
+        if (urlObj.origin !== 'http://127.0.0.1:8000' || urlObj.pathname !== '/') {
+          console.log('網址不符合條件');
+          this.autoRelogin();
+          return '網址不符合條件';
+        }
+        return '網址符合條件';
+
+      } catch (error) {
+        console.log('網址格式錯誤:', error);
+        return '網址格式錯誤';
+      }
+    },
     detectAutoLoginProcess() {
       const getJWT = localStorage.getItem('mackay');
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));

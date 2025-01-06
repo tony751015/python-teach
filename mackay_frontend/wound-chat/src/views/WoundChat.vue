@@ -9,6 +9,12 @@
         <!-- <v-img src="../assets/logo_dr.png" class="main-logo"></v-img> -->
         <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
       <!-- <header class="chat-title text-h6 font-weight-black">星禾互聯</header> -->
+      <v-btn
+        text
+        @click="goChatList()"      
+      >
+        <v-icon>mdi-home</v-icon>         
+      </v-btn>
       <v-spacer>
         <template>
           <v-tabs align-with-title background-color="transparent">
@@ -102,7 +108,7 @@
         <wound-photos
           :albums="albums"
           :current-album.sync="currentAlbum"
-          :selected-patient-id="userProfile.id"
+          :selected-patient-id="storeUserId"
           @update:current-album="updateCurrentAlbum"
         ></wound-photos>
       </v-row>
@@ -113,6 +119,7 @@
 <script>
 import ChatWindows from '../components/ChatWindows.vue';
 import WoundPhotos from '../components/WoundPhotos.vue';
+import { mapMutations } from 'vuex';
 
 export default {
   components: {
@@ -185,6 +192,21 @@ export default {
 
       this.searchResults = []; // 清空搜尋結果
     },
+    goChatList() {
+        this.UPDATE_USER_ID(this.userProfile.id);
+
+        // 取得 localStorage 中的 mackay
+        const mackayData = JSON.parse(localStorage.getItem('mackay') || '{}');
+        
+        // 更新 user_id
+        mackayData.user_id = this.userProfile.id;
+        
+        // 將更新後的物件存回 localStorage
+        localStorage.setItem('mackay', JSON.stringify(mackayData));
+
+        this.$router.push({ path: `/chat/` });
+      },
+      ...mapMutations(['UPDATE_USER_ID'])
   },
   mounted() {
     if (this.userProfile.name) {

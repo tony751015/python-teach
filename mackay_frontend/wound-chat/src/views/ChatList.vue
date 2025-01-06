@@ -108,7 +108,7 @@
                   class="px-1"
                   @click.stop="goChatroom(patient)"
                 >Open Chat
-                  <v-icon>mdi-arrow-right-bold</v-icon>
+                  <!-- <v-icon>mdi-arrow-right-bold</v-icon> -->
                 </v-btn>
               </v-list-item-action>
               <v-list-item-action>
@@ -358,7 +358,8 @@
         const mackayData = JSON.parse(localStorage.getItem('mackay') || '{}');
         
         // 更新 user_id
-        mackayData.user_id = patient.user_id;
+        mackayData.room_path = patient.room_path;
+        mackayData.selectedId = patient.user_id;
         
         // 將更新後的物件存回 localStorage
         localStorage.setItem('mackay', JSON.stringify(mackayData));
@@ -417,6 +418,9 @@
   .main-logo {
     height: 100%;
     padding: 10px 0px;
+  }
+  .patient-item{
+    margin-bottom: 2px;
   }
   .patient-item:hover {
     background-color: #f0f0f0;

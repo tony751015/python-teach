@@ -26,7 +26,7 @@
     <div class="photo-zone">
       <div class="photo-grid" infinite-wrapper>
         <v-hover v-slot="{ hover }" 
-        v-for="(photo, index) in currentPhotos" 
+        v-for="(photo, index) in filteredPhotos" 
         :key="index">
           <div class="photo-item" 
           @click="openImagePopup(`${SERVER_PATH}media/${photo.src}`)">
@@ -93,8 +93,11 @@ export default {
     };
   },
   computed: {
-    currentPhotos() {
-      return this.albums[this.currentAlbum]?.photos || [];
+    // currentPhotos() {
+    //   return this.albums[this.currentAlbum]?.photos || [];
+    // },
+    filteredPhotos() {
+      return this.albums[this.currentAlbum]?.photos.filter(photo => !photo.is_carer_user) || [];
     }
   },
   watch: {
@@ -183,14 +186,23 @@ export default {
     //   });
     // },
     loadMorePhotos($state) {
+        const getJWTData = JSON.parse(localStorage.getItem('mackay'));
         console.log($state);
+        let getPhotoUserId;
         if (!this.hasMore || this.selectedPatientId === -1) {
             $state.complete();
             return;
         }
+        if (this.selectedPatientId){
+          getPhotoUserId = this.selectedPatientId;
+        }else if (getJWTData.selectedId){
+          getPhotoUserId = getJWTData.selectedId;
+        }else{
+          getPhotoUserId = getJWTData.user_id;
+        }
         axios.get('http://127.0.0.1:8000/api/chat/photo', {
             params: {
-                user_id: this.selectedPatientId,
+                user_id: getPhotoUserId,
                 page: this.page,
                 size: this.size
             }
@@ -199,14 +211,15 @@ export default {
             if (this.localCurrentAlbum === 0) {
                 const newPhotos = response.data.results.map(photo => ({
                     id: photo.record_id,
-                    src: photo.media_url
+                    src: photo.media_url,
+                    is_carer_user: photo.is_carer_user
                 }));
                 console.log(response.data.results);
                 if (newPhotos.length > 0) {
                     if (this.page === 1) {
-                        this.albums = [{ photos: newPhotos }];
+                      this.albums = [{ photos: newPhotos }];
                     } else {
-                        this.albums[0].photos.push(...newPhotos);
+                      this.albums[0].photos.push(...Object.values(newPhotos).filter(photo => !photo.is_carer_user));
                     }
                     this.page += 1; // 增加頁數
                     if ($state) $state.loaded();
@@ -253,10 +266,16 @@ export default {
       this.$emit('update:currentAlbum', index);
     },
     confirmDelete(photoId) {
+      let getPhotoUserId;
+      if (this.selectedPatientId){
+        getPhotoUserId = this.selectedPatientId;
+      }else{
+        getPhotoUserId = this.$store.state.storeUserId;
+      }
       if (confirm('Are you sure you want to delete this photo？')) {
         axios.delete(`http://127.0.0.1:8000/api/chat/photo`, {
           data: {
-            user_id: this.selectedPatientId,
+            user_id: getPhotoUserId,
             record_id: photoId
           }
         })

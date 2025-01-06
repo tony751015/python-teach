@@ -1,0 +1,31 @@
+{% if load_member_list_ssr %}
+  <span>會員系統 A </span>
+  <ul>
+    {% for members in load_member_list_ssr %}
+    <li>
+      <span> {{ members.email }}</span>
+      <span> {{ members.password }}</span>
+      <span> {{ members.name }}</span>
+      <span> {{ members.birth }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+
+
+{% elif load_member_list_ssr_query %}
+  <span>會員系統 B</span>
+
+
+  {% if load_member_list_ssr_query == "error" %}
+    <span>查無資料</span>
+  {% else %}
+    <span> {{ load_member_list_ssr_query.email }}</span>
+    <span> {{ load_member_list_ssr_query.password }}</span>
+    <span> {{ load_member_list_ssr_query.name }}</span>
+    <span> {{ load_member_list_ssr_query.birth }}</span>
+  {% endif %}
+
+
+{% else %}
+  <span>出包</span>
+{% endif %}

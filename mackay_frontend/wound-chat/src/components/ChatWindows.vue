@@ -29,21 +29,20 @@
       </div>
     </div>
     <div>
-      <v-layout row>
+      <v-layout row class="send-message-layout">
         <v-text-field
           v-model="newMessage"
           placeholder="Type your message here"
           outlined
           hint="Shift + Enter for a new line, Enter to send: "
           persistent-hint
-          append-icon="mdi-emoticon-outline"
           @keyup.enter="sendMessage"
           class="message-input mb-13 mx-3"
         >
         </v-text-field>
-        <v-btn @click="sendMessage" elevation="0" color="white" class="send-btn px-1 mr-1" >
+        <button @click="sendMessage" elevation="0" color="white" class="send-btn px-1 mr-1" >
             <v-icon color="main-green">mdi-send</v-icon>
-        </v-btn>
+        </button>
         <v-btn @click="openUploadImage" elevation="0" color="primary" class="upload-btn main-green">
           <v-icon>mdi-paperclip</v-icon>
           Upload
@@ -170,7 +169,7 @@ export default {
       if (fetch_user_id) {
         userId = fetch_user_id
       }else {
-        userId = getJWTData.user_id
+        userId = getJWTData.selectedId
       }
       console.log('fetchMessages', this.userProfile.id, this.storeUserId);
       // if (this.userProfile.id !== this.$route.params.id) {
@@ -256,7 +255,7 @@ export default {
       if (fetch_user_id) {
         userId = fetch_user_id
       }else {
-        userId = getJWTData.user_id
+        userId = getJWTData.selectedId
       }
       if (!this.preloader) {
         axios.get(GET_API_URL, {
@@ -301,7 +300,7 @@ export default {
       if (fetch_user_id) {
         userId = fetch_user_id
       }else {
-        userId = getJWTData.user_id
+        userId = getJWTData.selectedId
       }
       if (this.newMessage.trim() !== '') {
         const user_name = this.userProfile.name || '您';
@@ -392,6 +391,10 @@ export default {
   position: relative;
 }
 
+.send-message-layout{
+  padding-top: 2px;
+  padding-right: 12px;
+}
 
 .message-input {
   border-top: 1px solid #eee;

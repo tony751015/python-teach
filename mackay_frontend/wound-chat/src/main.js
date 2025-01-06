@@ -25,14 +25,11 @@ const VUEX_FEATURE = {
     ...mapMutations({
       updateUserProfile: 'UPDATE_USER_PROFILE',
       updateUserLogin: 'UPDATE_USER_LOGIN',
-      updateUserId: 'UPDATE_USER_ID',
+      // updateUserId: 'UPDATE_USER_ID',
       updateAlert: 'UPDATE_ALERT',
     }),
     autoRelogin() {
       // alert('autoRelogin');
-      const isLoginWithJwt = localStorage.getItem('isLoginWithJwt');
-      if (isLoginWithJwt) {
-        // alert('isLoginWithJwt2');
         const getJwt = localStorage.getItem('mackay');
 
         const getJwtJson = JSON.parse(getJwt)
@@ -54,10 +51,10 @@ const VUEX_FEATURE = {
 
           this.updateUserLogin(true);
           this.updateUserProfile(USER_PROFILE);
-          this.updateUserId(USER_PROFILE.id);
-          if (USER_PROFILE) {
-            this.updateUserId(USER_PROFILE.id);
-          }
+          // this.updateUserId(USER_PROFILE.id);
+          // if (USER_PROFILE) {
+          //   this.updateUserId(USER_PROFILE.id);
+          // }
           this.updateAlert({
             show: true,
             status: 'success',
@@ -73,30 +70,12 @@ const VUEX_FEATURE = {
             message: 'Please login again!'
           });
 
-          this.$router.push('/');
+          if (this.$route.path != '/'){
+            this.$router.push('/');
+          }
           alert('route to login2');
         }
-      }else{
-        setTimeout(() => {
-          const isLoginWithJwt = localStorage.getItem('isLoginWithJwt');
-          // alert(isLoginWithJwt)
-          if (!isLoginWithJwt) {
-            this.updateUserProfile(null);
-            this.updateUserId(null);
-            this.updateUserLogin(false);
-            this.updateAlert({
-              show: true,
-              status: 'error',
-              message: 'Please login again!'
-            });
-            if (this.$route.path != '/'){
-              this.$router.push('/');
-            }
-          }    
-        }, 1000);
-        
-      }
-     
+
     },
 
     routerRedirectTo404() {
@@ -129,7 +108,7 @@ const VUEX_FEATURE = {
             };
             
             localStorage.setItem('mackay', JSON.stringify(localStorageSaveObj));
-            localStorage.setItem('isLoginWithJwt', true);
+            
             const decoded = jwt_decode(getJWT);
 
             const USER_PROFILE = {
@@ -183,7 +162,7 @@ const VUEX_FEATURE = {
     },
     logout() {
       localStorage.removeItem('mackay');
-      localStorage.removeItem('isLoginWithJwt');
+      
       this.updateAlert({
         show: true,
         status: 'success',

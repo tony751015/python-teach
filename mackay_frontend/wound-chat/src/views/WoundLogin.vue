@@ -28,7 +28,7 @@
              close-label
              color="v-dark"
              class="white--text mb-3"
-             >Quick log in/Sign up</v-chip>
+             >Fast log in/Sign up</v-chip>
             <v-card-text>
               <!-- 快速登入/註冊 -->
               <template>
@@ -51,7 +51,7 @@
                   block
                   outlined
                   elevation="0"
-                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:3000/&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
+                  href="https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006462026&redirect_uri=http://127.0.0.1:8000/&scope=openid%20profile&nonce=helloWorld&state=mackay&prompt=consent&ui_locales=zh-TW">
                   <div style="display: flex; align-items: center;">
                     <i class="fab fa-line" style="margin-right: 10px;"></i>
                   </div>
