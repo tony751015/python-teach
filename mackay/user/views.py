@@ -183,85 +183,86 @@ def chat_room_update_pin(request):
 @authentication_classes([])
 @permission_classes([])
 def load_user_chat_room(request):
-  serializer = JSONParser().parse(request)
+    serializer = JSONParser().parse(request)
 
-  userId = serializer['user_id']
-  page = serializer['page']
-  size = serializer['size']
+    userId = serializer['user_id']
+    page = serializer['page']
+    size = serializer['size']
 
-  # 如果接受到的request方法是 GET
-  if request.method == 'PUT':
-    # 檢查是否有email params
-    try:
-      isAuthMedical = User.objects.get(id=userId)
-    except User.DoesNotExist:
-      return Response('no permission', status=403)
-    
-    authMedicalType = isAuthMedical.is_superuser
+    # 如果接受到的request方法是 PUT
+    if request.method == 'PUT':
+        # 檢查是否有email params
+        try:
+            isAuthMedical = User.objects.get(id=userId)
+        except User.DoesNotExist:
+            return Response('no permission', status=403)
 
-    if authMedicalType:
-      chatRoomList = chat_room.objects.all()
-      chatRoomListCount = chatRoomList.count()
-      orderChatRoomList = chatRoomList.order_by('-pin', '-create_date').values(
-        "id",
-        "user_id",
-        "room_path",
-        "pin",
-      )
+        authMedicalType = isAuthMedical.is_superuser
 
-      for obj in orderChatRoomList:
-        # print('Get Room User ID', obj['user_id'])
-        patientId = obj['user_id']
+        if authMedicalType:
+            chatRoomList = chat_room.objects.all()
+            chatRoomListCount = chatRoomList.count()
+            orderChatRoomList = chatRoomList.order_by('-pin', '-create_date').values(
+                "id",
+                "user_id",
+                "room_path",
+                "pin",
+            )
 
-        patientData = User.objects.get(id=patientId)
-        lastChatRecord = chat_record.objects.filter(Q(create_user=patientId) & Q(ban=False)).order_by('create_date').last()
+            for obj in orderChatRoomList:
+                # print('Get Room User ID', obj['user_id'])
+                patientId = obj['user_id']
 
-        # print('lastChatRecord', lastChatRecord)
+                patientData = User.objects.get(id=patientId)
+                lastChatRecord = chat_record.objects.filter(Q(create_user=patientId) & Q(ban=False)).order_by('create_date').last()
 
-        obj['user_name'] = patientData.name
-        obj['user_id'] = patientData.id
-        obj['user_avatar'] = patientData.avatar
+                # print('lastChatRecord', lastChatRecord)
 
-        if lastChatRecord:
-          obj['last_message'] = {
-            "content": lastChatRecord.content,
-            "content_type": lastChatRecord.content_type,
-            "media_url": str(lastChatRecord.media_url)
-          }
+                obj['user_name'] = patientData.name
+                obj['user_id'] = patientData.id
+                obj['user_avatar'] = patientData.avatar
+                obj['is_superuser'] = patientData.is_superuser
+
+                if lastChatRecord:
+                    obj['last_message'] = {
+                        "content": lastChatRecord.content,
+                        "content_type": lastChatRecord.content_type,
+                        "media_url": str(lastChatRecord.media_url)
+                    }
+                else:
+                    obj['last_message'] = None
+
         else:
-          obj['last_message'] = None
+            return Response('no permission', status=403)
 
-    else:
-      return Response('no permission', status=403)
+        try:
+            p = Paginator(orderChatRoomList, size) 
+            page1 = p.page(page)
+            final = page1.object_list 
+            results = {
+                "count": chatRoomListCount,
+                "results": final
+            }
+            return Response(results, status=200)
 
-    try:
-      p = Paginator(orderChatRoomList, size) 
-      page1 = p.page(page)
-      final = page1.object_list 
-      results = {
-        "count": chatRoomListCount,
-        "results": final
-      }
-      return Response(results, status=200)
-    
-    # 如果超出分頁範圍
-    except PageNotAnInteger:
-      results = {
-        "count": chatRoomListCount,
-        "results": []
-      }
-      return Response(results, status=200)
+        # 如果超出分頁範圍
+        except PageNotAnInteger:
+            results = {
+                "count": chatRoomListCount,
+                "results": []
+            }
+            return Response(results, status=200)
 
-    # 如果指定分頁沒有資料
-    except EmptyPage:
-      results = {
-        "count": chatRoomListCount,
-        "results": []
-      }
-      return Response(results, status=200)
-    
-    # 發生其他錯誤時
-    except:
-      return Response('error', status=500)
+        # 如果指定分頁沒有資料
+        except EmptyPage:
+            results = {
+                "count": chatRoomListCount,
+                "results": []
+            }
+            return Response(results, status=200)
+
+        # 發生其他錯誤時
+        except:
+            return Response('error', status=500)
 
   

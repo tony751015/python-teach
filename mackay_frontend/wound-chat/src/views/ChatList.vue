@@ -50,89 +50,89 @@
         
         <v-list>
           <v-subheader>Patient census: {{ patientCount }}</v-subheader>
-          <template v-if="!preloading">
-            <v-list-item
-              v-for="patient in filteredPatients"
-              :key="patient.id"
-              class="patient-item"
-              @click="selectPatient(patient.user_id)"
-              :class="{ 'outlined': highlightedPatientId === patient.user_id }"
-            >
-              <v-list-item-avatar size="56">
-                <v-img :src="patient.user_avatar || require('@/assets/user.png')"></v-img>
-              </v-list-item-avatar>
-  
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ patient.user_name }}
-                  <span class="grey--text text--lighten-1 font-small">{{ '(' + patient.user_id + ')'}}</span>
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  <span
-                    v-if="
-                      patient.last_message &&
-                      patient.last_message.content_type === 'text'
-                    "
-                  >
-                    {{ patient.last_message.content }}
-                  </span>
-                  <span
-                    v-else-if="
-                      patient.last_message &&
-                      patient.last_message.content_type === 'image'
-                    "
-                  >
-                    傳送了一張圖片
-                    <v-btn
-                      outlined
-                      color="main-green"
-                      small
-                      class="px-1"
-                      @click.stop="openImagePopup(
-                        `${SERVER_PATH}media/${patient.last_message.media_url}`
-                      )"
+            <template v-if="!preloading">
+              <v-list-item
+                v-for="patient in visiblePatients"
+                :key="patient.id"
+                class="patient-item"
+                @click="selectPatient(patient.user_id)"
+                :class="{ 'outlined': highlightedPatientId === patient.user_id }"
+              >
+                <v-list-item-avatar size="56">
+                  <v-img :src="patient.user_avatar || require('@/assets/user.png')"></v-img>
+                </v-list-item-avatar>
+            
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ patient.user_name }}
+                    <span class="grey--text text--lighten-1 font-small">{{ '(' + patient.user_id + ')'}}</span>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <span
+                      v-if="
+                        patient.last_message &&
+                        patient.last_message.content_type === 'text'
+                      "
                     >
-                      <v-icon class="font-normal">mdi-magnify</v-icon>
-                      photo
-                    </v-btn>
-                  </span>
-                  <span v-else>no message</span>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-btn 
-                  outlined
-                  elevation="0"
-                  color="main-green"
-                  small
-                  class="px-1"
-                  @click.stop="goChatroom(patient)"
-                >Open Chat
-                  <!-- <v-icon>mdi-arrow-right-bold</v-icon> -->
-                </v-btn>
-              </v-list-item-action>
-              <v-list-item-action>
-                <v-btn 
-                  fab 
-                  elevation="0"
-                  :color="patient.pin ? 'main-green' : ''"
-                  @click.stop="togglePin(patient)"
-                >
-                  <v-icon :color="patient.pin ? 'white' : ''">mdi-pin</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-
-            <infinite-loading 
-              :identifier="infiniteId"
-              @infinite="loadMorePatients"
-              spinner="bubbles"
-              direction="bottom"
-            >
-              <div slot="no-more" class="infini-note grey--text text--lighten-1 font-small">No more data</div>
-              <div slot="no-results" class="infini-note grey--text text--lighten-1 font-small">No results found</div>
-            </infinite-loading>
-          </template>
+                      {{ patient.last_message.content }}
+                    </span>
+                    <span
+                      v-else-if="
+                        patient.last_message &&
+                        patient.last_message.content_type === 'image'
+                      "
+                    >
+                      傳送了一張圖片
+                      <v-btn
+                        outlined
+                        color="main-green"
+                        small
+                        class="px-1"
+                        @click.stop="openImagePopup(
+                          `${SERVER_PATH}media/${patient.last_message.media_url}`
+                        )"
+                      >
+                        <v-icon class="font-normal">mdi-magnify</v-icon>
+                        photo
+                      </v-btn>
+                    </span>
+                    <span v-else>no message</span>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-btn 
+                    outlined
+                    elevation="0"
+                    color="main-green"
+                    small
+                    class="px-1"
+                    @click.stop="goChatroom(patient)"
+                  >Open Chat
+                    <!-- <v-icon>mdi-arrow-right-bold</v-icon> -->
+                  </v-btn>
+                </v-list-item-action>
+                <v-list-item-action>
+                  <v-btn 
+                    fab 
+                    elevation="0"
+                    :color="patient.pin ? 'main-green' : ''"
+                    @click.stop="togglePin(patient)"
+                  >
+                    <v-icon :color="patient.pin ? 'white' : ''">mdi-pin</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+            
+              <infinite-loading 
+                :identifier="infiniteId"
+                @infinite="loadMorePatients"
+                spinner="bubbles"
+                direction="bottom"
+              >
+                <div slot="no-more" class="infini-note grey--text text--lighten-1 font-small">No more data</div>
+                <div slot="no-results" class="infini-note grey--text text--lighten-1 font-small">No results found</div>
+              </infinite-loading>
+            </template>
           
         </v-list>
       </v-col>
@@ -205,6 +205,9 @@
             patient.user_name.includes(this.searchQuery) || 
             patient.user_id.toString().includes(this.searchQuery)
         );
+      },
+      visiblePatients() {
+        return this.filteredPatients.filter(patient => !patient.is_superuser);
       }
     },
     methods: {

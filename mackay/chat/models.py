@@ -21,6 +21,7 @@ class chat_room(models.Model):
   user_id = models.TextField(blank=True)
   room_path = models.TextField(default='text', blank=True)
   pin = models.BooleanField(default=False)
+  ban = models.BooleanField(default=False)
   create_date = models.DateTimeField(auto_now_add=True) # 會自動建立日期
 
   class Meta:
