@@ -239,7 +239,13 @@ export default {
           // setTimeout(() => {
           //   this.$router.push({ name: 'chat-list' });
           // }, 500);
-          console.error(err);
+          console.error(err.response.status);
+
+          // if (err.response.status === 404) {
+          //   xxx
+          // } else if (err.response.status === 403) {
+          //   xxx
+          // }
         });
     },
 
