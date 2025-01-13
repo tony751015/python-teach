@@ -67,13 +67,14 @@ const VUEX_FEATURE = {
           this.updateAlert({
             show: true,
             status: 'error',
-            message: 'Please login again!'
+            message: 'Please log in again!'
           });
+          const urlObj = new URL(location.href);
 
-          if (this.$route.path != '/'){
+          if (urlObj.pathname !== '/'){
             this.$router.push('/');
           }
-          alert('route to login2');
+          
         }
 
     },

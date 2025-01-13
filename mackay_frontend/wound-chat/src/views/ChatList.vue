@@ -195,6 +195,7 @@
         highlightedPatientId: null, // 用於追蹤當前選擇的病患
         albums: [], // 初始化 albums 為空陣列
         currentAlbum: 0, // 初始化 currentAlbum
+        dontRun: false
       };
     },
     computed: {
@@ -207,7 +208,7 @@
         );
       },
       visiblePatients() {
-        return this.filteredPatients.filter(patient => !patient.is_superuser);
+        return this.filteredPatients.filter(patient => !patient.ban);
       }
     },
     methods: {
@@ -232,9 +233,9 @@
           console.log(response.data.results);
           if (response.data.results.length) {
             this.patients.push(...response.data.results);
-            this.patientCount = response.data.count;
             this.currentPage += 1;
             this.preloading = false;
+            this.updatePatientCount(); // 更新 patientCount
           } else {
             this.preloading = true;
           }
@@ -261,11 +262,16 @@
             console.log(response.data.results);
             if (response.data.results.length) {
               this.patients.push(...response.data.results);
-              this.patientCount = response.data.count;
               this.currentPage += 1;
               $state.loaded();
+              this.updatePatientCount(); // 更新 patientCount
+              // console.log("patients.", JSON.stringify(this.patients));
             } else {
               $state.complete();
+              if (!this.dontRun) {
+                this.updateBanForSuperusers(); // 確保資料完整下載完後再執行
+                this.dontRun = true;
+              }
             }
           })
           .catch(error => {
@@ -369,6 +375,28 @@
 
         this.$router.push({ path: `/chat/${patient.room_path}` });
       },
+      updatePatientCount() {
+        this.patientCount = this.visiblePatients.length;
+      },
+      updateBanForSuperusers() {
+        const roomPathsToBan = this.patients
+          .filter(patient => patient.is_superuser)
+          .map(patient => patient.room_path);
+
+        if (roomPathsToBan.length > 0) {
+          axios.put('http://127.0.0.1:8000/api/chat/update_ban', {
+            user_id: this.userProfile.id,
+            ban: true,
+            room_paths: roomPathsToBan
+          })
+          .then(() => {
+            this.startReloadPatientData();
+          })
+          .catch(error => {
+            console.error("Error updating ban state:", error);
+          });
+        }
+      },
       ...mapMutations(['UPDATE_USER_ID'])
     },
     mounted() {
@@ -426,7 +454,7 @@
     margin-bottom: 2px;
   }
   .patient-item:hover {
-    background-color: #f0f0f0;
+    background-color: #d4eaed;
     border-radius: 5px;
   }
   .logoutBtn {

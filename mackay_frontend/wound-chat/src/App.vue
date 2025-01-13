@@ -178,9 +178,7 @@ export default {
           message: 'Please log in again!'
         });
 
-        this.$router.push({
-          name: 'woundLogin'
-        })
+        this.$router.push('/');
       }
       // setTimeout(() => {
       //   this.alert_timeout = false;

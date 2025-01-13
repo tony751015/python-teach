@@ -43,8 +43,8 @@
           </div>
         </v-hover>
         <infinite-loading ref="infiniteLoading" force-use-infinite-wrapper=".photo-grid" @infinite="loadMorePhotos">
-          <div slot="no-more" class="infini-photo-note grey--text text--lighten-1 font-small">There are no more photo</div>
-          <div slot="no-results" class="infini-photo-note grey--text text--lighten-1 font-small">There are no more photo</div>
+          <div slot="no-more" class="infini-photo-note grey--text text--lighten-1 font-small">No more photo</div>
+          <div slot="no-results" class="infini-photo-note grey--text text--lighten-1 font-small">No more photo</div>
         </infinite-loading>
       </div>
     </div>

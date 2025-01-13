@@ -12,9 +12,10 @@
       <v-btn
         v-if="userProfile.super_user"
         text
+        class="ml-6"
         @click="goChatList()"
       >
-        <v-icon>mdi-arrow-left-drop-circle-outline</v-icon>go list
+      My Patients
       </v-btn>
       <v-spacer>
         <template>

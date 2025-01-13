@@ -207,6 +207,7 @@ def load_user_chat_room(request):
                 "user_id",
                 "room_path",
                 "pin",
+                "ban",
             )
 
             for obj in orderChatRoomList:
@@ -265,4 +266,34 @@ def load_user_chat_room(request):
         except:
             return Response('error', status=500)
 
-  
+@api_view(['PUT'])
+@authentication_classes([])
+@permission_classes([])
+def chat_room_update_ban(request):
+    serializer = JSONParser().parse(request)
+
+    userId = serializer['user_id']
+    ban = serializer['ban']
+    room_paths = serializer['room_paths']  # 修改為多個 room_path
+
+    if request.method == 'PUT':
+        try:
+            isAuthMedical = User.objects.get(id=userId)
+        except User.DoesNotExist:
+            return Response('no permission', status=403)
+        
+        authMedicalType = isAuthMedical.is_superuser
+
+        if authMedicalType:
+            for room_path in room_paths:
+                try:
+                    findChatRoom = chat_room.objects.get(room_path=room_path)
+                    findChatRoom.ban = ban
+                    findChatRoom.save()
+                except chat_room.DoesNotExist:
+                    return Response(f'chat room with path {room_path} not found', status=404)
+                except:
+                    return Response('error', status=500)
+            return Response('update', status=200)
+        else:
+            return Response('no permission', status=403)

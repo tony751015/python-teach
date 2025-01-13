@@ -9,8 +9,8 @@
       
       <div ref="chatWindow" class="chat-window">
         <infinite-loading direction="top" @infinite="infiniteHandler" :identifier='infiniteId'>
-          <div slot="no-more">There are no more comments</div>
-          <div slot="no-results">There are no more comments</div>
+          <div slot="no-more">No more comments</div>
+          <div slot="no-results">No more comments</div>
         </infinite-loading>
 
         <chat-message
@@ -240,7 +240,17 @@ export default {
           //   this.$router.push({ name: 'chat-list' });
           // }, 500);
           console.error(err.response.status);
-
+          if (err.response.status === 404) {
+            this.routerRedirectTo404();
+          } else if (err.response.status === 403) {
+            this.routerRedirectTo404();
+          }else{
+            if (this.userProfile.super_user){
+              this.$router.push({ name: 'chat-list' });
+            }else {
+              this.routerRedirectTo404();
+            }
+          }
           // if (err.response.status === 404) {
           //   xxx
           // } else if (err.response.status === 403) {

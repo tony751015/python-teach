@@ -58,7 +58,7 @@
                   <span style="flex: 1; text-align: center;">LINE Account</span>
                 </v-btn>
 
-                <v-btn 
+                <!-- <v-btn 
                   color="v-dark"
                   class="mb-2 justify-space-between align-center fastLogin"
                   block
@@ -66,12 +66,12 @@
                   outlined
                   elevation="0"
                   @click="loginToWoundChat('google123','google會員','google')">
-                  <div style="display: flex; align-items: center;">
+                  <div style="display: flex; align-items: center;"> -->
                     <!-- <v-icon left>mdi-google</v-icon> -->
-                     <v-img left class="iconImg" src="../assets/google.png"></v-img>
+                     <!-- <v-img left class="iconImg" src="../assets/google.png"></v-img>
                   </div>
                   <span style="flex: 1; text-align: center;">GOOGLE Account</span>
-                </v-btn>
+                </v-btn> -->
               </template>
             </v-card-text>
           </v-card>
