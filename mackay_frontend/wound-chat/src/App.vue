@@ -114,7 +114,6 @@ export default {
     // });
   },
   
-  
   methods: {
     checkURL(url) {
       try {

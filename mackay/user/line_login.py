@@ -10,12 +10,25 @@ from chat.models import chat_room
 import uuid
 from django.utils import timezone
 from datetime import timedelta
+from django.conf import settings
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 apiTokenUrl = 'https://api.line.me/oauth2/v2.1/token'
 apiProfileUrl = 'https://api.line.me/v2/profile'
+
+# 開發
+if settings.DEBUG == True:
+  LINE_ID = '2006462026'
+  LINE_SECRET = '5d9bbfbaeb564b6bae32765e79c20ab2'
+  REDIRECT_URL = 'http://127.0.0.1:3000/'
+
+# 部屬
+else:
+  LINE_ID = '2006754723'
+  LINE_SECRET = '313b67b3c810351c1396b450ac5c35e0'
+  REDIRECT_URL = 'https://wdcare.net/'
 
 # === JWT參考說明 === #
 # https://medium.com/%E4%BC%81%E9%B5%9D%E4%B9%9F%E6%87%82%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88/jwt-json-web-token-%E5%8E%9F%E7%90%86%E4%BB%8B%E7%B4%B9-74abfafad7ba
@@ -34,9 +47,9 @@ def line_fast_login(request):
   data_config = {
     'grant_type': 'authorization_code',
     'code': code,
-    'redirect_uri': 'http://127.0.0.1:8000/',
-    'client_id': 2006462026,
-    'client_secret': '5d9bbfbaeb564b6bae32765e79c20ab2'
+    'redirect_uri': REDIRECT_URL,
+    'client_id': LINE_ID,
+    'client_secret': LINE_SECRET
   }
 
   lineAuthApi = requests.post(

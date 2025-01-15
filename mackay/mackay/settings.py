@@ -1,24 +1,33 @@
-from pathlib import Path
-
+import environ
 import os
+from pathlib import Path
+from google.oauth2 import service_account
+
+env = environ.Env()
+environ.Env.read_env()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
-
+DOMAIN = env('BASE_DOMAIN')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-$c&ho%6zv9xq5$@-8+2ycwm@r#&p1nbsw1t^-0g#!7qn6#70c$"
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1:3000'] # 屆時要加入
-
+DEBUG = False
+ALLOWED_HOSTS = [
+  '34.80.24.89',
+  '34.149.217.42',
+  'www.wdcare.net',
+  'wdcare.net'
+] # 屆時要加入
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = False
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -48,7 +57,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
+
 ROOT_URLCONF = "mackay.urls"
 
 TEMPLATES = [
@@ -132,12 +141,11 @@ STATICFILES_DIRS = [
 # DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # # 上傳至GCP Storage，設定會去吃gcpUtils.py檔案
-# STATICFILES_STORAGE = 'cancell.gcpUtils.Static'
-# DEFAULT_FILE_STORAGE = 'cancell.gcpUtils.Media'
-# GS_FILE_OVERWRITE = True
+STATICFILES_STORAGE = 'mackay.gcpUtils.Static'
+DEFAULT_FILE_STORAGE = 'mackay.gcpUtils.Media'
+GS_FILE_OVERWRITE = True
 
 # # 上線部屬的BUCKET路徑
-# GS_BUCKET_NAME = env('GS_BUCKET_NAME') 
+GS_BUCKET_NAME = env('GS_BUCKET_NAME') 
 # print('GS_BUCKET_NAME', GS_BUCKET_NAME)
-
-# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR, 'gcp-storage-upload.json')) # 本機/Server上內容會不同。
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR, 'gcp-upload.json')) # 本機/Server上內容會不同。

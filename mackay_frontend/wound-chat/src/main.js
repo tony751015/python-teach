@@ -19,6 +19,9 @@ const VUEX_FEATURE = {
   data: () => ({
     SERVER_PATH: process.env.VUE_APP_SERVER_PATH,
     VUE_PATH: process.env.VUE_APP_PATH,
+    LINE_ID: process.env.VUE_APP_LINE_ID,
+    LINE_SECRET: process.env.VUE_APP_LINE_SECRET,
+    LINE_CALLBACK: process.env.VUE_APP_LINE_CALLBACK,
   }),
 
   methods: {
