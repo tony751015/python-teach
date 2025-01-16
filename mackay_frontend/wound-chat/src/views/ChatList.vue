@@ -7,6 +7,14 @@
     </v-responsive>
     
     <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
+    <v-btn
+        v-if="userProfile.super_user"
+        text
+        class="ml-6 list-btn"
+        disabled
+      >
+      My Patients
+    </v-btn>
     <v-spacer>
       <template>
         <v-tabs align-with-title background-color="transparent">
@@ -449,6 +457,10 @@
   .main-logo {
     height: 100%;
     padding: 10px 0px;
+  }
+  .list-btn.theme--light.v-btn.v-btn--disabled {
+    background-color: #fff;
+    color : #2D9CA0 !important;
   }
   .patient-item{
     margin-bottom: 2px;

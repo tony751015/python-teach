@@ -12,7 +12,7 @@
       <v-btn
         v-if="userProfile.super_user"
         text
-        class="ml-6"
+        class="ml-6 white--text"
         @click="goChatList()"
       >
       My Patients
