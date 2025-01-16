@@ -122,9 +122,10 @@ export default {
         console.log('URL:', url);
         console.log('Origin:', urlObj.origin);
         console.log('Pathname:', urlObj.pathname);
+        console.log('path:', this.PATH_CHECK);
 
         // 檢查 domain 和 pathname，確保沒有任何路徑、字元或 query parameters
-        if (urlObj.origin !== this.SERVER_PATH || urlObj.pathname !== '/') {
+        if (urlObj.origin != this.PATH_CHECK || urlObj.pathname != '/') {
           console.log('網址不符合條件');
           this.autoRelogin();
           return '網址不符合條件';

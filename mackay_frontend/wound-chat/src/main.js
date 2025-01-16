@@ -22,6 +22,7 @@ const VUEX_FEATURE = {
     LINE_ID: process.env.VUE_APP_LINE_ID,
     LINE_SECRET: process.env.VUE_APP_LINE_SECRET,
     LINE_CALLBACK: process.env.VUE_APP_LINE_CALLBACK,
+    PATH_CHECK: process.env.VUE_APP_LOGIN_CHECK,
   }),
 
   methods: {

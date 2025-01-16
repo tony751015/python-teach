@@ -84,7 +84,6 @@ import ChatMessage from './ChatMessage.vue';
 import ProgressLoader from '../common/progessLoading.vue';
 import ImagePopup from './ImagePopup.vue';
 import UploadImage from './UploadImage.vue';
-const GET_API_URL = 'http://127.0.0.1:8000/api/chat/list?';
 export default {
   name: 'ChatWindows',
   components: {
@@ -186,11 +185,19 @@ export default {
               return;
             
           }
+        }else {
+          const getJWTData = JSON.parse(localStorage.getItem('mackay'));
+          const selectedIdForCheck = getJWTData.selectedId;
+          if (selectedIdForCheck != chatRoomId) {
+            // alert('Wrong User');
+            this.$router.push('/chat')
+            return;
+          }
         }
 
       console.log('fetchMessages 1', userId)
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
-      axios.get(GET_API_URL,{
+      axios.get(`${this.SERVER_PATH}/api/chat/list?`,{
         params: {
           user_id: userId,
           page: this.page,
@@ -274,7 +281,7 @@ export default {
         userId = getJWTData.selectedId
       }
       if (!this.preloader) {
-        axios.get(GET_API_URL, {
+        axios.get(`${this.SERVER_PATH}/api/chat/list?`, {
           params: {
             user_id: userId,
             page: this.page,
