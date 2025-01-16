@@ -110,7 +110,7 @@
         <wound-photos
           :albums="albums"
           :current-album.sync="currentAlbum"
-          :selected-patient-id="storeUserId"
+          :selected-patient-id="currentAlbum"
           @update:current-album="updateCurrentAlbum"
         ></wound-photos>
       </v-row>
