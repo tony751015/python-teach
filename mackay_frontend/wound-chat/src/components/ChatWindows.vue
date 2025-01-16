@@ -343,7 +343,7 @@ export default {
         });
 
         // 發送 POST 請求到後端
-        axios.post('http://127.0.0.1:8000/api/chat/control', {
+        axios.post(`${this.SERVER_PATH}/api/chat/control`, {
           user_id: userId,
           is_carer_user: isCarerUser,  // 根據 super_user 設置
           content: messageData.content,

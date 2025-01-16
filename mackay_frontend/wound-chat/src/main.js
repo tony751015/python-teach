@@ -97,7 +97,7 @@ const VUEX_FEATURE = {
     // },
 
     userLoginProcess(code, state) {
-      axios.post('http://127.0.0.1:8000/api/member/line_login', {code, state,})
+      axios.post(`${this.SERVER_PATH}/api/member/line_login`, {code, state,})
         .then((res) => {
           const getJWT = res.data.jwt_token;
           

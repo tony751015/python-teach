@@ -98,7 +98,7 @@
           formData.append('user_id', userId);
           formData.append('is_carer_user', isCarerUser); // 根據 super_user 設置
           formData.append('photo_upload', this.file, `${userId}_${ts}.${this.file.type.split('/')[1]}`);
-          axios.post('http://127.0.0.1:8000/api/chat/upload', formData, {
+          axios.post(`${this.SERVER_PATH}/api/chat/upload`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },

@@ -124,7 +124,7 @@ export default {
         console.log('Pathname:', urlObj.pathname);
 
         // 檢查 domain 和 pathname，確保沒有任何路徑、字元或 query parameters
-        if (urlObj.origin !== 'http://127.0.0.1:8000' || urlObj.pathname !== '/') {
+        if (urlObj.origin !== this.SERVER_PATH || urlObj.pathname !== '/') {
           console.log('網址不符合條件');
           this.autoRelogin();
           return '網址不符合條件';

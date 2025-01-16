@@ -200,7 +200,7 @@ export default {
         }else{
           getPhotoUserId = getJWTData.user_id;
         }
-        axios.get('http://127.0.0.1:8000/api/chat/photo', {
+        axios.get(`${this.SERVER_PATH}/api/chat/photo`, {
             params: {
                 user_id: getPhotoUserId,
                 page: this.page,
@@ -273,7 +273,7 @@ export default {
         getPhotoUserId = this.$store.state.storeUserId;
       }
       if (confirm('Are you sure you want to delete this photo？')) {
-        axios.delete(`http://127.0.0.1:8000/api/chat/photo`, {
+        axios.delete(`${this.SERVER_PATH}/api/chat/photo`, {
           data: {
             user_id: getPhotoUserId,
             record_id: photoId

@@ -232,7 +232,7 @@
         this.popImgKey += 1;
       },
       initPatientsList() {
-        axios.put('http://127.0.0.1:8000/api/chat/room', {
+        axios.put(`${this.SERVER_PATH}/api/chat/room`, {
           user_id: this.userProfile.id,
           page: this.currentPage,
           size: this.pageSize
@@ -261,7 +261,7 @@
       loadMorePatients($state) {
         if (!this.preloading) {
           console.log("Loading more patients...");
-          axios.put('http://127.0.0.1:8000/api/chat/room', {
+          axios.put(`${this.SERVER_PATH}/api/chat/room`, {
             user_id: this.userProfile.id,
             page: this.currentPage,
             size: this.pageSize
@@ -297,7 +297,7 @@
       togglePin(patient) {
         const newPinState = !patient.pin;
         patient.pin = newPinState;
-        axios.put('http://127.0.0.1:8000/api/chat/update_pin', {
+        axios.put(`${this.SERVER_PATH}/api/chat/update_pin`, {
           user_id: this.userProfile.id,
           pin: newPinState,
           room_path: patient.room_path
@@ -392,7 +392,7 @@
           .map(patient => patient.room_path);
 
         if (roomPathsToBan.length > 0) {
-          axios.put('http://127.0.0.1:8000/api/chat/update_ban', {
+          axios.put(`${this.SERVER_PATH}/api/chat/update_ban`, {
             user_id: this.userProfile.id,
             ban: true,
             room_paths: roomPathsToBan
