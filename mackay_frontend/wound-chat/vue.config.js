@@ -7,7 +7,7 @@ module.exports = defineConfig({
     'vuetify'
   ],
 
-  publicPath: process.env.NODE_ENV === 'production' ? '/static/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? 'https://storage.googleapis.com/mackay-static/static/' : '/',
   css: {
     sourceMap: true,
     // requireModuleExtension: true,
