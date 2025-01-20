@@ -213,9 +213,9 @@ def load_user_chat_room(request):
             for obj in orderChatRoomList:
                 # print('Get Room User ID', obj['user_id'])
                 patientId = obj['user_id']
-
+                roomPath = obj['room_path']
                 patientData = User.objects.get(id=patientId)
-                lastChatRecord = chat_record.objects.filter(Q(create_user=patientId) & Q(ban=False)).order_by('create_date').last()
+                lastChatRecord = chat_record.objects.filter(Q(room_path=roomPath) & Q(ban=False)).order_by('create_date').last()
 
                 # print('lastChatRecord', lastChatRecord)
 

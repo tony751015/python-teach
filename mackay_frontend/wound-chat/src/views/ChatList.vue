@@ -90,7 +90,7 @@
                         patient.last_message.content_type === 'image'
                       "
                     >
-                      傳送了一張圖片
+                      send a photo
                       <v-btn
                         outlined
                         color="main-green"
