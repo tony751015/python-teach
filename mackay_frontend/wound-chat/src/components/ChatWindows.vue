@@ -159,11 +159,19 @@ export default {
     fetchMessages() {
       let userId
       let fetch_user_id
+      let fetch_chatRoom
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));
       if (this.userProfile.super_user){
          fetch_user_id = this.storeUserId
+        //  fetch_chatRoom = this.storeChatRoom
+         if (getJWTData.room_path) {
+            fetch_chatRoom = getJWTData.room_path;
+          }else {
+            fetch_chatRoom = this.storeChatRoom;
+          }
       }else {
          fetch_user_id = this.userProfile.id
+         fetch_chatRoom = this.userProfile.room_path
       }
       if (fetch_user_id) {
         userId = fetch_user_id
@@ -181,6 +189,7 @@ export default {
       if (!this.userProfile.super_user) {
             if (userId != chatRoomId) {
               // alert('Wrong User');
+              // alert(userId, chatRoomId);
               this.routerRedirectTo404();
               return;
             
@@ -199,7 +208,8 @@ export default {
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
       axios.get(`${this.SERVER_PATH}/api/chat/list?`,{
         params: {
-          user_id: userId,
+          user_id: this.userProfile.id,
+          chatRoom: fetch_chatRoom,
           page: this.page,
           size: 3
         }
@@ -216,6 +226,7 @@ export default {
           this.preloader = false;
           // console.log('fetchMessages 2', this.page);
           this.messages = res.data.results.slice().reverse();
+          console.log('fetchMessages 3', JSON.stringify(this.messages));
           // this.user_name = res.data.results[0].user_name;
           // localStorage.setItem('user_name', this.user_name);
           this.page += 1;
@@ -267,23 +278,31 @@ export default {
     },
 
     infiniteHandler($state) {
-      let userId
-      let fetch_user_id
+      // let userId
+      // let fetch_user_id
+      let fetch_chatRoom
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));
       if (this.userProfile.super_user){
-         fetch_user_id = this.storeUserId
+        //  fetch_user_id = this.storeUserId
+         if (getJWTData.room_path) {
+            fetch_chatRoom = getJWTData.room_path;
+          }else {
+            fetch_chatRoom = this.storeChatRoom;
+          }
       }else {
-         fetch_user_id = this.userProfile.id
+        //  fetch_user_id = this.userProfile.id
+         fetch_chatRoom = this.userProfile.room_path
       }
-      if (fetch_user_id) {
-        userId = fetch_user_id
-      }else {
-        userId = getJWTData.selectedId
-      }
+      // if (fetch_user_id) {
+      //   userId = fetch_user_id
+      // }else {
+      //   userId = getJWTData.selectedId
+      // }
       if (!this.preloader) {
         axios.get(`${this.SERVER_PATH}/api/chat/list?`, {
           params: {
-            user_id: userId,
+            user_id: this.userProfile.id,
+            chatRoom: fetch_chatRoom,
             page: this.page,
             size: 3
           },
@@ -312,19 +331,26 @@ export default {
     },
     // 發送訊息並用 axios 將資料 POST 到資料庫
     sendMessage() {
-      let userId
-      let fetch_user_id
+      // let userId
+      // let fetch_user_id
+      let fetch_chatRoom
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));
       if (this.userProfile.super_user){
-         fetch_user_id = this.storeUserId
+        //  fetch_user_id = this.storeUserId
+         if (getJWTData.room_path) {
+            fetch_chatRoom = getJWTData.room_path;
+          }else {
+            fetch_chatRoom = this.storeChatRoom;
+          }
       }else {
-         fetch_user_id = this.userProfile.id
+        //  fetch_user_id = this.userProfile.id
+         fetch_chatRoom = this.userProfile.room_path
       }
-      if (fetch_user_id) {
-        userId = fetch_user_id
-      }else {
-        userId = getJWTData.selectedId
-      }
+      // if (fetch_user_id) {
+      //   userId = fetch_user_id
+      // }else {
+      //   userId = getJWTData.selectedId
+      // }
       if (this.newMessage.trim() !== '') {
         const user_name = this.userProfile.name || '您';
         const isCarerUser = this.userProfile.super_user === true;
@@ -351,7 +377,8 @@ export default {
 
         // 發送 POST 請求到後端
         axios.post(`${this.SERVER_PATH}/api/chat/control`, {
-          user_id: userId,
+          user_id: this.userProfile.id,
+          chatRoom: fetch_chatRoom,
           is_carer_user: isCarerUser,  // 根據 super_user 設置
           content: messageData.content,
           content_type: 'text'

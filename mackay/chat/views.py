@@ -52,20 +52,21 @@ def chat_record_list(request):
     # page = serializer.get('page', 1)
     # size = serializer.get('size', 10)
     user_id = serializer['user_id']
+    chatRoom = serializer['chatRoom']
     page = serializer['page']
     size = serializer['size']
 
     # 如果有找到params
-    if user_id or page or size:
+    if chatRoom or page or size:
 
       # 取得某會員 指定Field的對話記錄
       # Filter後先使用annotate + TruncDate，設計一個新的資料key = create_date_truncated，轉換create_date成 2024-10-01格式
-      recordQuery = chat_record.objects.filter(Q(create_user=user_id)).annotate(
+      recordQuery = chat_record.objects.filter(Q(room_path=chatRoom)).annotate(
         create_date_truncated=TruncDate('create_date')
       )
 
       try:
-        findChatRoom = chat_room.objects.get(user_id=user_id)
+        findChatRoom = chat_room.objects.get(room_path=chatRoom)
       except chat_room.DoesNotExist:
         return Response('no found', status=404)
       except:
@@ -120,7 +121,9 @@ def chat_record_list(request):
       #   # 替換原本create_date的資料內容
       #   items['create_date'] = newDateTime
       # 反轉 recordData
+        # print('recordData11111111111111111111', recordData)
         recordData = list(reversed(recordData))
+        # print('recordData2222222222222222222222', recordData)
       try:
         p = Paginator(recordData, size) 
         page1 = p.page(page)
@@ -236,13 +239,15 @@ def chat_record_control(request):
         getContent = serializer['content']
         contentType = serializer['content_type']
         isCarerUser = serializer['is_carer_user']
+        chatRoom = serializer['chatRoom']
         # 建立一筆新資料
         # 如果沒有default值，則必須傳參數
         newCreate = chat_record.objects.create(
           create_user = getUserId,
           content = getContent,
           content_type = contentType,
-          is_carer_user = isCarerUser)
+          is_carer_user = isCarerUser,
+          room_path = chatRoom,)
         
         if newCreate:
           return Response({
@@ -271,6 +276,7 @@ def chat_upload_photo(request):
   isCarerUser = resData["is_carer_user"]
   # photo_upload1 = request.FILES.get('photo_upload')
   photo_upload = request.FILES['photo_upload']
+  chatRoom = resData['chatRoom']
 
   # create_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -287,6 +293,7 @@ def chat_upload_photo(request):
       content_type = 'image',
       media_url = photo_upload,
       is_carer_user = isCarerUser,
+      room_path = chatRoom
     )
     if createNewRecord:
       createNewRecordId = createNewRecord.id
@@ -320,6 +327,7 @@ def chat_record_photo(request):
             # 解析GET請求中的參數
             serializer = request.GET
             user_id = serializer['user_id']
+            chatRoom = serializer['chatRoom']
             page = serializer['page']
             size = serializer['size']
 
@@ -327,7 +335,7 @@ def chat_record_photo(request):
             if user_id or page or size:
                 # 取得某會員的圖片對話記錄，並使用TruncDate來截斷日期
                 recordQuery = chat_record.objects.filter(
-                    Q(create_user=user_id) & Q(content_type='image')
+                    Q(room_path=chatRoom) & Q(content_type='image')
                 ).annotate(
                     create_date_truncated=TruncDate('create_date')
                 )

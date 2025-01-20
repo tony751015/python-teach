@@ -111,6 +111,7 @@
           :albums="albums"
           :current-album.sync="currentAlbum"
           :selected-patient-id="currentAlbum"
+          :selectedChatroom="selectedChatroom"
           @update:current-album="updateCurrentAlbum"
         ></wound-photos>
       </v-row>
@@ -139,6 +140,7 @@ export default {
       chatRecord: [],
       albums: [],
       currentAlbum: 0,
+      selectedChatroom: ''
     };
   },
   computed: {

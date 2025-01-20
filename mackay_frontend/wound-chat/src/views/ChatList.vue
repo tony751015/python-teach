@@ -63,7 +63,7 @@
                 v-for="patient in visiblePatients"
                 :key="patient.id"
                 class="patient-item"
-                @click="selectPatient(patient.user_id)"
+                @click="selectPatient(patient)"
                 :class="{ 'outlined': highlightedPatientId === patient.user_id }"
               >
                 <v-list-item-avatar size="56">
@@ -97,7 +97,7 @@
                         small
                         class="px-1"
                         @click.stop="openImagePopup(
-                          `${SERVER_PATH}media/${patient.last_message.media_url}`
+                          `${IMG_PATH}media/${patient.last_message.media_url}`
                         )"
                       >
                         <v-icon class="font-normal">mdi-magnify</v-icon>
@@ -151,6 +151,7 @@
           :albums="albums"
           :current-album.sync="currentAlbum"
           :selected-patient-id="selectedPatientId"
+          :selected-chatroom="selectedChatroom"
           @update:current-album="updateCurrentAlbum"
         ></wound-photos>
       
@@ -200,6 +201,7 @@
         infiniteId: +new Date(), // 確保重置 infinite-loading
         pinnedPatients: [], // 存儲已經 pin 的病患 ID
         selectedPatientId: -1, // 初始化為 -1
+        selectedChatroom: 'noSelected', // 初始化為 noSelected
         highlightedPatientId: null, // 用於追蹤當前選擇的病患
         albums: [], // 初始化 albums 為空陣列
         currentAlbum: 0, // 初始化 currentAlbum
@@ -338,9 +340,11 @@
         })
       },
 
-      selectPatient(userId) {
-        this.selectedPatientId = userId;
-        this.highlightedPatientId = userId;
+      selectPatient(patient) {
+        console.log('selectPatient', patient);
+        this.selectedPatientId = patient.user_id;
+        this.highlightedPatientId = patient.user_id;
+        this.selectedChatroom = patient.room_path;
         // 確保 selectedPatientId 的變化能夠被 WoundPhotos.vue 監聽到
       },
       // reloadPatients() {
@@ -370,6 +374,7 @@
       goChatroom(patient) {
         console.log('goChatroom', patient);
         this.UPDATE_USER_ID(patient.user_id);
+        this.UPDATE_CHAT_ROOM(patient.room_path);
 
         // 取得 localStorage 中的 mackay
         const mackayData = JSON.parse(localStorage.getItem('mackay') || '{}');
@@ -405,7 +410,7 @@
           });
         }
       },
-      ...mapMutations(['UPDATE_USER_ID'])
+      ...mapMutations(['UPDATE_USER_ID', 'UPDATE_CHAT_ROOM']),
     },
     mounted() {
       // const userId = this.userProfile.id;

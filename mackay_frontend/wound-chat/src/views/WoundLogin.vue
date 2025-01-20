@@ -89,8 +89,8 @@
       fixed
     >
       <v-card-text class=" text-center">
-        <div class="caption">© 2020, MacKay Memorial Hospital. All rights reserved. No part of this website may be reproduced without written permission.</div>
-        <div class="caption">Copyright © 2020, Mackay Memorial Hospital, Taiwan Christian Church Presbyterian Mackay Medical Foundation. All rights reserved.</div>
+        <div class="caption">©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved. No part of this website may be reproduced without written permission.</div>
+        <div class="caption">Copyright ©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved.</div>
       </v-card-text>
       <v-card-text class="black--text text-center py-0 mb-4">
         <a class="black--text px-2 caption bdR" href="">Homepage</a>

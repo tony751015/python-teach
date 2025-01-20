@@ -63,7 +63,7 @@ def line_fast_login(request):
   access_token = lineAuthResult["access_token"]
   jwtTokenId = lineAuthResult["id_token"]
 
-  print('SHOW JWT TOKEN', jwtTokenId)
+  # print('SHOW JWT TOKEN', jwtTokenId)
     
   responseProfile = requests.get(
       apiProfileUrl,
@@ -87,7 +87,7 @@ def line_fast_login(request):
       getUserAuthId = getMember.id
       getSuperUser = getMember.is_superuser
       getRoomPath = chat_room.objects.get(user_id=getUserAuthId).room_path
-      print(getRoomPath)
+      # print(getRoomPath)
       # return Response('ok', status=200)
 
   except User.DoesNotExist:

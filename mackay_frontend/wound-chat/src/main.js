@@ -19,6 +19,7 @@ const VUEX_FEATURE = {
   data: () => ({
     SERVER_PATH: process.env.VUE_APP_SERVER_PATH,
     VUE_PATH: process.env.VUE_APP_PATH,
+    IMG_PATH: process.env.VUE_APP_IMG_PATH,
     LINE_ID: process.env.VUE_APP_LINE_ID,
     LINE_SECRET: process.env.VUE_APP_LINE_SECRET,
     LINE_CALLBACK: process.env.VUE_APP_LINE_CALLBACK,
@@ -30,6 +31,7 @@ const VUEX_FEATURE = {
       updateUserProfile: 'UPDATE_USER_PROFILE',
       updateUserLogin: 'UPDATE_USER_LOGIN',
       updateUserId: 'UPDATE_USER_ID',
+      updateChatRoom: 'UPDATE_CHAT_ROOM',
       updateAlert: 'UPDATE_ALERT',
     }),
     autoRelogin() {
@@ -185,6 +187,7 @@ const VUEX_FEATURE = {
       userProfile: 'exportUserProfile',
       userLogin: 'exportUserLogin',
       storeUserId: 'exportUserId',
+      storeChatRoom: 'exportChatRoom',
       alert: 'exportAlert',
     }),
   },

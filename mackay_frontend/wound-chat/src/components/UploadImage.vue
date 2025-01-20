@@ -82,20 +82,27 @@
     },
     methods: {
         startUpload() {
-          let userId;
+          const userId = this.userProfile.id;
+          let chatRoom;
           const getJWTData = JSON.parse(localStorage.getItem('mackay'));
-          if (this.storeUserId) {
-            userId = this.storeUserId;
+          if (this.userProfile.super_user) {
+            if (getJWTData.room_path) {
+              chatRoom = getJWTData.room_path;
+            }else {
+              chatRoom = this.storeChatRoom;
+            }
+            
           } else {
-            userId = getJWTData.user_id;
+            chatRoom = this.userProfile.room_path;
           }
           const isCarerUser = this.userProfile.super_user === true ? '1' : '0';
-
+          // const chatRoom = this.userProfile.chatRoom;
           const formData = new FormData();
           const ts = new Date().getTime();
           console.log('this.file', this.file);
 
           formData.append('user_id', userId);
+          formData.append('chatRoom', chatRoom); // 根據 super_user 設置
           formData.append('is_carer_user', isCarerUser); // 根據 super_user 設置
           formData.append('photo_upload', this.file, `${userId}_${ts}.${this.file.type.split('/')[1]}`);
           axios.post(`${this.SERVER_PATH}/api/chat/upload`, formData, {
@@ -104,7 +111,7 @@
             },
           })
           .then((response) => {
-            alert('Message sent successfully');
+            // alert('Message sent successfully');
             console.log('Message sent successfully:', response.data);
             this.uploadImage = false;
             const user_name = this.userProfile.name || '您';

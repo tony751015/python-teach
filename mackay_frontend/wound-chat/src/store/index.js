@@ -22,6 +22,9 @@ export default new Vuex.Store({
       // console.log('exportUserId: ', st.user_profile.id);
       return st.user_Id;
     },
+    exportChatRoom(st) { 
+      return st.chat_room;
+    },
     exportUserLogin(st) {
       return st.user_login;
     },
@@ -39,6 +42,9 @@ export default new Vuex.Store({
       // }
       st.user_Id = payload;
       // console.log('UPDATE_USER_ID: ', st.user_profile.id);
+    },
+    UPDATE_CHAT_ROOM(st, payload) {
+      st.chat_room = payload;
     },
     UPDATE_USER_LOGIN(st, payload) {
       st.user_login = payload;

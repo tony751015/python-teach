@@ -4,6 +4,7 @@ from django_resized import ResizedImageField
 
 class chat_record(models.Model):
   create_user = models.TextField(blank=True)
+  room_path = models.TextField(default='text', blank=True)
   is_carer_user = models.BooleanField(default=False)  # 是否為照護者用戶
   content = models.TextField(default='', blank=True)
   content_type = models.TextField(default='text', blank=True) # 預設text

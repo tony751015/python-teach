@@ -29,8 +29,8 @@
         v-for="(photo, index) in filteredPhotos" 
         :key="index">
           <div class="photo-item" 
-          @click="openImagePopup(`${SERVER_PATH}media/${photo.src}`)">
-            <img :src="`${SERVER_PATH}media/${photo.src}`">
+          @click="openImagePopup(`${IMG_PATH}media/${photo.src}`)">
+            <img :src="`${IMG_PATH}media/${photo.src}`">
             <v-card-title class="text-h6 white--text" style="">
               <v-row class="flex-column" justify="space-between">
                 <div class="align-self-center">
@@ -77,7 +77,12 @@ export default {
     selectedPatientId: {
       type: [Number, null],
       required: true
+    }, 
+    selectedChatroom: {
+      type: [String, null],
+      required: true
     }
+
   },
   data() {
     return {
@@ -101,8 +106,8 @@ export default {
     }
   },
   watch: {
-    selectedPatientId(newId) {
-      if (newId !== null && newId !== -1) {
+    selectedChatroom(newRoomPath) {
+      if (newRoomPath != null && newRoomPath != 'noSelected') {
         this.page = 1;
         this.hasMore = true;
         this.albums = [];
@@ -188,21 +193,22 @@ export default {
     loadMorePhotos($state) {
         const getJWTData = JSON.parse(localStorage.getItem('mackay'));
         console.log($state);
-        let getPhotoUserId;
-        if (!this.hasMore || this.selectedPatientId === -1) {
+        let getPhotoChatroom;
+        if (!this.hasMore || this.selectedChatroom == 'noSelected') {
             $state.complete();
             return;
         }
-        if (this.selectedPatientId){
-          getPhotoUserId = this.selectedPatientId;
-        }else if (getJWTData.selectedId){
-          getPhotoUserId = getJWTData.selectedId;
+        if (this.selectedChatroom){
+          getPhotoChatroom = this.selectedChatroom;
+        }else if (getJWTData.selectedRoomPath){
+          getPhotoChatroom = getJWTData.selectedRoomPath;
         }else{
-          getPhotoUserId = getJWTData.user_id;
+          getPhotoChatroom = getJWTData.room_path;
         }
         axios.get(`${this.SERVER_PATH}/api/chat/photo`, {
             params: {
-                user_id: getPhotoUserId,
+                user_id: this.userProfile.id,
+                chatRoom: getPhotoChatroom,
                 page: this.page,
                 size: this.size
             }
@@ -266,12 +272,13 @@ export default {
       this.$emit('update:currentAlbum', index);
     },
     confirmDelete(photoId) {
-      let getPhotoUserId;
-      if (this.selectedPatientId){
-        getPhotoUserId = this.selectedPatientId;
-      }else{
-        getPhotoUserId = this.$store.state.storeUserId;
-      }
+      // let getPhotoUserId;
+      // if (this.selectedPatientId){
+      //   getPhotoUserId = this.selectedPatientId;
+      // }else{
+      //   getPhotoUserId = this.$store.state.storeUserId;
+      // }
+      let getPhotoUserId = this.userProfile.id;
       if (confirm('Are you sure you want to delete this photo？')) {
         axios.delete(`${this.SERVER_PATH}/api/chat/photo`, {
           data: {
@@ -282,11 +289,11 @@ export default {
         .then(() => {
           const album = this.albums[this.currentAlbum];
           album.photos = album.photos.filter((photo) => photo.id !== photoId);
-          alert('The photo has been deleted.');
+          // alert('The photo has been deleted.');
         })
         .catch(error => {
           console.error('Error deleting photo:', error);
-          alert('Deletion failed. Please try again.');
+          // alert('Deletion failed. Please try again.');
         });
       }
     },
