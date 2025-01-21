@@ -12,7 +12,8 @@
           <div slot="no-more">No more comments</div>
           <div slot="no-results">No more comments</div>
         </infinite-loading>
-
+        
+        <!-- v-for="(msg, index) in messages.slice().reverse()" -->
         <chat-message
           v-for="(msg, index) in messages"
           :key="index"
@@ -108,6 +109,7 @@ export default {
       uploadImage: false,
       
       page: 1,
+      size: 16,
       popImgKey: 1,
       uploadImgKey: 1,
       activeKey: 1,
@@ -211,7 +213,7 @@ export default {
           user_id: this.userProfile.id,
           chatRoom: fetch_chatRoom,
           page: this.page,
-          size: 3
+          size: this.size,
         }
       })
         .then((res) => {
@@ -225,8 +227,8 @@ export default {
           console.log(JSON.stringify(res.data));
           this.preloader = false;
           // console.log('fetchMessages 2', this.page);
-          this.messages = res.data.results.slice().reverse();
-          console.log('fetchMessages 3', JSON.stringify(this.messages));
+          this.messages = res.data.results;
+          console.table('fetchMessages 3', this.messages);
           // this.user_name = res.data.results[0].user_name;
           // localStorage.setItem('user_name', this.user_name);
           this.page += 1;
@@ -304,7 +306,7 @@ export default {
             user_id: this.userProfile.id,
             chatRoom: fetch_chatRoom,
             page: this.page,
-            size: 3
+            size: this.size,
           },
         }).then(( res ) => {
           // console.log(JSON.stringify(res.data.results));
@@ -313,7 +315,7 @@ export default {
             $state.complete();
           } else {
             console.log('infiniteHandler', this.page);
-            this.messages.unshift(...res.data.results.slice().reverse());
+            this.messages.push(...res.data.results);
 
             this.page += 1;
             $state.loaded();

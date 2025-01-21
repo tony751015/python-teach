@@ -234,7 +234,7 @@
         this.popImgKey += 1;
       },
       initPatientsList() {
-        axios.put(`${this.SERVER_PATH}/api/chat/room`, {
+        axios.put(`${this.SERVER_PATH}api/chat/room`, {
           user_id: this.userProfile.id,
           page: this.currentPage,
           size: this.pageSize
@@ -263,7 +263,7 @@
       loadMorePatients($state) {
         if (!this.preloading) {
           console.log("Loading more patients...");
-          axios.put(`${this.SERVER_PATH}/api/chat/room`, {
+          axios.put(`${this.SERVER_PATH}api/chat/room`, {
             user_id: this.userProfile.id,
             page: this.currentPage,
             size: this.pageSize
@@ -414,7 +414,7 @@
     },
     mounted() {
       // const userId = this.userProfile.id;
-      // axios.put('http://127.0.0.1:8000/api/chat/room', {
+      // axios.put('http://127.0.0.1:8000api/chat/room', {
       //   user_id: userId,
       //   page: "1",
       //   size: "5"

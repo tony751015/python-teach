@@ -122,7 +122,8 @@ def chat_record_list(request):
       #   items['create_date'] = newDateTime
       # 反轉 recordData
         # print('recordData11111111111111111111', recordData)
-        recordData = list(reversed(recordData))
+        # recordData = list(reversed(recordData))
+        recordData = list(recordData)
         # print('recordData2222222222222222222222', recordData)
       try:
         p = Paginator(recordData, size) 

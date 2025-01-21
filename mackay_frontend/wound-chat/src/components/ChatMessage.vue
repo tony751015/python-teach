@@ -1,34 +1,49 @@
-<template>
-  <div>
-    <div class="date-divider text-center grey--text">{{ isFirstDate }}</div>
-    <v-row :class="alignmentClass" style="margin: 0;">
-      <v-col cols="auto" v-if="content_type === 'text'">
-        <v-card 
-          :class="[messageClass, 'mr-4']"
-          flat>
-          <v-card-text
-            class="font-weight-bold" v-html="contentRegexMatchURL"></v-card-text>
-        </v-card>
+<template lang="pug">
+  div
+    .date-divider.text-center.grey--text {{ isFirstDate }}
+    v-row(:class="alignmentClass" style="margin: 0;")
+      v-col(cols="auto" v-if="content_type === 'text'")
+        v-card.mr-4(:class="[messageClass, 'mr-4']" flat)
+          v-card-text.font-weight-bold(class="font-weight-bold" v-html="contentRegexMatchURL")
+
+      v-col.img_col(cols="5" :key="media_url" class="img_col" v-else-if="content_type === 'image'")
+        v-card.mr-4(color="point-1" :class="[messageClass, 'mr-4']" flat)
+          img(:src="`${IMG_PATH}media/${media_url}`" @click="$emit('image-click', `${IMG_PATH}media/${media_url}`)")
+
+      v-col(cols="5" :key="media_url" class="img_col" v-else-if="content_type === 'image2'")
+        v-card.mr-4(color="point-1" :class="[messageClass, 'mr-4']" flat)
+          img(:src="media_url" @click="$emit('image-click2', media_url)")
+
+  //- <div>
+  //-   <div class="date-divider text-center grey--text">{{ isFirstDate }}</div>
+  //-   <v-row :class="alignmentClass" style="margin: 0;">
+  //-     <v-col cols="auto" v-if="content_type === 'text'">
+  //-       <v-card 
+  //-         :class="[messageClass, 'mr-4']"
+  //-         flat>
+  //-         <v-card-text
+  //-           class="font-weight-bold" v-html="contentRegexMatchURL"></v-card-text>
+  //-       </v-card>
         
-      </v-col>
-      <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image'">
-        <v-card 
-          color="point-1"
-          :class="[messageClass, 'mr-4']"
-          flat>
-            <img :src="`${IMG_PATH}media/${media_url}`" @click="$emit('image-click', `${IMG_PATH}media/${media_url}`)" />
-        </v-card>
-      </v-col>
-      <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image2'">
-        <v-card 
-          color="point-1"
-          :class="[messageClass, 'mr-4']"
-          flat>
-            <img :src="media_url" @click="$emit('image-click2', media_url)" />
-        </v-card>
-      </v-col>
-    </v-row>  
-  </div>
+  //-     </v-col>
+  //-     <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image'">
+  //-       <v-card 
+  //-         color="point-1"
+  //-         :class="[messageClass, 'mr-4']"
+  //-         flat>
+  //-           <img :src="`${IMG_PATH}media/${media_url}`" @click="$emit('image-click', `${IMG_PATH}media/${media_url}`)" />
+  //-       </v-card>
+  //-     </v-col>
+  //-     <v-col cols="5" :key="media_url" class="img_col"  v-else-if="content_type === 'image2'">
+  //-       <v-card 
+  //-         color="point-1"
+  //-         :class="[messageClass, 'mr-4']"
+  //-         flat>
+  //-           <img :src="media_url" @click="$emit('image-click2', media_url)" />
+  //-       </v-card>
+  //-     </v-col>
+  //-   </v-row>  
+  //- </div>
   
 </template>
   
