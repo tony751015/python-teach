@@ -311,7 +311,7 @@ export default {
         }).then(( res ) => {
           // console.log(JSON.stringify(res.data.results));
           // console.log(res.data.count);
-          if (!res.data.results.length) {
+          if (!res.data.results.length || res.data.count <= this.size) {
             $state.complete();
           } else {
             console.log('infiniteHandler', this.page);

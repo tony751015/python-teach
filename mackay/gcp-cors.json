@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://wdcare.net", "https://www.wdcare.net"],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]
