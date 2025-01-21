@@ -145,7 +145,7 @@ export default {
 
   methods: {
     loginToWoundChat(patient_id , patient_name, patient_auth) {
-      axios.post(`${this.SERVER_PATH}/api/member/fast_login`, {
+      axios.post(`${this.SERVER_PATH}api/member/fast_login`, {
           patient_id: patient_id,
           patient_name: patient_name,  
           patient_auth: patient_auth

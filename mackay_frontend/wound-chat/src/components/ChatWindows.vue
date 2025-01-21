@@ -206,7 +206,7 @@ export default {
 
       console.log('fetchMessages 1', userId)
       // axios.get('http://127.0.0.1:8000/api/chat/list?user_id=1&page=' + this.page + '&size=15')
-      axios.get(`${this.SERVER_PATH}/api/chat/list?`,{
+      axios.get(`${this.SERVER_PATH}api/chat/list?`,{
         params: {
           user_id: this.userProfile.id,
           chatRoom: fetch_chatRoom,
@@ -299,7 +299,7 @@ export default {
       //   userId = getJWTData.selectedId
       // }
       if (!this.preloader) {
-        axios.get(`${this.SERVER_PATH}/api/chat/list?`, {
+        axios.get(`${this.SERVER_PATH}api/chat/list?`, {
           params: {
             user_id: this.userProfile.id,
             chatRoom: fetch_chatRoom,
@@ -376,7 +376,7 @@ export default {
         });
 
         // 發送 POST 請求到後端
-        axios.post(`${this.SERVER_PATH}/api/chat/control`, {
+        axios.post(`${this.SERVER_PATH}api/chat/control`, {
           user_id: this.userProfile.id,
           chatRoom: fetch_chatRoom,
           is_carer_user: isCarerUser,  // 根據 super_user 設置

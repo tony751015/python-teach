@@ -205,7 +205,7 @@ export default {
         }else{
           getPhotoChatroom = getJWTData.room_path;
         }
-        axios.get(`${this.SERVER_PATH}/api/chat/photo`, {
+        axios.get(`${this.SERVER_PATH}api/chat/photo`, {
             params: {
                 user_id: this.userProfile.id,
                 chatRoom: getPhotoChatroom,
@@ -280,7 +280,7 @@ export default {
       // }
       let getPhotoUserId = this.userProfile.id;
       if (confirm('Are you sure you want to delete this photo？')) {
-        axios.delete(`${this.SERVER_PATH}/api/chat/photo`, {
+        axios.delete(`${this.SERVER_PATH}api/chat/photo`, {
           data: {
             user_id: getPhotoUserId,
             record_id: photoId
