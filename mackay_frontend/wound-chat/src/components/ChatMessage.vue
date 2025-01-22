@@ -1,10 +1,10 @@
 <template lang="pug">
   div
-    .date-divider.text-center.grey--text {{ isFirstDate }}
+    .date-divider.text-center.grey--text.font-small {{ isFirstDate }}
     v-row(:class="alignmentClass" style="margin: 0;")
       v-col(cols="auto" v-if="content_type === 'text'")
         v-card.mr-4(:class="[messageClass, 'mr-4']" flat)
-          v-card-text.font-weight-bold(class="font-weight-bold" v-html="contentRegexMatchURL")
+          v-card-text.font-large.font-weight-bold(class="font-weight-bold" v-html="contentRegexMatchURL")
 
       v-col.img_col(cols="5" :key="media_url" class="img_col" v-else-if="content_type === 'image'")
         v-card.mr-4(color="point-1" :class="[messageClass, 'mr-4']" flat)
@@ -152,6 +152,7 @@ export default {
   overflow-wrap: break-word;
   word-wrap:break-word;
   word-break:break-all;
+  line-height: 1.5;
 }
 
 .own-message {

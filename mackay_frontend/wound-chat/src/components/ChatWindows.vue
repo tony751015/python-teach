@@ -23,7 +23,7 @@
           :content="msg.content"
           :media_url="msg.media_url"
           :isFirstDate="msg.isFirstDate"
-          @image-click="openImagePopup(`${SERVER_PATH}media/${msg.media_url}`)" 
+          @image-click="openImagePopup(`${IMG_PATH}media/${msg.media_url}`)" 
           @image-click2="openImagePopup(msg.media_url)"
         ></chat-message>
         <!-- image-click2解決測試時路徑用 -->

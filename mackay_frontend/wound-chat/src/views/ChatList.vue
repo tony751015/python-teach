@@ -299,7 +299,7 @@
       togglePin(patient) {
         const newPinState = !patient.pin;
         patient.pin = newPinState;
-        axios.put(`${this.SERVER_PATH}/api/chat/update_pin`, {
+        axios.put(`${this.SERVER_PATH}api/chat/update_pin`, {
           user_id: this.userProfile.id,
           pin: newPinState,
           room_path: patient.room_path
@@ -397,7 +397,7 @@
           .map(patient => patient.room_path);
 
         if (roomPathsToBan.length > 0) {
-          axios.put(`${this.SERVER_PATH}/api/chat/update_ban`, {
+          axios.put(`${this.SERVER_PATH}api/chat/update_ban`, {
             user_id: this.userProfile.id,
             ban: true,
             room_paths: roomPathsToBan

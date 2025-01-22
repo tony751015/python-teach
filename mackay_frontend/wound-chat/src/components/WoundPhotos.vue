@@ -225,7 +225,11 @@ export default {
                     if (this.page === 1) {
                       this.albums = [{ photos: newPhotos }];
                     } else {
-                      this.albums[0].photos.push(...Object.values(newPhotos).filter(photo => !photo.is_carer_user));
+                       // 去重處理，確保不會加載重複的圖片
+                        const existingPhotoIds = new Set(this.albums[0].photos.map(photo => photo.id));
+                        const uniqueNewPhotos = newPhotos.filter(photo => !existingPhotoIds.has(photo.id));
+                        this.albums[0].photos.push(...uniqueNewPhotos);
+                      // this.albums[0].photos.push(...Object.values(newPhotos).filter(photo => !photo.is_carer_user));
                     }
                     this.page += 1; // 增加頁數
                     if ($state) $state.loaded();

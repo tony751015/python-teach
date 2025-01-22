@@ -125,6 +125,13 @@
             };
             this.$emit('message-uploaded', messageData);
             this.$root.$emit('upload-success');
+            // 發送滾動到底部
+            this.$nextTick(() => {
+              const chatWindow = this.$parent.$refs.chatWindow;
+              if (chatWindow) {
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+              }
+            });
           })
           .catch((err) => {
             console.error('Error sending message:', err);
