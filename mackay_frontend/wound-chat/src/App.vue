@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-alert class="login-alert"
+    <v-alert class="login-alert text-center"
       v-if='alert.show'
       dense
       transition="scale-transition"
@@ -272,7 +272,9 @@ export default {
   width: 300px;
   margin: auto;
 }
-
+.login-alert .v-alert__content{
+  margin-left: -40px;
+}
 .font-super-small {
   font-size: 10px !important;
 }
