@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.response import Response
 import requests
 # from django.shortcuts import render, redirect
-from chat.models import chat_room
+from chat.models import chat_room, chat_record
 import uuid
 from django.utils import timezone
 from datetime import timedelta
@@ -110,6 +110,14 @@ def line_fast_login(request):
         room_path=f"{getUserAuthId}-{newUUID4}"
       )
       getRoomPath = creatChatRoom.room_path
+      # 增加歡迎詞
+      welcome_message = chat_record.objects.create(
+          create_user=10,
+          content="Welcome! We are Dr. Wound's medical team, here to assist with your wound care needs. Feel free to reach out via text and upload wound photos if needed for better assessment and support. We’re here to help :) 🙂",
+          content_type='text',
+          is_carer_user=True,
+          room_path=getRoomPath
+      )
 
   return Response({
      "status": "ok",
