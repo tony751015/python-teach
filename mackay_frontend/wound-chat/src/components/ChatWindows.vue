@@ -44,9 +44,15 @@
         <button @click="sendMessage" elevation="0" color="white" class="send-btn px-1 mr-1" >
             <v-icon color="main-green">mdi-send</v-icon>
         </button>
-        <v-btn @click="openUploadImage" elevation="0" color="primary" class="upload-btn main-green">
+        <v-btn 
+          @click="openUploadImage" 
+          elevation="0" 
+          color="primary" 
+          class="upload-btn main-green"
+          :class="{'upload-btn--mobile': $vuetify.breakpoint.xs}"
+        >
           <v-icon>mdi-paperclip</v-icon>
-          Upload
+          <span class="d-none d-sm-inline">Upload</span>
         </v-btn>
       </v-layout>
       
@@ -485,9 +491,24 @@ export default {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.v-btn.upload-btn{
+.upload-btn {
   height: 55px;
 }
+
+.upload-btn--mobile {
+  min-width: 40px !important;
+  width: 40px;
+  height: 40px !important;
+  padding: 0 !important;
+  margin-top: 8px;
+}
+
+@media (max-width: 428px) {
+  .message-input {
+    margin-bottom: 8px !important;
+  }
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
