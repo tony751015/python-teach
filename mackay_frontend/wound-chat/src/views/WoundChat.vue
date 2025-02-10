@@ -31,6 +31,14 @@
           </v-tabs>
         </template>
       </v-spacer>
+      <!-- 新增照片區域切換按鈕 -->
+      <v-btn
+        icon
+        class="white--text d-md-none"
+        @click="togglePhotoSection"
+      >
+        <v-icon>{{ isPhotoSectionOpen ? 'mdi-close' : 'mdi-image' }}</v-icon>
+      </v-btn>
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal">
@@ -53,7 +61,7 @@
     <v-container fluid class="fill-height">
       <v-row>
         <!-- 左側：聊天室區域 -->
-        <v-col cols="8" class="chat-section">
+        <v-col :cols="12" :md="8" class="chat-section">
           <v-toolbar flat dense class="w-100">
             <!-- <div class="d-flex align-center">
               <v-avatar size="30">
@@ -108,6 +116,11 @@
 
         <!-- 右側：照片列表區域 -->
         <wound-photos
+          class="photo-section"
+          :class="{
+            'photo-section--mobile': $vuetify.breakpoint.smAndDown,
+            'photo-section--open': isPhotoSectionOpen && $vuetify.breakpoint.smAndDown
+          }"
           :albums="albums"
           :current-album.sync="currentAlbum"
           :selected-patient-id="currentAlbum"
@@ -140,7 +153,8 @@ export default {
       chatRecord: [],
       albums: [],
       currentAlbum: 0,
-      selectedChatroom: ''
+      selectedChatroom: '',
+      isPhotoSectionOpen: false
     };
   },
   computed: {
@@ -210,6 +224,9 @@ export default {
 
         this.$router.push({ path: `/chat/` });
       },
+      togglePhotoSection() {
+        this.isPhotoSectionOpen = !this.isPhotoSectionOpen;
+      },
       ...mapMutations(['UPDATE_USER_ID'])
   },
   mounted() {
@@ -219,7 +236,7 @@ export default {
     if (this.userProfile.thumb) {
       this.thumb_avatar = this.userProfile.thumb;
     }
-  }
+  },
 };
 </script>
 
@@ -303,5 +320,48 @@ export default {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
+}
+
+.photo-section {
+  transition: transform 0.3s ease;
+  flex: 0 0 33.33333%;
+  max-width: 33.33333%;
+}
+
+.photo-section--mobile {
+  position: fixed;
+  top: 48px;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: white;
+  transform: translateX(100%);
+  height: calc(100vh - 48px);
+  width: 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.photo-section--open {
+  transform: translateX(0);
+}
+
+@media (max-width: 960px) {
+  .chat-section {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  .photo-section {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* 確保 row 有正確的 flex 佈局 */
+.container.fill-height > .row {
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>
