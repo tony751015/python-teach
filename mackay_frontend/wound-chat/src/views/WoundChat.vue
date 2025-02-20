@@ -241,6 +241,9 @@ export default {
 </script>
 
 <style scoped>
+.v-menu__content{
+  z-index: 109 !important;
+}
 .v-toolbar__content {
   width: 100%;
   display: flex;
