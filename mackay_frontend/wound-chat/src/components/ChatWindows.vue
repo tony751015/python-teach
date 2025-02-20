@@ -507,6 +507,9 @@ export default {
   .message-input {
     margin-bottom: 8px !important;
   }
+  .chat-container{
+    height: calc(100vh - 100px);
+  }
 }
 
 /* width */
