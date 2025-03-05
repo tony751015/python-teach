@@ -30,7 +30,7 @@
       </div>
     </div>
     <div>
-      <v-layout row class="send-message-layout">
+      <div class="send-message-layout d-none d-md-flex">
         <v-text-field
           v-model="newMessage"
           placeholder="Type your message here"
@@ -41,20 +41,22 @@
           class="message-input mb-13 mx-3"
         >
         </v-text-field>
-        <button @click="sendMessage" elevation="0" color="white" class="send-btn px-1 mr-1" >
+        <div class="action-buttons">
+          <button @click="sendMessage" elevation="0" color="white" class="send-btn px-1 mr-1" >
             <v-icon color="main-green">mdi-send</v-icon>
-        </button>
-        <v-btn 
-          @click="openUploadImage" 
-          elevation="0" 
-          color="primary" 
-          class="upload-btn main-green"
-          :class="{'upload-btn--mobile': $vuetify.breakpoint.xs}"
-        >
-          <v-icon>mdi-paperclip</v-icon>
-          <span class="d-none d-sm-inline">Upload</span>
-        </v-btn>
-      </v-layout>
+          </button>
+          <v-btn 
+            @click="openUploadImage" 
+            elevation="0" 
+            color="primary" 
+            class="upload-btn main-green"
+            :class="{'upload-btn--mobile': $vuetify.breakpoint.xs}"
+          >
+            <v-icon>mdi-paperclip</v-icon>
+            <span class="d-none d-sm-inline">Upload</span>
+          </v-btn>
+        </div>
+      </div>
       
     </div>
 
@@ -449,9 +451,11 @@ export default {
   position: relative;
 }
 
-.send-message-layout{
+.send-message-layout {
   padding-top: 2px;
   padding-right: 12px;
+  display: flex;
+  align-items: flex-start;
 }
 
 .message-input {
@@ -492,7 +496,7 @@ export default {
   margin-bottom: 15px;
 }
 .upload-btn {
-  height: 55px;
+  height: 40px;
 }
 
 .upload-btn--mobile {
@@ -502,13 +506,22 @@ export default {
   padding: 0 !important;
   margin-top: 8px;
 }
-
+.action-buttons {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+@media (max-width: 961px) {
+  .chat-window {
+    height: calc(100vh - 154px);
+  }
+}
 @media (max-width: 428px) {
   .message-input {
     margin-bottom: 8px !important;
   }
   .chat-container{
-    height: calc(100vh - 100px);
+    height: calc(100vh - 36px);
   }
 }
 

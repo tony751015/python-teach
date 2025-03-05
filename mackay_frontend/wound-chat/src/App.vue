@@ -262,7 +262,9 @@ export default {
 .v-dialog {
   /* v-dialog樣式寫在這裡。 */
 }
-
+.v-app-bar .dropdown-btn{
+  padding: 0 10px;
+}
 .login-alert{
   position: fixed;
   top: 50px;  

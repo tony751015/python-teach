@@ -179,7 +179,37 @@ const VUEX_FEATURE = {
       setTimeout(() => {
         this.$router.push('/');
       }, 1000);
-    }
+    },
+    clientWidthResize() {
+      this.clientWidth = document.documentElement.clientWidth;
+      this.clientHeight = document.documentElement.clientHeight;
+      // INIT Rwd Type
+      if (this.clientWidth >= 1280) {
+        this.setRwdType('desktop');
+        // this.changeHamburgerFocus(false);
+      } else if (this.clientWidth < 1280 && this.clientWidth > 1080) {
+        this.setRwdType('tablet');
+        // this.changeHamburgerFocus(false);
+      } else if (this.clientWidth <= 1080 && this.clientWidth > 730) {
+        this.setRwdType('tablet-m');
+      } else {
+        this.setRwdType('mobile');
+      }
+
+      if (this.clientWidth > 800) {
+        this.changeTeamFeatureStatus({
+          active: false,
+          features: null,
+        });
+      }
+
+      if (this.clientWidth > 900) {
+        this.changeHelpFilterStatus({
+          active: false,
+          query: null,
+        });
+      }
+    },
   },
 
   computed: {

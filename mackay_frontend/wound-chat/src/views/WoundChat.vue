@@ -2,21 +2,13 @@
   <v-app>
     <!-- Topbar 區域 -->
     <v-app-bar color="main-green" elevation="0" dense>
-      <v-responsive class="d-sm-none">
+      <!-- <v-responsive class="d-sm-none">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      </v-responsive>
+      </v-responsive> -->
       
         <!-- <v-img src="../assets/logo_dr.png" class="main-logo"></v-img> -->
         <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
       <!-- <header class="chat-title text-h6 font-weight-black">星禾互聯</header> -->
-      <v-btn
-        v-if="userProfile.super_user"
-        text
-        class="ml-6 white--text"
-        @click="goChatList()"
-      >
-      My Patients
-      </v-btn>
       <v-spacer>
         <template>
           <v-tabs align-with-title background-color="transparent">
@@ -32,26 +24,33 @@
         </template>
       </v-spacer>
       <!-- 新增照片區域切換按鈕 -->
-      <v-btn
+      <!-- <v-btn
         icon
         class="white--text d-md-none"
         @click="togglePhotoSection"
       >
         <v-icon>{{ isPhotoSectionOpen ? 'mdi-close' : 'mdi-image' }}</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal">
             <v-avatar size="30">
               <v-img :src="thumb_avatar"></v-img>
             </v-avatar>
-            <span class="ml-2">{{ username }}</span>
+            <span class="ml-2 d-none d-sm-block">{{ username }}</span>
             <v-icon right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
         <v-list dense>
-          <v-list-item>
-            <v-list-item-title class="logoutBtn" @click="logout">log out</v-list-item-title>
+          <!-- 手機版顯示用戶名稱 -->
+          <v-list-item class="d-sm-none">
+            <v-list-item-title class="user-name">{{ username }}</v-list-item-title>
+          </v-list-item>
+          <!-- 手機版顯示分隔線 -->
+          <v-divider class="d-sm-none"></v-divider>
+          <!-- 登出按鈕 -->
+          <v-list-item @click="logout">
+            <v-list-item-title class="logoutBtn">log out</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -112,6 +111,7 @@
             </v-list>
           </v-toolbar>
           <chat-windows class="chatWindows" ref="chatWindows"></chat-windows>
+
         </v-col>
 
         <!-- 右側：照片列表區域 -->
@@ -128,19 +128,71 @@
           @update:current-album="updateCurrentAlbum"
         ></wound-photos>
       </v-row>
+
+      <!-- 修改手機版功能按鈕區 -->
+      <div class="mobile-actions d-md-none">
+        <div class="mobile-actions-container">
+          <!-- My Patients 按鈕 -->
+          <v-btn
+            v-if="userProfile.super_user"
+            text
+            class="mobile-action-btn"
+            @click="goChatList"
+          >
+            <div class="d-flex flex-column align-center">
+              <v-icon class="action-icon">mdi-account-multiple</v-icon>
+              <span class="action-text">Patients</span>
+            </div>
+          </v-btn>
+          
+          <!-- 照片區域切換按鈕 -->
+          <v-btn
+            text
+            class="mobile-action-btn"
+            :class="{'active': isPhotoSectionOpen}"
+            @click="togglePhotoSection"
+          >
+            <div class="d-flex flex-column align-center">
+              <v-icon class="action-icon">mdi-image</v-icon>
+              <span class="action-text">Photos</span>
+            </div>
+          </v-btn>
+
+          <!-- 訊息輸入按鈕 -->
+          <v-btn
+            text
+            class="mobile-action-btn"
+            @click="openMessageLayout"
+          >
+            <div class="d-flex flex-column align-center">
+              <v-icon class="action-icon">mdi-message-text</v-icon>
+              <span class="action-text">Message</span>
+            </div>
+          </v-btn>
+        </div>
+      </div>
     </v-container>
+
+    <!-- 添加 MsgLayout 組件 -->
+    <msg-layout
+      :visible.sync="isMessageLayoutOpen"
+      @send-message="handleSendMessage"
+      @message-uploaded="handleMessageUploaded"
+    ></msg-layout>
   </v-app>
 </template>
 
 <script>
 import ChatWindows from '../components/ChatWindows.vue';
 import WoundPhotos from '../components/WoundPhotos.vue';
+import MsgLayout from '../components/MsgLayout.vue';
 import { mapMutations } from 'vuex';
 
 export default {
   components: {
     ChatWindows,
-    WoundPhotos
+    WoundPhotos,
+    MsgLayout
   },
   data() {
     return {
@@ -154,7 +206,8 @@ export default {
       albums: [],
       currentAlbum: 0,
       selectedChatroom: '',
-      isPhotoSectionOpen: false
+      isPhotoSectionOpen: false,
+      isMessageLayoutOpen: false,
     };
   },
   computed: {
@@ -227,6 +280,16 @@ export default {
       togglePhotoSection() {
         this.isPhotoSectionOpen = !this.isPhotoSectionOpen;
       },
+      openMessageLayout() {
+        this.isMessageLayoutOpen = true;
+      },
+      handleSendMessage(message) {
+        this.$refs.chatWindows.newMessage = message;
+        this.$refs.chatWindows.sendMessage();
+      },
+      handleMessageUploaded(messageData) {
+        this.$refs.chatWindows.handleMessageUploaded(messageData);
+      },
       ...mapMutations(['UPDATE_USER_ID'])
   },
   mounted() {
@@ -241,6 +304,9 @@ export default {
 </script>
 
 <style scoped>
+.v-app-bar .dropdown-btn{
+  padding: 0 10px;
+}
 .v-menu__content{
   z-index: 109 !important;
 }
@@ -353,11 +419,16 @@ export default {
   .chat-section {
     flex: 0 0 100%;
     max-width: 100%;
+    padding-bottom: 60px; /* 為底部按鈕區留出空間 */
   }
   
   .photo-section {
     flex: 0 0 100%;
     max-width: 100%;
+  }
+  
+  .photo-section--mobile {
+    height: calc(100vh - 108px); /* 48px (topbar) + 60px (bottom actions) */
   }
 }
 
@@ -366,5 +437,70 @@ export default {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
+}
+
+.mobile-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+}
+
+.mobile-actions-container {
+  display: flex;
+  justify-content: space-around;
+  padding: 4px 0;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.mobile-action-btn {
+  flex: 1;
+  height: auto;
+  min-width: auto;
+  padding: 8px 0;
+  border-radius: 0;
+}
+
+.action-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+  color: #757575; /* 未選中的顏色 */
+  transition: color 0.3s ease;
+}
+
+.action-text {
+  font-size: 12px;
+  line-height: 1;
+  color: #757575; /* 未選中的顏色 */
+  transition: color 0.3s ease;
+}
+
+/* 選中和懸停狀態使用 #2d9ca0 顏色 */
+.mobile-action-btn.active .action-icon,
+.mobile-action-btn.active .action-text,
+.mobile-action-btn:hover .action-icon,
+.mobile-action-btn:hover .action-text {
+  color: #2d9ca0 !important;
+}
+
+/* 為底部導航添加微妙的陰影 */
+.mobile-actions {
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* 確保 MsgLayout 的 z-index 高於其他元素 */
+.v-dialog {
+  z-index: 1100 !important;
+}
+
+.user-name {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+  padding: 8px 16px;
 }
 </style>

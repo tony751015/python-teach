@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container v-if='!preloading' class="fill-height">
-      <v-row justify="center" align="center" class="main-container" style="max-width: 400px;">
+      <v-row justify="center" align="center" class="main-container" style="max-width: 355px;">
         <!-- 左側圖片方框 -->
         <!-- <v-col cols="12" md="4" class="v-col colLeft">
           <v-card class="image-box">
@@ -88,7 +88,7 @@
       color="point-1"
       fixed
     >
-      <v-card-text class=" text-center">
+      <v-card-text class=" text-center copyright">
         <div class="caption">©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved. No part of this website may be reproduced without written permission.</div>
         <div class="caption">Copyright ©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved.</div>
       </v-card-text>
@@ -230,6 +230,9 @@ export default {
   }
   .image-box{
     height: 40vh;
+  }
+  .copyright .caption{
+    font-size: 9px !important;
   }
 }
 </style>
