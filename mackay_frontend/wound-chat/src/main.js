@@ -33,6 +33,7 @@ const VUEX_FEATURE = {
       updateUserId: 'UPDATE_USER_ID',
       updateChatRoom: 'UPDATE_CHAT_ROOM',
       updateAlert: 'UPDATE_ALERT',
+      updateRwdType: 'UPDATE_RWD_TYPE',
     }),
     autoRelogin() {
       // alert('autoRelogin');
@@ -180,36 +181,7 @@ const VUEX_FEATURE = {
         this.$router.push('/');
       }, 1000);
     },
-    clientWidthResize() {
-      this.clientWidth = document.documentElement.clientWidth;
-      this.clientHeight = document.documentElement.clientHeight;
-      // INIT Rwd Type
-      if (this.clientWidth >= 1280) {
-        this.setRwdType('desktop');
-        // this.changeHamburgerFocus(false);
-      } else if (this.clientWidth < 1280 && this.clientWidth > 1080) {
-        this.setRwdType('tablet');
-        // this.changeHamburgerFocus(false);
-      } else if (this.clientWidth <= 1080 && this.clientWidth > 730) {
-        this.setRwdType('tablet-m');
-      } else {
-        this.setRwdType('mobile');
-      }
-
-      if (this.clientWidth > 800) {
-        this.changeTeamFeatureStatus({
-          active: false,
-          features: null,
-        });
-      }
-
-      if (this.clientWidth > 900) {
-        this.changeHelpFilterStatus({
-          active: false,
-          query: null,
-        });
-      }
-    },
+    
   },
 
   computed: {
@@ -219,6 +191,7 @@ const VUEX_FEATURE = {
       storeUserId: 'exportUserId',
       storeChatRoom: 'exportChatRoom',
       alert: 'exportAlert',
+      getRwdType: 'exportRwdType',
     }),
   },
 }

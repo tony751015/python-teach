@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     user_profile: {},
     user_login: false,
+    rwdType: 'desktop',
     alert: {
       show: false,
       status: '',
@@ -31,6 +32,9 @@ export default new Vuex.Store({
     exportAlert(st) {
       return st.alert;
     },
+    exportRwdType(st) {
+      return st.rwdType;
+    },
   },
   mutations: {
     UPDATE_USER_PROFILE(st, payload) {
@@ -54,6 +58,9 @@ export default new Vuex.Store({
     },
     SET_USER_ID(state, userId) {
       state.user_Id = userId;
+    },
+    SET_RWD_TYPE(state, payload) {
+      state.rwdType = payload;
     }
   },
   actions: {

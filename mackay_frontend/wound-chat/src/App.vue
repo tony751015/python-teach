@@ -54,7 +54,7 @@
 
 
 <script>
-// import { mapMutations, mapGetters } from 'vuex';
+import { mapMutations, mapGetters } from 'vuex';
 import * as jwt_decode from 'jwt-decode';
 
 export default {
@@ -67,17 +67,22 @@ export default {
     timer: '',
   }),
 
-  created() {
-  
-    // console.log('this.$route.name', this.$route.name);
-    // if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
-    //   this.detectAutoLoginProcess();
-    // }
-  },
+  // created() {
+  //   // console.log('this.$route.name', this.$route.name);
+  //   // if (this.$route.name.match(/chat-/g) && !this.$route.query.code && !this.$route.query.state) {
+  //   //   this.detectAutoLoginProcess();
+  //   // }
+  // },
 
   mounted() {
     console.log('this.$route', this.$route);
     console.log('this.$route.name', this.$route.name);
+
+    window.addEventListener('resize', this.clientWidthResize);
+    // window.addEventListener('scroll', this.handleGoTopBtnShow);
+    this.$nextTick(() => {
+      this.clientWidthResize();
+    });
     // if (this.$route.query.code && this.$route.query.state&& this.$route.name === 'woundLogin') {
       // console.log('AAAAAAAAAA1: ', this.$route.name);
     // const url = new URL("http://127.0.0.1:3000/");
@@ -115,6 +120,10 @@ export default {
   },
   
   methods: {
+    ...mapMutations({
+      updateRwdType: 'SET_RWD_TYPE',
+    }),
+
     checkURL(url) {
       try {
         const urlObj = new URL(url);
@@ -137,6 +146,7 @@ export default {
         return '網址格式錯誤';
       }
     },
+
     detectAutoLoginProcess() {
       const getJWT = localStorage.getItem('mackay');
       const getJWTData = JSON.parse(localStorage.getItem('mackay'));
@@ -184,6 +194,25 @@ export default {
       //   this.alert_timeout = false;
       //   console.log('alert_timeout', this.alert_timeout);
       // },3000);
+    },
+
+    clientWidthResize() {
+      this.clientWidth = document.documentElement.clientWidth;
+      this.clientHeight = document.documentElement.clientHeight;
+      // INIT Rwd Type
+      if (this.clientWidth >= 1280) {
+        this.updateRwdType('desktop');
+        // this.changeHamburgerFocus(false);
+      } else if (this.clientWidth < 1280 && this.clientWidth > 1080) {
+        this.updateRwdType('tablet');
+        // this.changeHamburgerFocus(false);
+      } else if (this.clientWidth <= 1080 && this.clientWidth > 730) {
+        this.updateRwdType('tablet-m');
+      } else {
+        this.updateRwdType('mobile');
+      }
+
+      console.log('CHECK RWDTYPE', this.getRwdType);
     },
     
     // detectAutoLoginProccess() {
@@ -246,15 +275,17 @@ export default {
     },
   },
   
-  // computed: {
-  //   ...mapGetters({
-  //     getUserProfile: 'exportUserProfile',
-  //   }),
-  // },
+  computed: {
+    ...mapGetters({
+      getRwdType: 'exportRwdType',
+    }),
+  },
 };
 </script>
 
-<style>
+<style lang="scss">
+$topbarHeight: '38px';
+
 .row {
   margin: 0 !important;
 }
@@ -295,5 +326,25 @@ export default {
 
 .font-super-large {
   font-size: 18px !important;
+}
+// 桌機版
+// @media (min-width: 1280px) and (max-width: 9999px) {}
+
+// 平板版
+// @media (min-width: 731px) and (max-width: 1279px) {}
+
+// 手機板
+@media (max-width: 730px) {
+  .v-app-bar {
+    height: #{$topbarHeight} !important;
+    .v-slide-group, .v-toolbar__content, .v-toolbar__extension {
+      height: #{$topbarHeight} !important;
+    }
+    .main-logo {
+      width: 100px;
+      height: 21px !important;
+      padding: 0 !important;
+    }
+  }
 }
 </style>

@@ -33,8 +33,8 @@
       </v-btn> -->
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal">
-            <v-avatar size="30">
+          <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal" :small='getRwdType === "mobile" ? true : false'>
+            <v-avatar :size="getRwdType !== 'mobile' ? 30 : 20">
               <v-img :src="thumb_avatar"></v-img>
             </v-avatar>
             <span class="ml-2 d-none d-sm-block">{{ username }}</span>
@@ -303,8 +303,10 @@ export default {
 };
 </script>
 
-<style scoped>
-.v-app-bar .dropdown-btn{
+<style scoped lang="scss">
+$topbarHeight: '38px';
+
+.v-app-bar .dropdown-btn {
   padding: 0 10px;
 }
 .v-menu__content{
@@ -320,7 +322,7 @@ export default {
   padding: 10px 0px;
 }
 .fill-height {
-  height: calc(100vh - 48px);
+  height: calc(100vh - #{$topbarHeight});
   padding: unset;
 }
 .container.fill-height > .row{
@@ -399,13 +401,13 @@ export default {
 
 .photo-section--mobile {
   position: fixed;
-  top: 48px;
+  top: #{$topbarHeight};
   right: 0;
   bottom: 0;
   z-index: 1000;
   background: white;
   transform: translateX(100%);
-  height: calc(100vh - 48px);
+  height: calc(100vh - #{$topbarHeight});
   width: 100%;
   flex: 0 0 100%;
   max-width: 100%;
@@ -415,7 +417,7 @@ export default {
   transform: translateX(0);
 }
 
-@media (max-width: 960px) {
+@media (max-width: 730px) {
   .chat-section {
     flex: 0 0 100%;
     max-width: 100%;
@@ -428,8 +430,20 @@ export default {
   }
   
   .photo-section--mobile {
-    height: calc(100vh - 108px); /* 48px (topbar) + 60px (bottom actions) */
+    height: calc(100vh - 108px); /* #{$topbarHeight} (topbar) + 60px (bottom actions) */
   }
+
+  // .v-app-bar {
+  //   height: #{$topbarHeight} !important;
+  //   .v-toolbar__content, .v-toolbar__extension {
+  //     height: #{$topbarHeight} !important;
+  //   }
+  //   .main-logo {
+  //     width: 100px;
+  //     height: 21px;
+  //     padding: 0 !important;
+  //   }
+  // }
 }
 
 /* 確保 row 有正確的 flex 佈局 */

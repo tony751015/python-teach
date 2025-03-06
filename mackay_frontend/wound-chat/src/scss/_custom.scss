@@ -1,0 +1,28 @@
+@media (max-width: 960px) {
+  .chat-section {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-bottom: 60px; /* 為底部按鈕區留出空間 */
+  }
+  
+  .photo-section {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  .photo-section--mobile {
+    height: calc(100vh - 108px); /* #{$topbarHeight} (topbar) + 60px (bottom actions) */
+  }
+
+  .v-app-bar {
+    height: #{$topbarHeight} !important;
+    .v-toolbar__content, .v-toolbar__extension {
+      height: #{$topbarHeight} !important;
+    }
+    .main-logo {
+      width: 100px;
+      height: 21px;
+      padding: 0 !important;
+    }
+  }
+}

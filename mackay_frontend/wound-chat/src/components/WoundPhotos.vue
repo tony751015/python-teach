@@ -12,14 +12,14 @@
             @click="updateCurrentAlbum(0)"
           >
           <v-icon>mdi-upload</v-icon>
-          Uploaded wound photo
+          {{ getRwdType === 'desktop' ? 'Uploaded wound photo' : 'Uploaded' }}
         </v-tab>
         <v-tab
             :color="localCurrentAlbum === 1 ? 'primary' : ''"
             @click="updateCurrentAlbum(1)"
           >
           <v-icon>mdi-magnify-expand</v-icon>
-          AI wound area detection
+          {{ getRwdType === 'desktop' ? 'AI wound area detection' : 'Detection' }}
         </v-tab>
       </v-tabs>
     </v-toolbar>
