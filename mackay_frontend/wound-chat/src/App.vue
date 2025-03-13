@@ -296,6 +296,26 @@ $topbarHeight: '38px';
 .v-app-bar .dropdown-btn{
   padding: 0 10px;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 .login-alert{
   position: fixed;
   top: 50px;  
@@ -335,6 +355,9 @@ $topbarHeight: '38px';
 
 // 手機板
 @media (max-width: 730px) {
+  ::-webkit-scrollbar {
+    width: 2px;
+  }
   .v-app-bar {
     height: #{$topbarHeight} !important;
     .v-slide-group, .v-toolbar__content, .v-toolbar__extension {

@@ -31,8 +31,15 @@
       </v-btn> -->
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal">
-            <v-avatar size="30">
+          <v-btn 
+            class="dropdown-btn" 
+            v-bind="attrs" 
+            v-on="on" 
+            rounded 
+            color="normal"
+            :small='getRwdType === "mobile" ? true : false'
+          >
+            <v-avatar :size="getRwdType !== 'mobile' ? 30 : 20">
               <v-img :src="thumb_avatar"></v-img>
             </v-avatar>
             <span class="ml-2 d-none d-sm-block">{{ username }}</span>
@@ -63,7 +70,7 @@
             <!-- 搜尋區域 -->
             <v-text-field
               v-model="searchQuery"
-              prepend-icon="mdi-magnify"
+              prepend-inner-icon="mdi-magnify"
               label="Search for a patient"
               dense
               outlined
@@ -118,8 +125,8 @@
                         >
                           <!-- 手機版：上圖下字 -->
                           <div v-if="$vuetify.breakpoint.smAndDown" class="d-flex flex-column align-center">
-                            <v-icon size="16" class="mb-1">mdi-magnify</v-icon>
-                            <span class="preview-text">photo</span>
+                            <v-icon size="16" class="mb-1">mdi-image-search-outline</v-icon>
+                            <!-- <span class="preview-text">photo</span> -->
                           </div>
                           
                           <!-- 電腦版：原始樣式 -->
@@ -143,8 +150,8 @@
                     >
                       <!-- 手機版：上圖下字 -->
                       <div v-if="$vuetify.breakpoint.smAndDown" class="d-flex flex-column align-center">
-                        <v-icon size="16" class="mb-1">mdi-chat</v-icon>
-                        <span class="chat-text">Chat</span>
+                        <v-icon size="16" class="mb-1">mdi-chat-processing-outline</v-icon>
+                        <!-- <span class="chat-text">Chat</span> -->
                       </div>
                       
                       <!-- 電腦版：原始樣式 -->
@@ -154,7 +161,8 @@
                     </v-btn>
                   </v-list-item-action>
                   <v-list-item-action>
-                    <v-btn 
+                    <v-btn
+                      small
                       fab 
                       elevation="0"
                       :color="patient.pin ? 'main-green' : ''"
@@ -497,7 +505,7 @@
     padding: 0 10px;
   }
   .fill-height {
-    height: calc(100vh - 48px);
+    height: calc(100vh - 40px);
     padding: unset;
   }
   .container.fill-height > .row{
@@ -517,13 +525,13 @@
   }
   .photo-section--mobile {
     position: fixed;
-    top: 48px;
+    top: 40px;
     right: 0;
     bottom: 0;
     z-index: 1000;
     background: white;
     transform: translateX(100%);
-    height: calc(100vh - 48px);
+    height: calc(100vh - 40px);
     width: 100%;
     flex: 0 0 100%;
     max-width: 100%;
@@ -548,8 +556,8 @@
     justify-content: space-between;
   }
   .main-logo {
-    height: 100%;
-    padding: 10px 0px;
+    height: 90%;
+    padding: 6px 0;
   }
   .list-btn.theme--light.v-btn.v-btn--disabled {
     background-color: #fff;
@@ -567,6 +575,12 @@
     }
     .list-btn.theme--light.v-btn.v-btn--disabled {
       padding: 0 4px !important;
+    }
+    .v-app-bar .dropdown-btn {
+      height: 28px !important;
+    }
+    .main-logo {
+      padding: 8px 0;
     }
   }
   .patient-item{
@@ -696,5 +710,16 @@
   color: rgba(0, 0, 0, 0.87);
   font-size: 14px;
   padding: 8px 16px;
+}
+
+/* 調整 app-bar 高度 */
+.v-app-bar.v-app-bar--dense {
+  height: 40px !important;
+  max-height: 40px !important;
+}
+
+.v-app-bar.v-app-bar--dense .v-toolbar__content {
+  height: 40px !important;
+  max-height: 40px !important;
 }
   </style>

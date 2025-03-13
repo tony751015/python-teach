@@ -1,14 +1,11 @@
 <template>
-  <v-dialog
-    :value="visible"
-    @input="$emit('update:visible', $event)"
-    fullscreen
-    hide-overlay
-    transition="dialog-bottom-transition"
+  <v-bottom-sheet
+    v-model="localVisible"
+    inset
   >
-    <v-card class="message-layout">
+    <v-sheet class="message-layout">
       <!-- 頂部工具欄 -->
-      <v-toolbar dark color="main-green">
+      <v-toolbar dense color="main-green" dark>
         <v-btn icon dark @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -16,23 +13,23 @@
         <v-spacer></v-spacer>
       </v-toolbar>
 
-      <!-- 訊息輸入區域容器 -->
-      <div class="input-container">
-        <v-card-text class="message-input-area">
-          <v-textarea
-            v-model="newMessage"
-            outlined
-            auto-grow
-            rows="4"
-            row-height="30"
-            placeholder="Type your message here"
-            hide-details
-            class="message-textarea"
-          ></v-textarea>
+      <!-- 訊息輸入區域 -->
+      <v-card-text class="message-input-area">
+        <v-textarea
+          v-model="newMessage"
+          outlined
+          auto-grow
+          rows="4"
+          row-height="30"
+          placeholder="Type your message here"
+          hide-details
+          class="message-textarea"
+        ></v-textarea>
 
-          <!-- 按鈕區域 -->
-          <div class="action-buttons">
-            <!-- 附件按鈕 -->
+        <!-- 按鈕區域 -->
+        <div class="action-buttons-grid">
+          <!-- 左側：附件按鈕 -->
+          <div class="grid-item">
             <v-btn
               color="main-green"
               text
@@ -44,8 +41,10 @@
                 <span class="caption">Upload</span>
               </div>
             </v-btn>
+          </div>
 
-            <!-- 發送按鈕 -->
+          <!-- 右側：發送按鈕 -->
+          <div class="grid-item text-right">
             <v-btn
               color="main-green"
               text
@@ -59,9 +58,9 @@
               </div>
             </v-btn>
           </div>
-        </v-card-text>
-      </div>
-    </v-card>
+        </div>
+      </v-card-text>
+    </v-sheet>
 
     <!-- 圖片上傳組件 -->
     <UploadImage 
@@ -71,7 +70,7 @@
       @update:visible="updateVisible"
       @message-uploaded="handleMessageUploaded"
     ></UploadImage>
-  </v-dialog>
+  </v-bottom-sheet>
 </template>
 
 <script>
@@ -95,13 +94,26 @@ export default {
     return {
       newMessage: '',
       uploadImage: false,
-      uploadImgKey: 1
+      uploadImgKey: 1,
+      localVisible: false
     };
+  },
+
+  watch: {
+    visible(val) {
+      this.localVisible = val;
+      if (!val) {
+        this.newMessage = '';
+      }
+    },
+    localVisible(val) {
+      this.$emit('update:visible', val);
+    }
   },
 
   methods: {
     close() {
-      this.$emit('update:visible', false);
+      this.localVisible = false;
       this.newMessage = '';
     },
 
@@ -130,35 +142,20 @@ export default {
       this.$emit('message-uploaded', messageData);
       this.close();
     }
-  },
-
-  watch: {
-    visible(val) {
-      if (!val) {
-        this.newMessage = '';
-      }
-    }
   }
 };
 </script>
 
 <style scoped>
 .message-layout {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.input-container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  padding-bottom: 76px; /* 為底部功能按鈕區留出空間 */
+  padding-bottom: 16px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 .message-input-area {
   width: 100%;
-  max-width: 600px; /* 限制最大寬度 */
+  max-width: 600px;
   margin: 0 auto;
   padding: 16px;
 }
@@ -167,11 +164,22 @@ export default {
   margin-bottom: 15px;
 }
 
-.action-buttons {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 兩列等寬 */
+  gap: 8px;
   padding: 0 8px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.grid-item {
+  display: flex;
+  align-items: center;
+}
+
+.grid-item:last-child {
+  justify-content: flex-end;
 }
 
 .action-btn {
@@ -192,16 +200,5 @@ export default {
 
 .action-btn.v-btn--disabled {
   opacity: 0.6;
-}
-
-/* 對話框底部過渡動畫 */
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-  transition: transform .3s ease-in-out;
-}
-
-.dialog-bottom-transition-enter,
-.dialog-bottom-transition-leave-to {
-  transform: translateY(100%);
 }
 </style>

@@ -408,4 +408,9 @@ export default {
 .v-responsive__sizer {
   padding-bottom: 75%;
 }
+@media (max-width: 730px)  {
+  .photo-zone {
+    height: calc(100vh - 177px);
+  }
+}
 </style>

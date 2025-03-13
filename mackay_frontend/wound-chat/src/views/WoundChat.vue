@@ -33,7 +33,15 @@
       </v-btn> -->
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn class="dropdown-btn" v-bind="attrs" v-on="on" rounded color="normal" :small='getRwdType === "mobile" ? true : false'>
+          <v-btn 
+            class="dropdown-btn" 
+            v-bind="attrs" 
+            v-on="on" 
+            rounded 
+            color="normal"
+            :small='getRwdType === "mobile" ? true : false'
+            @click="handleDropdownClick"
+          >
             <v-avatar :size="getRwdType !== 'mobile' ? 30 : 20">
               <v-img :src="thumb_avatar"></v-img>
             </v-avatar>
@@ -75,7 +83,7 @@
 
             <v-text-field
               v-model="searchChat"
-              prepend-icon="mdi-magnify"
+              prepend-inner-icon="mdi-magnify"
               label="Search for a chat"
               dense
               outlined
@@ -130,7 +138,10 @@
       </v-row>
 
       <!-- 修改手機版功能按鈕區 -->
-      <div class="mobile-actions d-md-none">
+      <div 
+        class="mobile-actions d-md-none"
+        :class="{'mobile-actions--hidden': isMessageLayoutOpen}"
+      >
         <div class="mobile-actions-container">
           <!-- My Patients 按鈕 -->
           <v-btn
@@ -281,6 +292,9 @@ export default {
         this.isPhotoSectionOpen = !this.isPhotoSectionOpen;
       },
       openMessageLayout() {
+        if (this.isPhotoSectionOpen) {
+          this.isPhotoSectionOpen = false;
+        }
         this.isMessageLayoutOpen = true;
       },
       handleSendMessage(message) {
@@ -289,6 +303,11 @@ export default {
       },
       handleMessageUploaded(messageData) {
         this.$refs.chatWindows.handleMessageUploaded(messageData);
+      },
+      handleDropdownClick() {
+        if (this.isPhotoSectionOpen) {
+          this.isPhotoSectionOpen = false;
+        }
       },
       ...mapMutations(['UPDATE_USER_ID'])
   },
@@ -322,7 +341,7 @@ $topbarHeight: '38px';
   padding: 10px 0px;
 }
 .fill-height {
-  height: calc(100vh - #{$topbarHeight});
+  height: calc(100vh - 48px);
   padding: unset;
 }
 .container.fill-height > .row{
@@ -375,7 +394,7 @@ $topbarHeight: '38px';
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 /* Track */
@@ -404,7 +423,7 @@ $topbarHeight: '38px';
   top: #{$topbarHeight};
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 200;
   background: white;
   transform: translateX(100%);
   height: calc(100vh - #{$topbarHeight});
@@ -418,6 +437,10 @@ $topbarHeight: '38px';
 }
 
 @media (max-width: 730px) {
+  .fill-height {
+    height: calc(100vh - #{$topbarHeight});
+    padding: unset;
+  }
   .chat-section {
     flex: 0 0 100%;
     max-width: 100%;
@@ -430,7 +453,7 @@ $topbarHeight: '38px';
   }
   
   .photo-section--mobile {
-    height: calc(100vh - 108px); /* #{$topbarHeight} (topbar) + 60px (bottom actions) */
+    height: calc(100vh - 105px); /* #{$topbarHeight} (topbar) + 60px (bottom actions) */
   }
 
   // .v-app-bar {
@@ -461,12 +484,17 @@ $topbarHeight: '38px';
   background: white;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   z-index: 1000;
+  transition: transform 0.3s ease; /* 添加過渡效果 */
+}
+
+.mobile-actions--hidden {
+  transform: translateY(100%); /* 向下移動隱藏 */
 }
 
 .mobile-actions-container {
   display: flex;
   justify-content: space-around;
-  padding: 4px 0;
+  padding: 12px 0 19px;
   max-width: 600px;
   margin: 0 auto;
   position: relative;
