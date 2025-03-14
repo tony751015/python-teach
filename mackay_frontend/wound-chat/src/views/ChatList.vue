@@ -89,12 +89,12 @@
                   @click="selectPatient(patient)"
                   :class="{ 'outlined': highlightedPatientId === patient.user_id }"
                 >
-                  <v-list-item-avatar size="45">
+                  <v-list-item-avatar :size="getRwdType === 'mobile' ? 30 : 45">
                     <v-img :src="patient.user_avatar || require('@/assets/user.png')"></v-img>
                   </v-list-item-avatar>
               
                   <v-list-item-content>
-                    <v-list-item-title>
+                    <v-list-item-title class="font-weight-bold">
                       {{ patient.user_name }}
                       <span class="grey--text text--lighten-1 font-small">{{ '(' + patient.user_id + ')'}}</span>
                     </v-list-item-title>
