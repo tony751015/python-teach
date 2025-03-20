@@ -9,6 +9,14 @@
         <!-- <v-img src="../assets/logo_dr.png" class="main-logo"></v-img> -->
         <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
       <!-- <header class="chat-title text-h6 font-weight-black">星禾互聯</header> -->
+      <v-btn
+        v-if="userProfile.super_user"
+        text
+        class="ml-6 white--text d-md-block  d-none"
+        @click="goChatList()"
+      >
+        My Patients
+      </v-btn>
       <v-spacer>
         <template>
           <v-tabs align-with-title background-color="transparent">
@@ -90,6 +98,7 @@
               color="main-green"
               placeholder="Search for a chat"
               hide-details
+              class="searchChatBar"
               @keyup.enter="performSearch"
               @input="onInput"
             ></v-text-field>
@@ -143,18 +152,6 @@
         :class="{'mobile-actions--hidden': isMessageLayoutOpen}"
       >
         <div class="mobile-actions-container">
-          <!-- My Patients 按鈕 -->
-          <v-btn
-            v-if="userProfile.super_user"
-            text
-            class="mobile-action-btn"
-            @click="goChatList"
-          >
-            <div class="d-flex flex-column align-center">
-              <v-icon class="action-icon">mdi-account-multiple</v-icon>
-              <span class="action-text">Patients</span>
-            </div>
-          </v-btn>
           
           <!-- 照片區域切換按鈕 -->
           <v-btn
@@ -164,8 +161,20 @@
             @click="togglePhotoSection"
           >
             <div class="d-flex flex-column align-center">
-              <v-icon class="action-icon">mdi-image</v-icon>
-              <span class="action-text">Photos</span>
+              <v-icon class="action-icon">{{ isPhotoSectionOpen ? 'mdi-arrow-right' : 'mdi-image' }}</v-icon>
+              <span class="action-text">{{ isPhotoSectionOpen ? 'Back' : 'Photos' }}</span>
+            </div>
+          </v-btn>
+
+          <!-- 新增的上傳圖片按鈕 -->
+          <v-btn
+            text
+            class="mobile-action-btn"
+            @click="openUploadImage"
+          >
+            <div class="d-flex flex-column align-center">
+              <v-icon class="action-icon">mdi-paperclip</v-icon>
+              <span class="action-text">Upload</span>
             </div>
           </v-btn>
 
@@ -180,6 +189,19 @@
               <span class="action-text">Message</span>
             </div>
           </v-btn>
+
+          <!-- My Patients 按鈕 -->
+          <v-btn
+            v-if="userProfile.super_user"
+            text
+            class="mobile-action-btn"
+            @click="goChatList"
+          >
+            <div class="d-flex flex-column align-center">
+              <v-icon class="action-icon">mdi-account-multiple</v-icon>
+              <span class="action-text">Patients</span>
+            </div>
+          </v-btn>
         </div>
       </div>
     </v-container>
@@ -190,6 +212,15 @@
       @send-message="handleSendMessage"
       @message-uploaded="handleMessageUploaded"
     ></msg-layout>
+
+    <!-- 添加 UploadImage 組件 -->
+    <UploadImage 
+      :key="`imgupload-${uploadImgKey}`"
+      :activeUpload="uploadImage"
+      @close="closeUploadImage"
+      @update:visible="updateVisible"
+      @message-uploaded="handleMessageUploaded"
+    ></UploadImage>
   </v-app>
 </template>
 
@@ -197,13 +228,15 @@
 import ChatWindows from '../components/ChatWindows.vue';
 import WoundPhotos from '../components/WoundPhotos.vue';
 import MsgLayout from '../components/MsgLayout.vue';
+import UploadImage from '../components/UploadImage.vue';
 import { mapMutations } from 'vuex';
 
 export default {
   components: {
     ChatWindows,
     WoundPhotos,
-    MsgLayout
+    MsgLayout,
+    UploadImage
   },
   data() {
     return {
@@ -219,6 +252,8 @@ export default {
       selectedChatroom: '',
       isPhotoSectionOpen: false,
       isMessageLayoutOpen: false,
+      uploadImage: false, // 新增的狀態
+      uploadImgKey: 1, // 新增的狀態
     };
   },
   computed: {
@@ -296,6 +331,16 @@ export default {
           this.isPhotoSectionOpen = false;
         }
         this.isMessageLayoutOpen = true;
+      },
+      openUploadImage() {
+        this.uploadImage = true;
+        this.uploadImgKey += 1;
+      },
+      closeUploadImage() {
+        this.uploadImage = false;
+      },
+      updateVisible(val) {
+        this.uploadImage = val;
       },
       handleSendMessage(message) {
         this.$refs.chatWindows.newMessage = message;
@@ -412,6 +457,7 @@ $topbarHeight: '38px';
   background: #555; 
 }
 
+
 .photo-section {
   transition: transform 0.3s ease;
   flex: 0 0 33.33333%;
@@ -509,14 +555,14 @@ $topbarHeight: '38px';
 }
 
 .action-icon {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 4px;
   color: #757575; /* 未選中的顏色 */
   transition: color 0.3s ease;
 }
 
 .action-text {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
   color: #757575; /* 未選中的顏色 */
   transition: color 0.3s ease;

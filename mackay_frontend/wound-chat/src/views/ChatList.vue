@@ -7,14 +7,14 @@
       </v-responsive> -->
       
       <img src="../assets/logo_dr.png" class="main-logo" alt="logo">
-      <v-btn
+      <!-- <v-btn
         v-if="userProfile.super_user"
         text
         class="list-btn"
         disabled
       >
         <span class="patients-text">My Patients</span>
-      </v-btn>
+      </v-btn> -->
       <v-spacer>
         <template>
           <v-tabs align-with-title background-color="transparent">
@@ -86,7 +86,7 @@
                   v-for="patient in visiblePatients"
                   :key="patient.id"
                   class="patient-item"
-                  @click="selectPatient(patient)"
+                  @click="selectPatient(patient); togglePhotoSection()"
                   :class="{ 'outlined': highlightedPatientId === patient.user_id }"
                 >
                   <v-list-item-avatar :size="getRwdType === 'mobile' ? 30 : 45">
@@ -114,7 +114,7 @@
                         "
                       >
                         send a photo
-                        <v-btn
+                        <!-- <v-btn
                           outlined
                           color="main-green"
                           small
@@ -122,19 +122,19 @@
                           @click.stop="openImagePopup(
                             `${IMG_PATH}media/${patient.last_message.media_url}`
                           )"
-                        >
+                        > -->
                           <!-- 手機版：上圖下字 -->
-                          <div v-if="$vuetify.breakpoint.smAndDown" class="d-flex flex-column align-center">
+                          <!-- <div v-if="$vuetify.breakpoint.smAndDown" class="d-flex flex-column align-center">
                             <v-icon size="16" class="mb-1">mdi-image-search-outline</v-icon>
-                            <!-- <span class="preview-text">photo</span> -->
-                          </div>
+                            <span class="preview-text">photo</span>
+                          </div> -->
                           
                           <!-- 電腦版：原始樣式 -->
-                          <template v-else>
+                          <!-- <template v-else>
                             <v-icon class="font-normal">mdi-magnify</v-icon>
                             <span class="ml-1">photo</span>
                           </template>
-                        </v-btn>
+                        </v-btn> -->
                       </span>
                       <span v-else>no message</span>
                     </v-list-item-subtitle>
@@ -202,18 +202,16 @@
         ></wound-photos>
       </v-row>
 
-      <!-- 新增懸浮的照片切換按鈕 -->
+      <!-- 新增的 close 懸浮按鈕 -->
       <v-btn
+        v-if="$vuetify.breakpoint.smAndDown && isPhotoSectionOpen"
         fab
         color="main-green"
-        class="floating-photo-btn d-md-none"
-        :class="{'active': isPhotoSectionOpen}"
+        class="floating-close-btn"
         @click="togglePhotoSection"
         elevation="2"
       >
-        <v-icon color="white">
-          {{ isPhotoSectionOpen ? 'mdi-close' : 'mdi-image' }}
-        </v-icon>
+        <v-icon color="white">mdi-close</v-icon>
       </v-btn>
     </v-container>
 
@@ -531,7 +529,7 @@
     z-index: 1000;
     background: white;
     transform: translateX(100%);
-    height: calc(100vh - 40px);
+    height: calc(100vh - 48px);
     width: 100%;
     flex: 0 0 100%;
     max-width: 100%;
@@ -631,6 +629,16 @@
 /* 調整 z-index 確保彈出選單在照片區域上方 */
 .v-menu__content {
   z-index: 1001 !important;
+}
+
+.floating-close-btn {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: 60px;
+  height: 60px;
 }
 
 .floating-photo-btn {

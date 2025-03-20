@@ -10,7 +10,7 @@
         </v-col> -->
         <v-col 
           cols="12" 
-          style="height: 180px; width: 100%;">
+          style="height: 160px; width: 100%;">
           <v-layout align-center class="justify-center">
             <v-img 
             max-width="100%"
@@ -225,13 +225,23 @@ export default {
   border-right: 1px solid #fff;
 }
 @media screen and (max-width: 767px){
+  .loginLogo{
+    max-width: 70vw !important;
+  }
+  .custom-title {
+    font-size: 1rem !important;
+    padding: 8px 16px;
+    justify-content: center;
+  }
   .colRight .pa-5{
-    height: 40vh;
+    height: auto;
+    margin: 0 20px;
   }
   .image-box{
     height: 40vh;
   }
   .copyright .caption{
+    line-height: 1rem;
     font-size: 9px !important;
   }
 }

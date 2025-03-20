@@ -6,18 +6,19 @@
         centered
         grow
         show-arrows
+        slider-color="#2D9CA0"
       >
         <v-tab
-            :color="localCurrentAlbum === 0 ? 'primary' : ''"
-            @click="updateCurrentAlbum(0)"
-          >
+          :style="{ color: localCurrentAlbum === 0 ? '#2D9CA0' : '' }"
+          @click="updateCurrentAlbum(0)"
+        >
           <v-icon>mdi-upload</v-icon>
           {{ getRwdType === 'desktop' ? 'Uploaded wound photo' : 'Uploaded' }}
         </v-tab>
         <v-tab
-            :color="localCurrentAlbum === 1 ? 'primary' : ''"
-            @click="updateCurrentAlbum(1)"
-          >
+          :style="{ color: localCurrentAlbum === 1 ? '#2D9CA0' : '' }"
+          @click="updateCurrentAlbum(1)"
+        >
           <v-icon>mdi-magnify-expand</v-icon>
           {{ getRwdType === 'desktop' ? 'AI wound area detection' : 'Detection' }}
         </v-tab>
@@ -324,6 +325,9 @@ export default {
 </script>
 
 <style scoped>
+.v-tab{
+  font-size: 12px;
+}
 .photo-section {
   height: 100%;
   overflow-y: auto;
@@ -407,6 +411,11 @@ export default {
 }
 .v-responsive__sizer {
   padding-bottom: 75%;
+}
+@media (max-width: 960px)  {
+  .photo-zone {
+    height: calc(100vh - 188px);
+  }
 }
 @media (max-width: 730px)  {
   .photo-zone {

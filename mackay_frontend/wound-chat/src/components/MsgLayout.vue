@@ -6,11 +6,11 @@
     <v-sheet class="message-layout">
       <!-- 頂部工具欄 -->
       <v-toolbar dense color="main-green" dark>
+        <v-toolbar-title class="small">New Message</v-toolbar-title>
+        <v-spacer></v-spacer>
         <v-btn icon dark @click="close">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>New Message</v-toolbar-title>
-        <v-spacer></v-spacer>
       </v-toolbar>
 
       <!-- 訊息輸入區域 -->
@@ -36,7 +36,7 @@
               class="action-btn"
               @click="openUploadImage"
             >
-              <div class="d-flex flex-column align-center">
+              <div class="d-flex">
                 <v-icon class="mb-1">mdi-paperclip</v-icon>
                 <span class="caption">Upload</span>
               </div>
@@ -52,7 +52,7 @@
               @click="sendMessage"
               :disabled="!newMessage.trim()"
             >
-              <div class="d-flex flex-column align-center">
+              <div class="d-flex">
                 <v-icon class="mb-1">mdi-send</v-icon>
                 <span class="caption">Send</span>
               </div>
@@ -147,6 +147,9 @@ export default {
 </script>
 
 <style scoped>
+.v-toolbar__title{
+  font-size: 1rem;
+}
 .message-layout {
   padding-bottom: 16px;
   border-top-left-radius: 16px;

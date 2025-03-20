@@ -2,8 +2,8 @@
     <v-dialog v-model="uploadImage" max-width="500px" scrollable>
       <v-card>
         <v-card-title class="font-large font-weight-bold text-center">
-          Please upload a photo of the wound
-          <span class="font-weight-regular font-small grey--text">Only accept JPG and PNG image files(Max: 8MB)</span>
+          Upload a photo of the wound
+          <span class="font-weight-regular font-small grey--text ml-1">JPG and PNG image files only(Max: 8MB)</span>
         </v-card-title>
         
         <v-card-text>
@@ -37,8 +37,8 @@
                   <!-- 防呆訊息顯示區 -->
                   <div class="uploader-interface">
                     <v-icon size="40" color="#dcdcdc">mdi-cloud-upload-outline</v-icon>
-                    <p :class="{ 'error-message': showErrorMsg }">{{ fileTips }}</p>
-                    <p class="text-caption text-grey--text">Only accept JPG and PNG image files，Max: 8MB</p>
+                    <p :class="{ 'error-message': showErrorMsg }">{{ displayFileTips }}</p>
+                    <!-- <p class="text-caption text-grey--text">Only accept JPG and PNG image files，Max: 8MB</p> -->
                   </div>
                 </div>
             </v-container>
@@ -73,12 +73,18 @@
         file: null, // 上傳檔案物件
         filePreviewSrc: "", // 圖片預覽 URL
         fileOnDrag: false, // 是否處於拖曳狀態
-        fileTips: "Drag and drop or click to upload images", // 提示訊息
+        fileTips: "Drag and drop or click to upload images", // 初始提示訊息
         showErrorMsg: false, // 是否顯示錯誤訊息
         canUpload: false, // 是否允許上傳
         showLoading: false, // 傳送按鈕的載入狀態
         
       };
+    },
+    computed: {
+      displayFileTips() {
+        // 使用 $vuetify.breakpoint.smAndDown 來檢查是否為手機版
+        return this.$vuetify.breakpoint.smAndDown ? "Click to upload images" : this.fileTips;
+      }
     },
     methods: {
         startUpload() {
