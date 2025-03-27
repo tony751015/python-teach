@@ -6,9 +6,10 @@
     <v-sheet class="message-layout">
       <!-- 頂部工具欄 -->
       <v-toolbar dense color="main-green" dark>
-        <v-toolbar-title class="small">New Message</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon dark @click="close">
+        <v-toolbar-title class="text-center mx-auto">New Message</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon dark @click="close" class="ml-n6">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -18,6 +19,7 @@
         <v-textarea
           v-model="newMessage"
           outlined
+          color="main-green"
           auto-grow
           rows="4"
           row-height="30"
@@ -197,11 +199,23 @@ export default {
 
 .action-btn .caption {
   font-size: 12px;
-  line-height: 1;
+  line-height: 1.35;
   margin-top: 4px;
 }
 
 .action-btn.v-btn--disabled {
   opacity: 0.6;
 }
+
+/* .toolbar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+}
+
+.close-btn {
+  position: absolute;
+  right: 0;
+} */
 </style>

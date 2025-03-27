@@ -13,7 +13,7 @@
           style="height: 160px; width: 100%;">
           <v-layout align-center class="justify-center">
             <v-img 
-            max-width="100%"
+            width="100%"
             class="aling-center loginLogo" src="../assets/trm01.png"></v-img>
           </v-layout>
           
@@ -209,7 +209,7 @@ export default {
 }
 .colRight .pa-5{
   border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 .colRight .custom-title{
   letter-spacing: 3px !important;
@@ -226,7 +226,7 @@ export default {
 }
 @media screen and (max-width: 767px){
   .loginLogo{
-    max-width: 70vw !important;
+    max-width: 290px !important;
   }
   .custom-title {
     font-size: 1rem !important;
@@ -243,6 +243,11 @@ export default {
   .copyright .caption{
     line-height: 1rem;
     font-size: 9px !important;
+  }
+}
+@media screen and (max-width: 414px){
+  .loginLogo{
+    max-width: 70vw !important;
   }
 }
 </style>
