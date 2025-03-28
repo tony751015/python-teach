@@ -22,7 +22,8 @@ apiProfileUrl = 'https://api.line.me/v2/profile'
 if settings.DEBUG == True:
   LINE_ID = '2006462026'
   LINE_SECRET = '5d9bbfbaeb564b6bae32765e79c20ab2'
-  REDIRECT_URL = 'http://127.0.0.1:3000/'
+  # REDIRECT_URL = 'http://127.0.0.1:3000/'
+  REDIRECT_URL = 'http://192.168.1.107:3000/'
 
 # 部屬
 else:
