@@ -77,7 +77,7 @@
       <v-row>
         <!-- 左側：聊天室區域 -->
         <v-col :cols="12" :md="8" class="chat-section">
-          <v-toolbar flat dense class="w-100">
+          <v-toolbar flat dense class="w-100 searchChatToolBar">
             <!-- <div class="d-flex align-center">
               <v-avatar size="30">
                 <v-img src="https://cdn.vuetifyjs.com/images/john.jpg"></v-img>
@@ -161,7 +161,7 @@
             @click="togglePhotoSection"
           >
             <div class="d-flex flex-column align-center">
-              <v-icon class="action-icon">{{ isPhotoSectionOpen ? 'mdi-arrow-right' : 'mdi-image' }}</v-icon>
+              <v-icon class="action-icon">{{ isPhotoSectionOpen ? 'mdi-arrow-left' : 'mdi-image' }}</v-icon>
               <span class="action-text">{{ isPhotoSectionOpen ? 'Back' : 'Photos' }}</span>
             </div>
           </v-btn>
@@ -521,7 +521,9 @@ $topbarHeight: '38px';
   display: flex;
   flex-wrap: wrap;
 }
-
+.searchChatToolBar:deep  .v-toolbar__content{
+  padding: 4px 8px !important;
+}
 .mobile-actions {
   position: fixed;
   bottom: 0;

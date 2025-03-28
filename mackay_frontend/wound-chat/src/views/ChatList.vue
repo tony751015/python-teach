@@ -80,7 +80,7 @@
             ></v-text-field>
           </v-toolbar>
           <v-list>
-            <v-subheader>Patient census: {{ patientCount }}</v-subheader>
+            <v-subheader>Total: {{ patientCount }}</v-subheader>
               <template v-if="!preloading">
                 <v-list-item
                   v-for="patient in visiblePatients"
@@ -503,7 +503,7 @@
     padding: 0 10px;
   }
   .fill-height {
-    height: calc(100vh - 40px);
+    height: calc(100vh - 48px);
     padding: unset;
   }
   .container.fill-height > .row{

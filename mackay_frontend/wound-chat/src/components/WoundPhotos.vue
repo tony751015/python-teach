@@ -419,7 +419,7 @@ export default {
 }
 @media (max-width: 730px)  {
   .photo-zone {
-    height: calc(100vh - 177px);
+    height: calc(100vh - 188px);
   }
 }
 </style>
