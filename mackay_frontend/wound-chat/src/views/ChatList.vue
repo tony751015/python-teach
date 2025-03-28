@@ -85,7 +85,7 @@
                 <v-list-item
                   v-for="patient in visiblePatients"
                   :key="patient.id"
-                  class="patient-item"
+                  class="patient-item px-3"
                   @click="selectPatient(patient); togglePhotoSection()"
                   :class="{ 'outlined': highlightedPatientId === patient.user_id }"
                 >
@@ -145,12 +145,13 @@
                       elevation="0"
                       color="main-green"
                       small
+                      fab 
                       :class="['chat-btn', {'mobile-chat-btn': $vuetify.breakpoint.smAndDown}]"
                       @click.stop="goChatroom(patient)"
                     >
                       <!-- 手機版：上圖下字 -->
                       <div v-if="$vuetify.breakpoint.smAndDown" class="d-flex flex-column align-center">
-                        <v-icon size="16" class="mb-1">mdi-chat-processing-outline</v-icon>
+                        <v-icon size="22" class="mb-1">mdi-chat-processing-outline</v-icon>
                         <!-- <span class="chat-text">Chat</span> -->
                       </div>
                       
@@ -160,7 +161,7 @@
                       </template>
                     </v-btn>
                   </v-list-item-action>
-                  <v-list-item-action>
+                  <v-list-item-action class="ml-2">
                     <v-btn
                       small
                       fab 

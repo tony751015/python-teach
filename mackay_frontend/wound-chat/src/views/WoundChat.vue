@@ -151,12 +151,13 @@
         class="mobile-actions d-md-none"
         :class="{'mobile-actions--hidden': isMessageLayoutOpen}"
       >
-        <div class="mobile-actions-container">
+        <div class="mobile-actions-container pt-1 pb-2 px-1">
           
           <!-- 照片區域切換按鈕 -->
           <v-btn
+            elevation='0'
             text
-            class="mobile-action-btn"
+            class="mobile-action-btn rounded-lg"
             :class="{'active': isPhotoSectionOpen}"
             @click="togglePhotoSection"
           >
@@ -168,8 +169,9 @@
 
           <!-- 新增的上傳圖片按鈕 -->
           <v-btn
+            elevation='0'
             text
-            class="mobile-action-btn"
+            class="mobile-action-btn py-1 rounded-lg"
             @click="openUploadImage"
           >
             <div class="d-flex flex-column align-center">
@@ -180,8 +182,9 @@
 
           <!-- 訊息輸入按鈕 -->
           <v-btn
+            elevation='0'
             text
-            class="mobile-action-btn"
+            class="mobile-action-btn rounded-lg"
             @click="openMessageLayout"
           >
             <div class="d-flex flex-column align-center">
@@ -193,8 +196,9 @@
           <!-- My Patients 按鈕 -->
           <v-btn
             v-if="userProfile.super_user"
+            elevation='0'
             text
-            class="mobile-action-btn"
+            class="mobile-action-btn rounded-lg"
             @click="goChatList"
           >
             <div class="d-flex flex-column align-center">
@@ -325,6 +329,20 @@ export default {
       },
       togglePhotoSection() {
         this.isPhotoSectionOpen = !this.isPhotoSectionOpen;
+
+        if (this.isPhotoSectionOpen) {
+          document.body.classList.add('disable-scroller');
+          document.documentElement.style.overflow = 'hidden';
+        } else {
+          document.body.classList.remove('disable-scroller');
+          document.documentElement.style.overflow = 'unset';
+        }
+
+},
+
+destroyed() {
+  document.body.classList.remove('cc-overflow-hide');
+  document.documentElement.style.overflow = 'unset';
       },
       openMessageLayout() {
         if (this.isPhotoSectionOpen) {
@@ -333,10 +351,12 @@ export default {
         this.isMessageLayoutOpen = true;
       },
       openUploadImage() {
+        document.body.classList.add('disable-scroller');
         this.uploadImage = true;
         this.uploadImgKey += 1;
       },
       closeUploadImage() {
+        document.body.classList.remove('disable-scroller');
         this.uploadImage = false;
       },
       updateVisible(val) {
@@ -491,6 +511,10 @@ $topbarHeight: '38px';
     flex: 0 0 100%;
     max-width: 100%;
     padding-bottom: 60px; /* 為底部按鈕區留出空間 */
+  }
+
+  .mobile-action-btn {
+    height: 48px !important;
   }
   
   .photo-section {

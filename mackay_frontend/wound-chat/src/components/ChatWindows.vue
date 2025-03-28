@@ -7,7 +7,7 @@
     <div class="px-0 mr-n3">
       <ProgressLoader :key='activeKey' :showText="`LOADING...`" :active="activeProgress"></ProgressLoader>
       
-      <div ref="chatWindow" class="chat-window">
+      <div ref="chatWindow" class="chat-window pt-1 pb-4">
         <infinite-loading direction="top" @infinite="infiniteHandler" :identifier='infiniteId'>
           <div slot="no-more">No more comments</div>
           <div slot="no-results">No more comments</div>
@@ -144,6 +144,17 @@ export default {
     //     });
     // }
   },
+
+  mounted() {
+    document.body.classList.add('disable-scroller');
+    document.documentElement.style.overflow = 'hidden';
+  },
+
+  destroyed() {
+    document.body.classList.remove('disable-scroller');
+    document.documentElement.style.overflow = 'unset';
+  },
+
   // mounted() {
     // 頁面初次加載時滾動到底部
     // this.$nextTick(() => {
@@ -435,7 +446,7 @@ export default {
 
 <style scoped>
 .chat-container {
-  height: calc(100vh - 64px);
+  height: calc(100dvh - 160px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -446,7 +457,7 @@ export default {
   flex: 1;
   background-color: #fff;
   padding: 0;
-  height: calc(100vh - 205px);
+  /* height: calc(100dvh - 205px); */
   overflow-y: auto;
   position: relative;
 }
@@ -520,9 +531,9 @@ export default {
   .message-input {
     margin-bottom: 8px !important;
   }
-  .chat-container{
+  /* .chat-container{
     height: calc(100vh - 36px);
-  }
+  } */
 }
 
 </style>
