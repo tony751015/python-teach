@@ -457,7 +457,7 @@ export default {
   flex: 1;
   background-color: #fff;
   padding: 0;
-  height: calc(100dvh - 205px);
+  /* height: calc(100vh - 205px); */
   overflow-y: auto;
   position: relative;
 }
@@ -521,6 +521,11 @@ export default {
   display: flex;
   align-items: center;
   margin-top: 8px;
+}
+@media (min-width: 962px) {
+  .chat-window {
+    height: calc(100vh - 205px);
+  }
 }
 @media (max-width: 961px) {
   .chat-window {

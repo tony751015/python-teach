@@ -6,4 +6,4 @@ def gcp_upload_image(file, filePath):
         storage.save(filePath, file)
         return filePath
     except Exception as e:
-        # print("Failed to upload!")
+        print("Failed to upload!")
