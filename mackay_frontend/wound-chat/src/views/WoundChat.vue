@@ -523,7 +523,7 @@ $topbarHeight: '38px';
   }
   
   .photo-section--mobile {
-    height: calc(100vh - 105px); /* #{$topbarHeight} (topbar) + 60px (bottom actions) */
+    height: calc(100vh - 99px); /* #{$topbarHeight} (topbar) + 60px (bottom actions) */
   }
 
   // .v-app-bar {

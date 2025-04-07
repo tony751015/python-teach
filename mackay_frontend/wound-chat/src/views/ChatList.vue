@@ -145,12 +145,12 @@
                       elevation="0"
                       color="main-green"
                       small
-                      fab 
+                      :fab="getRwdType !== 'desktop'" 
                       :class="['chat-btn', {'mobile-chat-btn': $vuetify.breakpoint.smAndDown}]"
                       @click.stop="goChatroom(patient)"
                     >
                       <!-- 手機版：上圖下字 -->
-                      <div v-if="$vuetify.breakpoint.smAndDown" class="d-flex flex-column align-center">
+                      <div v-if="getRwdType !== 'desktop'"  class="d-flex flex-column align-center">
                         <v-icon size="22" class="mb-1">mdi-chat-processing-outline</v-icon>
                         <!-- <span class="chat-text">Chat</span> -->
                       </div>

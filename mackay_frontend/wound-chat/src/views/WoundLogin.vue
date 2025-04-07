@@ -89,7 +89,7 @@
       fixed
     >
       <v-card-text class=" text-center copyright">
-        <div class="caption">©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved. No part of this website may be reproduced without written permission.</div>
+        <!-- <div class="caption">©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved. No part of this website may be reproduced without written permission.</div> -->
         <div class="caption">Copyright ©2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved.</div>
       </v-card-text>
       <v-card-text class="black--text text-center py-0 mb-4">
@@ -242,7 +242,7 @@ export default {
   }
   .copyright .caption{
     line-height: 1rem;
-    font-size: 9px !important;
+    font-size: 7px !important;
   }
 }
 @media screen and (max-width: 414px){

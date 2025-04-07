@@ -457,7 +457,7 @@ export default {
   flex: 1;
   background-color: #fff;
   padding: 0;
-  /* height: calc(100dvh - 205px); */
+  height: calc(100dvh - 205px);
   overflow-y: auto;
   position: relative;
 }
