@@ -8,6 +8,8 @@ from user.views import user_fast_login, load_user_chat_room, chat_room_update_pi
 from user.line_login import line_fast_login
 from chat.views import chat_record_list, chat_record_control, chat_record_ssr, chat_record_ssr_with_query, chat_upload_photo, chat_record_photo
 
+from ai.views import gemini_request
+
 from django.views.static import serve
 from django.urls import re_path as url
 
@@ -27,6 +29,8 @@ urlpatterns = [
 
     path("api/member/fast_login", user_fast_login),
     path("api/member/line_login", line_fast_login),
+
+    path("api/ai/gemini_request", gemini_request),
     # path("member/", load_member_list_ssr),
     # path("member/<id>", load_member_list_ssr_query),
 
