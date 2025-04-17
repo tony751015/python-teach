@@ -21,7 +21,7 @@
         <!-- 右側登入方框 -->
         <v-col cols="12" md="12" class="v-col colRight">
           
-          <v-card class="pa-5 text-center">
+          <v-card class="pa-4 text-center">
             <v-card-title class="headline font-weight-bold text-center custom-title">Online Platform System</v-card-title>
             <v-chip 
              closed 
@@ -207,7 +207,7 @@ export default {
 .v-col{
   padding: unset;
 }
-.colRight .pa-5{
+.colRight .pa-4{
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }

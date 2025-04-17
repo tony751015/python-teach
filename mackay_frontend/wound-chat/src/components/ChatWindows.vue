@@ -522,14 +522,14 @@ export default {
   align-items: center;
   margin-top: 8px;
 }
-@media (min-width: 962px) {
+@media all and (min-width: 962px) {
   .chat-window {
     height: calc(100vh - 205px);
   }
 }
 @media (max-width: 961px) {
   .chat-window {
-    height: calc(100vh - 154px);
+    height: calc(100vh - 160px);
   }
 }
 @media (max-width: 428px) {

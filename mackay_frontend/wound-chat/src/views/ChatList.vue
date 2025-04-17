@@ -698,7 +698,7 @@
 
 /* 手機版樣式 */
 .mobile-chat-btn {
-  min-width: 45px !important;
+  /* min-width: 45px !important; */
   height: auto !important;
   padding: 4px 0 !important;
 }

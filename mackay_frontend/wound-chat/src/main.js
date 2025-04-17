@@ -71,11 +71,11 @@ const VUEX_FEATURE = {
           this.updateUserProfile(null);
           this.updateUserId(null);
           this.updateUserLogin(false);
-          this.updateAlert({
-            show: true,
-            status: 'error',
-            message: 'Please log in again!'
-          });
+          // this.updateAlert({
+          //   show: true,
+          //   status: 'error',
+          //   message: 'Please log in again!'
+          // });
           const urlObj = new URL(location.href);
 
           if (urlObj.pathname !== '/'){
