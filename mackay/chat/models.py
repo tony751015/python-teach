@@ -2,6 +2,8 @@ import uuid
 from django.db import models
 from django_resized import ResizedImageField
 
+uuuid = uuid.uuid4()
+
 class chat_record(models.Model):
   create_user = models.TextField(blank=True)
   room_path = models.TextField(default='text', blank=True)
@@ -11,7 +13,7 @@ class chat_record(models.Model):
   ban = models.BooleanField(default=False) # 預設False
   # media_url = models.FileField(upload_to='chat/', default="", null=True, blank=True)
   media_url = ResizedImageField(upload_to='chat/', force_format="WEBP", quality=75, null=True, blank=True)
-  message_id = models.UUIDField(default=uuid.uuid4(), editable=False)
+  message_id = models.UUIDField(default=uuuid, editable=False)
   create_date = models.DateTimeField(auto_now_add=True) # 會自動建立日期
 
   class Meta:
