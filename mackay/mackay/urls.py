@@ -8,6 +8,8 @@ from user.views import user_fast_login, load_user_chat_room, chat_room_update_pi
 from user.line_login import line_fast_login
 from chat.views import chat_record_list, chat_record_control, chat_record_ssr, chat_record_ssr_with_query, chat_upload_photo, chat_record_photo
 
+from ssr.views import index_ssr, chat_ssr, chat_room_ssr
+
 from ai.views import gemini_request
 
 from django.views.static import serve
@@ -26,6 +28,10 @@ urlpatterns = [
     path("api/chat/room", load_user_chat_room),
     path("api/chat/update_pin", chat_room_update_pin),
     path("api/chat/update_ban", chat_room_update_ban),
+
+    path("", index_ssr),
+    re_path(r'chat\/?$', chat_ssr),
+    path('chat/<room>', chat_room_ssr),
 
     path("api/member/fast_login", user_fast_login),
     path("api/member/line_login", line_fast_login),
