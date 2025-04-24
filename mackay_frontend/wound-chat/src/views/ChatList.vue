@@ -241,6 +241,8 @@
 
     created() {
       this.initPatientsList();
+      document.body.classList.add('disable-scroller');
+      document.documentElement.style.overflow = 'hidden';
     },
 
     data() {
@@ -472,7 +474,14 @@
       ...mapMutations(['UPDATE_USER_ID', 'UPDATE_CHAT_ROOM']),
       togglePhotoSection() {
         this.isPhotoSectionOpen = !this.isPhotoSectionOpen;
-      }
+      },
+      // --- popstate 事件處理函數 ---
+      preventBackButton() {
+        // 當用戶嘗試返回時，再次推入狀態以阻止導航
+        history.pushState(null, '', location.href);
+        console.log("Back button navigation prevented in ChatList."); // Debug message
+      },
+      // --- popstate 事件處理函數結束 ---
     },
     mounted() {
       // const userId = this.userProfile.id;
@@ -495,7 +504,19 @@
       if (this.userProfile.thumb) {
         this.thumb_avatar = this.userProfile.thumb;
       }
-    }
+
+      // --- 禁用返回按鈕 ---
+      history.pushState(null, '', location.href); // Add initial state barrier
+      window.addEventListener('popstate', this.preventBackButton); // Add listener
+      // --- 禁用返回按鈕結束 ---
+    },
+    destroyed() {
+      document.body.classList.remove('disable-scroller');
+      document.documentElement.style.overflow = 'unset';
+      // --- 恢復返回按鈕 ---
+      window.removeEventListener('popstate', this.preventBackButton); // Remove listener
+      // --- 恢復返回按鈕結束 ---
+    },
   };
   </script>
   
@@ -539,6 +560,9 @@
     transform: translateX(0);
   }
   @media (max-width: 960px) {
+    .fill-height {
+      height: calc(100vh - 38px);
+    }
     .chat-list-section {
       flex: 0 0 100%;
       max-width: 100%;
@@ -711,7 +735,9 @@
 
 @media (max-width: 600px) {
   .mobile-chat-btn {
-    min-width: 40px !important;
+    /* min-width: 45px !important; */
+    height: auto !important;
+    padding: 4px 0 !important;
   }
 }
 

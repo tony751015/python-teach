@@ -1,11 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    
+    <!-- Primary Language: Traditional Chinese -->
+    <title>病患聊天列表 - 線上傷口照護平台 | Patient Chat List - Online Wound Care Platform</title>
+    <meta name="description" content="安全地查看和管理您的傷口照護病患聊天列表。瀏覽最新訊息並進入個別聊天室。 | Securely view and manage your wound care patient chat list. Browse latest messages and enter individual chat rooms.">
+    <meta name="keywords" content="病患列表, 聊天, 傷口照護, 訊息, 遠距醫療, patient list, chat, wound care, messaging, telemedicine, Si Yin Medical">
+
+    <!-- Add alternate link for English version if you have a separate English site/page -->
+    <!-- <link rel="alternate" hreflang="en" href="/en/chat/" /> -->
+    
+    <link rel="icon" href="/favicon.ico">
 </head>
 <body>
-    
+    <!-- Skip links for accessibility -->
+    <a href="#main-content" class="skip-link">跳至主要內容 (Skip to main content)</a>
+
+    <header>
+        <h1>病患聊天列表 | Patient Chat List</h1>
+    </header>
+
+    <main id="main-content">
+        <section id="patient-list-section">
+            <h2>我的病患 | My Patients</h2>
+            <p>這裡是您所有病患的聊天列表。您可以搜尋特定病患、查看最新訊息或進入聊天室。 | This is the chat list for all your patients. You can search for specific patients, view the latest messages, or enter chat rooms.</p>
+            
+            <!-- Vue app mount point -->
+            <div id="chat-list-app">
+                <p>正在載入病患列表... | Loading patient list...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Updated Copyright based on WoundLogin.vue -->
+        <p>&copy; 2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved.</p>
+        <!-- You can add more links like in WoundLogin if needed for the static version -->
+    </footer>
+
+    <!-- Scripts for your Vue app -->
 </body>
 </html>

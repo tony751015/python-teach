@@ -10,7 +10,7 @@
         </v-col> -->
         <v-col 
           cols="12" 
-          style="height: 160px; width: 100%;">
+          class="logo-col">
           <v-layout align-center class="justify-center">
             <v-img 
             width="100%"
@@ -135,7 +135,16 @@ export default {
     }
 
   },
-
+  mounted() {
+    // 組件掛載時禁用滾動
+    document.body.classList.add('disable-scroller');
+    document.documentElement.style.overflow = 'hidden';
+  },
+  destroyed() {
+    // 組件銷毀時恢復滾動
+    document.body.classList.remove('disable-scroller');
+    document.documentElement.style.overflow = 'unset';
+  },
   data() {
     return {
       preloading: true,
@@ -164,6 +173,8 @@ export default {
 };
 </script>
 
+
+
 <style scoped>
 .theme--light.v-application{
   background-image: url(../assets/loginBG.png); 
@@ -172,11 +183,15 @@ export default {
   background-position: center;
 }
 .fill-height {
-  min-height: 100vh;
+  max-height: 100vh;
   justify-content: center;
 }
 .main-container {
   transform: translate3d(0, -7vh, 0);
+}
+.logo-col{
+  height: 160px;
+  width: 100%;
 }
 .image-box {
   background-color: #f5f5f5;
@@ -212,7 +227,7 @@ export default {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 .colRight .custom-title{
-  letter-spacing: 3px !important;
+  letter-spacing: 2.5px !important;
 }
 .loginLogo{
   justify-content: center;
@@ -225,6 +240,9 @@ export default {
   border-right: 1px solid #fff;
 }
 @media screen and (max-width: 767px){
+  .fill-height {
+    /* max-height: calc(100vh - 100px); */
+  }
   .loginLogo{
     max-width: 290px !important;
   }
@@ -243,6 +261,10 @@ export default {
   .copyright .caption{
     line-height: 1rem;
     font-size: 7px !important;
+  }
+  
+  .main-container {
+    /* transform: translate3d(0, -7vh, 0); */
   }
 }
 @media screen and (max-width: 414px){

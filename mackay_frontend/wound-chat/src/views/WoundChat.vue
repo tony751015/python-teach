@@ -341,7 +341,7 @@ export default {
 },
 
 destroyed() {
-  document.body.classList.remove('cc-overflow-hide');
+  document.body.classList.remove('disable-scroller');
   document.documentElement.style.overflow = 'unset';
       },
       openMessageLayout() {
@@ -374,6 +374,11 @@ destroyed() {
           this.isPhotoSectionOpen = false;
         }
       },
+      preventBackButton() {
+        // 當用戶嘗試返回時，再次推入狀態以阻止導航
+        history.pushState(null, '', location.href);
+        console.log("Back button navigation prevented in WoundChat."); // Debug message
+      },
       ...mapMutations(['UPDATE_USER_ID'])
   },
   mounted() {
@@ -383,6 +388,20 @@ destroyed() {
     if (this.userProfile.thumb) {
       this.thumb_avatar = this.userProfile.thumb;
     }
+
+    // --- 禁用返回按鈕 ---
+    history.pushState(null, '', location.href); // Add initial state barrier
+    window.addEventListener('popstate', this.preventBackButton); // Add listener
+    // --- 禁用返回按鈕結束 ---
+  },
+  destroyed() {
+    // --- 恢復返回按鈕 ---
+    window.removeEventListener('popstate', this.preventBackButton); // Remove listener
+    // --- 恢復返回按鈕結束 ---
+
+    // 恢復頁面滾動 (確保離開頁面時恢復)
+    document.body.classList.remove('disable-scroller');
+    document.documentElement.style.overflow = 'unset';
   },
 };
 </script>

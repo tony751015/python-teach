@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Language: Traditional Chinese -->
+    <title>病患聊天室 - 線上傷口照護平台 | Patient Chat Room - Online Wound Care Platform</title>
+    <meta name="description" content="與您的病患進行安全的線上聊天。發送訊息、上傳傷口照片，並查看照護紀錄。 | Engage in secure online chat with your patient. Send messages, upload wound photos, and view care records.">
+    <meta name="keywords" content="聊天室, 病患溝通, 傷口照片, 訊息傳送, 遠距照護, chat room, patient communication, wound photo, messaging, remote care, Si Yin Medical">
+
+    <!-- Add alternate link for English version if you have a separate English site/page -->
+    <!-- <link rel="alternate" hreflang="en" href="/en/chat/{room_id}/" /> -->
+
+    <link rel="icon" href="/favicon.ico"> <!-- 假設您有 favicon -->
+</head>
+<body>
+    <!-- Skip links for accessibility -->
+    <a href="#main-content" class="skip-link">跳至主要內容 (Skip to main content)</a>
+
+    <header>
+        <!-- Simplified header for static rendering -->
+        <h1>病患聊天室 | Patient Chat Room</h1>
+    </header>
+
+    <main id="main-content">
+        <section id="chat-interface">
+            <h2>與病患溝通 | Communicate with Patient</h2>
+            <p>在此聊天室中與您的病患安全地交流。您可以發送文字訊息、上傳傷口照片以供評估。 | Securely communicate with your patient in this chat room. You can send text messages and upload wound photos for assessment.</p>
+
+            <!-- This div could be the mount point for your Vue WoundChat component -->
+            <div id="wound-chat-app">
+                <div id="chat-window-placeholder">
+                    <p>正在載入聊天訊息... | Loading chat messages...</p>
+                </div>
+                <div id="message-input-placeholder">
+                    <p>訊息輸入區域 | Message input area</p>
+                </div>
+                <div id="photo-section-placeholder">
+                    <p>傷口照片區域 | Wound photos area</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Updated Copyright based on WoundLogin.vue -->
+        <p>&copy; 2019 Si Yin Medical Consulting Services Co., Ltd.. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts for your Vue app -->
+</body>
+</html>
