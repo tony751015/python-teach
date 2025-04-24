@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     "user",
     "chat",
-    "ai"
+    "ai",
+    "linerobot"
 ]
 
 # 下面定義會員資料結構來源

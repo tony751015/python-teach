@@ -11,6 +11,7 @@ from chat.views import chat_record_list, chat_record_control, chat_record_ssr, c
 from ssr.views import index_ssr, chat_ssr, chat_room_ssr
 
 from ai.views import gemini_request
+from linerobot.views import line_bot_callback
 
 from django.views.static import serve
 from django.urls import re_path as url
@@ -39,6 +40,9 @@ urlpatterns = [
     path("api/ai/gemini_request", gemini_request),
     # path("member/", load_member_list_ssr),
     # path("member/<id>", load_member_list_ssr_query),
+
+    # LINEBOT MESSAGE API
+    path("api/line/callback", line_bot_callback),
 
     path('mvc/', chat_record_ssr), # 執行 chat_record_ssr
     path('mvc/<id>', chat_record_ssr_with_query), # 執行 chat_record_ssr_with_query
