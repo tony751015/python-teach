@@ -34,73 +34,72 @@ parser = WebhookParser(LINE_CHANNEL_ACCESS_SECRET)
 @csrf_exempt
 def line_bot_callback(request):
     if request.method == 'POST':
-        signature = request.META['HTTP_X_LINE_SIGNATURE']
+        signature = request.META.get('HTTP_X_LINE_SIGNATURE', '')
         body = request.body.decode('utf-8')
 
         try:
-            events = parser.parse(body,signature)
+            events = parser.parse(body, signature)
         except InvalidSignatureError:
             return HttpResponseForbidden()
         except LineBotApiError:
             return HttpResponseBadRequest()
-        
-        #收到傳送者傳送的訊息 接接收到的訊息傳回.
-        for event in events:
-            # 判斷是否為縮圖或圖片訊息
-            # if isinstance(event, StickerMessage) or event.message.type == 'image':
-            #     message = TextSendMessage(text = '提醒您，我們不會針對圖片或貼圖做智能回覆喔。')
-            #     line_bot_api.reply_message(event.reply_token,message)
-     
 
-            # 一般訊息事件，大部分回應都在這
+        # 處理接收到的事件
+        for event in events:
             if isinstance(event, MessageEvent):
-                # 取得使用者LINEID
+                # 取得使用者 LINE ID
                 lineId = event.source.user_id
                 profile = line_bot_api.get_profile(lineId)
                 userName = profile.display_name
                 pictureUrl = profile.picture_url
+                user_input = event.message.text.strip()  # 使用者輸入的文字
                 print('User ID:', lineId)
                 print('User Name:', userName)
                 print('Picture URL:', pictureUrl)
-                findUserLineRecord = user_linebot_track.objects.filter(line_id = lineId).count()
-                findUser = User.objects.filter(account = lineId).count()
 
-                print('LINE CONFIG', event)
+                # 檢查 LINE ID 是否已存在於資料庫
+                findUserLineRecord = user_linebot_track.objects.filter(line_id=lineId).exists()
+                findUser = User.objects.filter(account=lineId).exists()
 
-                # 檢查LINEID在資料庫是否存在
-                if not findUserLineRecord or not findUser:
+                if not findUserLineRecord:
                     user_linebot_track.objects.create(
-                        line_id = lineId,
-                        request = '首次使用紀錄',
-                        category = 'system')
+                        line_id=lineId,
+                        request='首次使用紀錄',
+                        category='system'
+                    )
 
+                if not findUser:
+                    # 如果使用者不存在，則新增使用者
                     uuuid = uuid.uuid4()
-
                     User.objects.create(
-                      is_superuser=False,
-                      fast_auth='LINE',
-                      verify=True,
-                      name=userName,
-                      account=lineId,
-                      hashCode=uuuid,
-                      avatar=pictureUrl)
-                
-                # 偵測到 @xxx 的關鍵字
-                if isinstance(event.message,TextMessage):
-                    mtext = event.message.text.lower()
-                    mtext.replace('\uff20','@')
-                    
-                    # ==================== linebot_v3 ====================
+                        is_superuser=False,
+                        fast_auth='LINE',
+                        verify=True,
+                        name=userName,
+                        account=lineId,
+                        hashCode=uuuid,
+                        avatar=pictureUrl
+                    )
+
+                # 偵測文字訊息
+                if isinstance(event.message, TextMessage):
+                    mtext = event.message.text.lower().replace('\uff20', '@')
+
+                    # 如果使用者輸入 "@症狀回報"，啟動 ePRO 問卷流程
                     if mtext == '@症狀回報':
-                      modules.start_epro(event, lineId)
+                        modules.start_epro(event, lineId)
+                        continue  # 跳過後續處理
 
-                    # elif mtext == '@衛教內容':
-                    #   modules.start_education(event, lineId)
+                # 呼叫 handle_user_registration 處理姓名和病歷號
+                if not modules.handle_user_registration(event, lineId, user_input):
+                    # 如果尚未完成登記，跳過後續處理
+                    continue
 
-                    # elif mtext == '@掛號進度':
-                    #   modules.start_track_register(event, lineId)
-                    # ==================== linebot_v3 end ====================
+                # 如果完成登記，進入 ePRO 問卷流程
+                modules.start_epro_ques_1(event, lineId)
+
             elif isinstance(event, PostbackEvent):
+                # 呼叫 handle_postback 處理 Postback 事件
                 modules.handle_postback(event)
 
         return HttpResponse()
