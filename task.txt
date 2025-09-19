@@ -1,0 +1,26 @@
+1. 我的目標
+  - 指定專案根目錄路徑為: "D:\python-teach"。
+  - 在目前 Django 後端server 新增功能。
+  - 建立一個名為 chatTranslate 的 app。
+  - 主要功能是翻譯目前專案內聊天紀錄的翻譯，但目前是測試階段，先用假資料翻譯就行，後續才會整併進入專案
+  - 翻譯功能是串接地端部屬的LLM進行翻譯
+2. 使用技術或語言
+  - 後端與使用 Django v5
+  - 重點的程式碼片段，提供完整註解說明
+
+3. 串接地端LLM的資訊
+  - API網址是:  https://e77c18627c0e.ngrok-free.app/api/chat
+  -用JSON格式傳送:
+   {
+     "model": "gemma3:4b",
+     "messages": [
+        { "role": "user", "content": "請翻譯'text的內容'只要給翻譯 不要其他解釋跟問候 text:how do you do" }
+       ],
+     "stream": false
+   }
+  - 假資料就放在"text:"後面
+  
+4. py檔執行後直接將內容print出來就行
+    
+
+

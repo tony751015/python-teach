@@ -41,6 +41,9 @@ urlpatterns = [
     # path("member/", load_member_list_ssr),
     # path("member/<id>", load_member_list_ssr_query),
 
+    # 翻譯功能 API
+    path("chatTranslate/", include("chatTranslate.urls")),
+
     # LINEBOT MESSAGE API
     path("api/line/callback", line_bot_callback),
 

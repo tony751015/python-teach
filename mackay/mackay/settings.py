@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "user",
     "chat",
     "ai",
-    "linerobot"
+    "linerobot",
+    "chatTranslate"  # 新增的翻譯功能 app
 ]
 
 # 下面定義會員資料結構來源
