@@ -9,6 +9,7 @@ class chat_record(models.Model):
   room_path = models.TextField(default='text', blank=True)
   is_carer_user = models.BooleanField(default=False)  # 是否為照護者用戶
   content = models.TextField(default='', blank=True)
+  content_trans = models.TextField(default='', blank=True) # 翻譯後內容欄位
   content_type = models.TextField(default='text', blank=True) # 預設text
   ban = models.BooleanField(default=False) # 預設False
   # media_url = models.FileField(upload_to='chat/', default="", null=True, blank=True)

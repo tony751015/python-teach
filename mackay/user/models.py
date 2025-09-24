@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, UserManager, Permission
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.TextField(max_length=50, blank=True, default="")
+    nationality = models.TextField(max_length=50, blank=True, default="") # 使用者國籍
     name = models.TextField(max_length=50, blank=True)
     hashCode = models.TextField(blank=True, default="")
     account = models.TextField(unique=True)
