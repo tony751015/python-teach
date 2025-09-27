@@ -38,7 +38,10 @@ export default new Vuex.Store({
   },
   mutations: {
     UPDATE_USER_PROFILE(st, payload) {
-      st.user_profile = payload;
+      st.user_profile = {
+        ...payload,
+        user_lang: payload.user_lang || ''
+      };
     },
     UPDATE_USER_ID(st, payload) {
       // if (st.user_profile) {

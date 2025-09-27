@@ -87,6 +87,7 @@ def line_fast_login(request):
       getMember.save()
       getUserAuthId = getMember.id
       getSuperUser = getMember.is_superuser
+      getLang = getMember.user_lang
       getRoomPath = chat_room.objects.get(user_id=getUserAuthId).room_path
       # print(getRoomPath)
       # return Response('ok', status=200)
@@ -125,7 +126,8 @@ def line_fast_login(request):
      "jwt_token": jwtTokenId,
      "user_id": getUserAuthId,
      "super_user": getSuperUser,
-     "room_path": getRoomPath
+     "room_path": getRoomPath,
+     "user_lang": getLang
   }, status=200)
 
 

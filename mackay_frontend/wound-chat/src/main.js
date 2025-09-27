@@ -51,7 +51,8 @@ const VUEX_FEATURE = {
             thumb: decoded.picture,
             id: getJwtJson.user_id,
             super_user: getJwtJson.super_user,
-            room_path: getJwtJson.room_path
+            room_path: getJwtJson.room_path,
+            user_lang: getJwtJson.user_lang
           }
 
           console.log('autoRelogin', USER_PROFILE);
@@ -112,6 +113,7 @@ const VUEX_FEATURE = {
               jwt: getJWT,
               user_id: res.data.user_id,
               super_user: res.data.super_user,
+              user_lang: res.data.user_lang,
               room_path: res.data.room_path
             };
             
@@ -125,6 +127,7 @@ const VUEX_FEATURE = {
               thumb: decoded.picture,
               id: res.data.user_id,
               super_user: res.data.super_user,
+              user_lang: res.data.user_lang,
               room_path: res.data.room_path
             }
 

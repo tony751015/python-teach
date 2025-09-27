@@ -21,6 +21,7 @@
           :content_type="msg.content_type"
           :user_name="msg.user_name"
           :content="msg.content"
+          :content_trans="msg.content_trans"
           :media_url="msg.media_url"
           :isFirstDate="msg.isFirstDate"
           @image-click="openImagePopup(`${IMG_PATH}media/${msg.media_url}`)" 

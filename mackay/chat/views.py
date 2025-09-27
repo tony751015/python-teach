@@ -83,7 +83,7 @@ def chat_record_list(request):
       # check2 = check1.order_by('-create_date_truncated')
 
       # recordData = list(recordQuery.values_list('create_date_truncated', flat=True).order_by('-create_date_truncated').annotate(record_id=F('id')).values('record_id', 'content', 'content_type', 'create_date_truncated', 'is_carer_user'))
-      recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'content', 'media_url', 'content_type', 'create_date_truncated', 'is_carer_user'))
+      recordData = list(filterData.annotate(record_id=F('id')).values('record_id', 'content', 'content_trans', 'media_url', 'content_type', 'create_date_truncated', 'is_carer_user'))
 
       # 設計一個變數，用來記錄每次For迴圈保存的 create_date_truncated 值
       currentLoopDate = ''

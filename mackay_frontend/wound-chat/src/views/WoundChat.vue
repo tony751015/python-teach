@@ -225,6 +225,13 @@
       @update:visible="updateVisible"
       @message-uploaded="handleMessageUploaded"
     ></UploadImage>
+
+    <LangSelect
+      v-model="showLangDialog"
+      :langOptions="[ { text: 'English', value: 'en' }, { text: 'Spanish', value: 'es' }, { text: 'French', value: 'fr' }, { text: 'German', value: 'de' }, { text: 'Italian', value: 'it' }, { text: 'Portuguese', value: 'pt' } ]"
+      :userId="userProfile.id"
+      @lang-selected="handleLangSelected"
+    />
   </v-app>
 </template>
 
@@ -233,6 +240,7 @@ import ChatWindows from '../components/ChatWindows.vue';
 import WoundPhotos from '../components/WoundPhotos.vue';
 import MsgLayout from '../components/MsgLayout.vue';
 import UploadImage from '../components/UploadImage.vue';
+import LangSelect from '../components/LangSelect.vue';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -240,7 +248,8 @@ export default {
     ChatWindows,
     WoundPhotos,
     MsgLayout,
-    UploadImage
+    UploadImage,
+    LangSelect
   },
   data() {
     return {
@@ -258,6 +267,8 @@ export default {
       isMessageLayoutOpen: false,
       uploadImage: false, // 新增的狀態
       uploadImgKey: 1, // 新增的狀態
+      showLangDialog: false,
+      selectedLang: '',
     };
   },
   computed: {
@@ -379,6 +390,29 @@ destroyed() {
         history.pushState(null, '', location.href);
         console.log("Back button navigation prevented in WoundChat."); // Debug message
       },
+      async handleLangSelected(lang) {
+        this.selectedLang = lang;
+        // 呼叫 API 更新 user_lang
+        try {
+          await this.$axios.put('/api/user/update_lang', {
+            user_id: this.userProfile.id,
+            user_lang: lang
+          });
+          // 更新 localStorage
+          let mackayData = JSON.parse(localStorage.getItem('mackay') || '{}');
+          mackayData.user_lang = lang;
+          localStorage.setItem('mackay', JSON.stringify(mackayData));
+          // 更新 Vuex store
+          this.$store.commit('UPDATE_USER_PROFILE', {
+            ...this.userProfile,
+            user_lang: lang
+          });
+          this.userProfile.user_lang = lang;
+          this.showLangDialog = false;
+        } catch (err) {
+          this.$toast && this.$toast.error('語言設定失敗');
+        }
+      },
       ...mapMutations(['UPDATE_USER_ID'])
   },
   mounted() {
@@ -393,6 +427,11 @@ destroyed() {
     history.pushState(null, '', location.href); // Add initial state barrier
     window.addEventListener('popstate', this.preventBackButton); // Add listener
     // --- 禁用返回按鈕結束 ---
+
+    // 病患登入且 user_lang 為空時顯示語言選擇
+    if (!this.userProfile.super_user && !this.userProfile.user_lang) {
+      this.showLangDialog = true;
+    }
   },
   destroyed() {
     // --- 恢復返回按鈕 ---

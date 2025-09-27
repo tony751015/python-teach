@@ -4,7 +4,13 @@
     v-row(:class="alignmentClass" style="margin: 0;")
       v-col(cols="auto" v-if="content_type === 'text'")
         v-card.mr-4(:class="[messageClass, 'mr-4']" flat)
-          v-card-text.font-large.font-weight-bold(class="font-weight-bold" v-html="contentRegexMatchURL")
+          v-card-text.font-large.font-weight-bold(class="font-weight-bold")
+            span(v-if="showContentTrans && content_trans" v-html="contentTransRegexMatchURL")
+            span(v-else-if="showBothContent")
+              span(v-html="contentRegexMatchURL")
+              br
+              span(style="color: #2196f3; font-size: 0.95em; margin-left: 8px;" v-if="content_trans" v-html="contentTransRegexMatchURL")
+            span(v-else v-html="contentRegexMatchURL")
 
       v-col.img_col(cols="5" :key="media_url" class="img_col" v-else-if="content_type === 'image'")
         v-card.mr-4(color="point-1" :class="[messageClass, 'mr-4']" flat)
@@ -69,6 +75,10 @@ export default {
       type: String,
       required: true
     },
+    content_trans: {
+      type: String,
+      default: ''
+    },
     media_url: {
       type: String,
       required: true
@@ -80,11 +90,30 @@ export default {
   },
 
   computed: {
-    contentRegexMatchURL: function() {
-      let newContent = this.content;
-      // eslint-disable-next-line
-      /* eslint-disable-next-line */
-      const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/g;
+    showContentTrans() {
+      // 病患看到醫護訊息且有翻譯
+      const isSuperUser = this.$root.userProfile?.super_user;
+      return !isSuperUser && this.is_carer_user && this.content_trans;
+    },
+    showBothContent() {
+      // 醫護人員看到病患訊息
+      const isSuperUser = this.$root.userProfile?.super_user;
+      return isSuperUser && !this.is_carer_user;
+    },
+    contentRegexMatchURL() {
+      let newContent = this.content || '';
+      // eslint-disable-next-line no-useless-escape
+      const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)/g;
+      const matchURL = newContent.match(urlRegex);
+      if (matchURL) {
+        newContent = newContent.replace(urlRegex, `<a style="margin: 0 5px;" href="${matchURL[0]}" target="_blank">${matchURL[0]}</a>`);
+      }
+      return newContent;
+    },
+    contentTransRegexMatchURL() {
+      let newContent = this.content_trans || '';
+      // eslint-disable-next-line no-useless-escape
+      const urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)/g;
       const matchURL = newContent.match(urlRegex);
       if (matchURL) {
         newContent = newContent.replace(urlRegex, `<a style="margin: 0 5px;" href="${matchURL[0]}" target="_blank">${matchURL[0]}</a>`);
@@ -92,24 +121,19 @@ export default {
       return newContent;
     },
     alignmentClass() {
-      // alert(this.is_carer_user);
       const isSuperUser = this.$root.userProfile?.super_user;
       if (isSuperUser) {
         return this.is_carer_user ? 'justify-end' : 'justify-start';
-        // return this.is_carer_user ? 'justify-start' : 'justify-end';
       } else {
         return this.is_carer_user ? 'justify-start' : 'justify-end';
-        // return this.is_carer_user ? 'justify-end' : 'justify-start';
       }
     },
     messageClass() {
       const isSuperUser = this.$root.userProfile?.super_user;
       if (isSuperUser) {
         return this.is_carer_user ? 'own-message' : 'other-message';
-        // return this.is_carer_user ? 'other-message' : 'own-message';
       } else {
         return this.is_carer_user ? 'other-message' : 'own-message';
-        // return this.is_carer_user ? 'own-message' : 'other-message';
       }
     }
   },

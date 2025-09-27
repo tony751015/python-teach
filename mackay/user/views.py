@@ -297,3 +297,22 @@ def chat_room_update_ban(request):
             return Response('update', status=200)
         else:
             return Response('no permission', status=403)
+
+@api_view(['PUT'])
+@authentication_classes([])
+@permission_classes([])
+def update_user_lang(request):
+    serializer = JSONParser().parse(request)
+    user_id = serializer.get('user_id')
+    user_lang = serializer.get('user_lang')
+    if not user_id or not user_lang:
+        return Response('need params', status=400)
+    try:
+        user = User.objects.get(id=user_id)
+        user.user_lang = user_lang
+        user.save()
+        return Response({'status': 'ok', 'user_lang': user_lang}, status=200)
+    except User.DoesNotExist:
+        return Response('user not found', status=404)
+    except Exception as e:
+        return Response(str(e), status=500)
