@@ -47,6 +47,17 @@
             <v-icon color="main-green">mdi-send</v-icon>
           </button>
           <v-btn 
+            v-if="userProfile && userProfile.super_user"
+            @click="$emit('open-trans-pop')" 
+            elevation="0" 
+            color="primary" 
+            class="upload-btn main-green mr-1"
+            :class="{'upload-btn--mobile': $vuetify.breakpoint.xs}"
+          >
+            <v-icon>mdi-translate</v-icon>
+            <span class="d-none d-sm-inline">Translate</span>
+          </v-btn>
+          <v-btn 
             @click="openUploadImage" 
             elevation="0" 
             color="primary" 
@@ -403,6 +414,7 @@ export default {
           chatRoom: fetch_chatRoom,
           is_carer_user: isCarerUser,  // 根據 super_user 設置
           content: messageData.content,
+          user_lang: getJWTData.user_lang||this.userProfile.user_lang||'en',
           content_type: 'text'
         })
         .then((response) => {

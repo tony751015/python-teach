@@ -223,6 +223,7 @@ def load_user_chat_room(request):
                 obj['user_id'] = patientData.id
                 obj['user_avatar'] = patientData.avatar
                 obj['is_superuser'] = patientData.is_superuser
+                obj['user_lang'] = patientData.user_lang
 
                 if lastChatRecord:
                     obj['last_message'] = {

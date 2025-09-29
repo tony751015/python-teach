@@ -261,6 +261,7 @@
         infiniteId: +new Date(), // 確保重置 infinite-loading
         pinnedPatients: [], // 存儲已經 pin 的病患 ID
         selectedPatientId: -1, // 初始化為 -1
+        selectedLang: '',
         selectedChatroom: 'noSelected', // 初始化為 noSelected
         highlightedPatientId: null, // 用於追蹤當前選擇的病患
         albums: [], // 初始化 albums 為空陣列
@@ -436,6 +437,7 @@
         console.log('goChatroom', patient);
         this.UPDATE_USER_ID(patient.user_id);
         this.UPDATE_CHAT_ROOM(patient.room_path);
+        // console.log('new user_lang',patient.user_lang);
 
         // 取得 localStorage 中的 mackay
         const mackayData = JSON.parse(localStorage.getItem('mackay') || '{}');
@@ -443,6 +445,7 @@
         // 更新 user_id
         mackayData.room_path = patient.room_path;
         mackayData.selectedId = patient.user_id;
+        mackayData.user_lang = patient.user_lang;
         
         // 將更新後的物件存回 localStorage
         localStorage.setItem('mackay', JSON.stringify(mackayData));

@@ -127,7 +127,7 @@
               </template>
             </v-list>
           </v-toolbar>
-          <chat-windows class="chatWindows" ref="chatWindows"></chat-windows>
+          <chat-windows class="chatWindows" ref="chatWindows" @open-trans-pop="openTransMsgPop"></chat-windows>
 
         </v-col>
 
@@ -148,8 +148,8 @@
 
       <!-- 修改手機版功能按鈕區 -->
       <div 
-        class="mobile-actions d-md-none"
-        :class="{'mobile-actions--hidden': isMessageLayoutOpen}"
+  class="mobile-actions d-md-none"
+  :class="{'mobile-actions--hidden': isMessageLayoutOpen || showTransMsgPop}"
       >
         <div class="mobile-actions-container pt-1 pb-2 px-1">
           
@@ -206,6 +206,19 @@
               <span class="action-text">Patients</span>
             </div>
           </v-btn>
+          <!-- 翻譯訊息跳窗按鈕 -->
+          <v-btn
+            v-if="userProfile.super_user"
+            elevation='0'
+            text
+            class="mobile-action-btn rounded-lg"
+            @click="openTransMsgPop"
+          >
+            <div class="d-flex flex-column align-center">
+              <v-icon class="action-icon">mdi-translate</v-icon>
+              <span class="action-text">翻譯</span>
+            </div>
+          </v-btn>
         </div>
       </div>
     </v-container>
@@ -226,6 +239,12 @@
       @message-uploaded="handleMessageUploaded"
     ></UploadImage>
 
+    <!-- 翻譯訊息跳窗 -->
+    <TransMsgPop
+      :visible.sync="showTransMsgPop"
+      @message-uploaded="handleMessageUploaded"
+    />
+
     <LangSelect
       v-model="showLangDialog"
       :langOptions="[ { text: 'English', value: 'en' }, { text: 'Spanish', value: 'es' }, { text: 'French', value: 'fr' }, { text: 'German', value: 'de' }, { text: 'Italian', value: 'it' }, { text: 'Portuguese', value: 'pt' } ]"
@@ -241,6 +260,7 @@ import WoundPhotos from '../components/WoundPhotos.vue';
 import MsgLayout from '../components/MsgLayout.vue';
 import UploadImage from '../components/UploadImage.vue';
 import LangSelect from '../components/LangSelect.vue';
+import TransMsgPop from '../components/TransMsgPop.vue';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -249,7 +269,8 @@ export default {
     WoundPhotos,
     MsgLayout,
     UploadImage,
-    LangSelect
+    LangSelect,
+    TransMsgPop
   },
   data() {
     return {
@@ -269,6 +290,7 @@ export default {
       uploadImgKey: 1, // 新增的狀態
       showLangDialog: false,
       selectedLang: '',
+      showTransMsgPop: false
     };
   },
   computed: {
@@ -280,6 +302,7 @@ export default {
     updateCurrentAlbum(newAlbumIndex) {
       this.currentAlbum = newAlbumIndex;
     },
+    
    
     // 當輸入改變時，更新搜尋結果
     onInput() {
@@ -360,6 +383,12 @@ destroyed() {
           this.isPhotoSectionOpen = false;
         }
         this.isMessageLayoutOpen = true;
+      },
+      openTransMsgPop() {
+        if (this.isPhotoSectionOpen) {
+          this.isPhotoSectionOpen = false;
+        }
+        this.showTransMsgPop = true;
       },
       openUploadImage() {
         document.body.classList.add('disable-scroller');

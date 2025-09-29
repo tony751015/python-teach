@@ -11,8 +11,10 @@ app_name = 'chatTranslate'
 urlpatterns = [
     # API 端點
     path('api/translate/', views.translate_chat_message, name='translate_message'),
+    path('api/proofread/', views.proofread_message, name='proofread_message'),
     path('api/translate/records/', views.get_translation_records, name='translation_records'),
     
     # 測試頁面
     path('test/', views.test_translation_view, name='test_translation'),
 ]
+

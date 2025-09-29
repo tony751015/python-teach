@@ -10,6 +10,7 @@ from django.db.models import Q, F, Func, Value, CharField
 from django.core.paginator import Paginator, InvalidPage, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from mackay.settings import DEBUG
+from chatTranslate.views import LLMTranslationService
 
 # 引用客製化的會員
 from django.contrib.auth import get_user_model
@@ -241,11 +242,43 @@ def chat_record_control(request):
         contentType = serializer['content_type']
         isCarerUser = serializer['is_carer_user']
         chatRoom = serializer['chatRoom']
+        getUserLang = serializer['user_lang']
+        # 若前端已提供翻譯結果，則直接使用，略過 LLM 翻譯
+        provided_translated = serializer.get('content_trans', '')
+        
+        # 規範化語言代碼
+        def _norm_lang(lang):
+          return 'zh-tw' if lang in ['zh', 'zh-tw', 'zh_TW', 'zh-Hant'] else lang
+
+        translated_text = provided_translated
+        if translated_text == '':
+          try:
+            if contentType == 'text':
+              translator = LLMTranslationService()
+              # 醫護人員傳入時，原文繁中，翻譯成病患語言
+              if isCarerUser in [1, '1', True]:
+                src = 'zh-tw'
+                tgt = _norm_lang(getUserLang)
+              else:
+                # 病患傳入時，原文為病患語言，翻成繁中
+                src = _norm_lang(getUserLang)
+                tgt = 'zh-tw'
+              result = translator.translate_text(
+                text=getContent,
+                source_lang=src,
+                target_lang=tgt
+              )
+              if result.get('success'):
+                translated_text = result.get('translated_text', '')
+          except:
+            translated_text = ''
+
         # 建立一筆新資料
         # 如果沒有default值，則必須傳參數
         newCreate = chat_record.objects.create(
           create_user = getUserId,
           content = getContent,
+          content_trans = translated_text,
           content_type = contentType,
           is_carer_user = isCarerUser,
           room_path = chatRoom,)

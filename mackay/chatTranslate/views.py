@@ -9,6 +9,7 @@ from rest_framework import status
 import json
 import requests
 import time
+import re
 from .models import TranslationRecord
 
 # Create your views here.
@@ -21,9 +22,32 @@ class LLMTranslationService:
     
     def __init__(self):
         # LLM API 配置
-        self.api_url = "https://e77c18627c0e.ngrok-free.app/api/chat"
+        self.api_url = "https://b84934f7fa03.ngrok-free.app/api/chat"
         self.model_name = "gemma3:4b"
         self.timeout = 30  # 30秒超時
+        # URL 偵測樣式 (http/https 與 www 開頭)
+        self.url_regex = re.compile(r"(https?://[^\s]+|www\.[^\s]+)")
+
+    def _mask_urls(self, text: str):
+        """將文字中的 URL 以佔位符替換，回傳 (masked_text, mapping)。"""
+        index = 0
+        mapping = {}
+
+        def _repl(match):
+            nonlocal index
+            key = f"[URL_{index}]"
+            mapping[key] = match.group(0)
+            index += 1
+            return key
+
+        masked_text = self.url_regex.sub(_repl, text)
+        return masked_text, mapping
+
+    def _restore_urls(self, text: str, mapping: dict):
+        """將佔位符還原成原本 URL。"""
+        for key, val in mapping.items():
+            text = text.replace(key, val)
+        return text
     
     def translate_text(self, text, source_lang="en", target_lang="zh-tw"):
         """
@@ -40,13 +64,31 @@ class LLMTranslationService:
         try:
             start_time = time.time()
             
-            # 構建翻譯請求的 prompt - 明確指定翻譯成繁體中文
+            # 先遮蔽 URL，避免被翻譯
+            masked_text, url_map = self._mask_urls(text)
+
+            # 構建翻譯請求的 prompt - 明確指定翻譯成繁體中文，且不要翻譯 URL
             if target_lang == "zh-tw":
-                prompt = f"請將以下英文翻譯成繁體中文，只需要給出翻譯結果，不要任何解釋或問候語：\n\n{text}"
+                prompt = (
+                    "請將以下內容翻譯成繁體中文。\n"
+                    "- 不要翻譯或改動任何 URL 佔位符 [URL_x] 或 URL 本身。\n"
+                    "- 只輸出翻譯結果，不要多餘解釋。\n\n"
+                    f"{masked_text}"
+                )
             elif target_lang == "zh-cn":
-                prompt = f"請將以下英文翻譯成簡體中文，只需要給出翻譯結果，不要任何解釋或問候語：\n\n{text}"
+                prompt = (
+                    "請將以下內容翻譯成簡體中文。\n"
+                    "- 不要翻譯或改動任何 URL 佔位符 [URL_x] 或 URL 本身。\n"
+                    "- 只輸出翻譯結果，不要多餘解釋。\n\n"
+                    f"{masked_text}"
+                )
             else:
-                prompt = f"請翻譯以下文字成{target_lang}，只需要給出翻譯結果：\n\n{text}"
+                prompt = (
+                    f"請翻譯以下文字成{target_lang}。\n"
+                    "- 不要翻譯或改動任何 URL 佔位符 [URL_x] 或 URL 本身。\n"
+                    "- 只輸出翻譯結果。\n\n"
+                    f"{masked_text}"
+                )
             
             # 構建請求資料
             request_data = {
@@ -85,6 +127,9 @@ class LLMTranslationService:
                     translated_text = response_data['choices'][0]['message']['content'].strip()
                 else:
                     translated_text = str(response_data)  # 備用方案
+
+                # 還原 URL 佔位符
+                translated_text = self._restore_urls(translated_text, url_map)
                 
                 return {
                     'success': True,
@@ -119,6 +164,67 @@ class LLMTranslationService:
                 'error': f"翻譯處理錯誤: {str(e)}",
                 'processing_time': time.time() - start_time if 'start_time' in locals() else 0
             }
+
+    def proofread_text(self, text: str) -> dict:
+        """
+        中文校對：輸入繁體中文，輸出修正後的繁體中文；不添加說明。
+        """
+        try:
+            start_time = time.time()
+            # 遮蔽 URL，避免被誤改
+            masked_text, url_map = self._mask_urls(text)
+
+            prompt = (
+                "請扮演嚴謹的中文校對員。\n"
+                "- 僅修正錯別字、用字不當與基本語法，維持原意與口吻。\n"
+                "- 不加入任何解釋或前後綴，只輸出校正後的繁體中文結果。\n"
+                "- 不要改動任何 URL 佔位符 [URL_x] 或 URL 本身。\n\n"
+                f"原文：{masked_text}"
+            )
+
+            request_data = {
+                "model": self.model_name,
+                "messages": [{"role": "user", "content": prompt}],
+                "stream": False
+            }
+
+            response = requests.post(
+                self.api_url,
+                json=request_data,
+                timeout=self.timeout,
+                headers={'Content-Type': 'application/json', 'Accept': 'application/json'}
+            )
+
+            processing_time = time.time() - start_time
+
+            if response.status_code == 200:
+                data = response.json()
+                if 'message' in data and 'content' in data['message']:
+                    corrected = data['message']['content'].strip()
+                elif 'choices' in data and len(data['choices']) > 0:
+                    corrected = data['choices'][0]['message']['content'].strip()
+                else:
+                    corrected = str(data)
+                # 還原 URL 佔位符
+                corrected = self._restore_urls(corrected, url_map)
+                return {
+                    'success': True,
+                    'corrected_text': corrected,
+                    'processing_time': processing_time,
+                    'model_used': self.model_name,
+                }
+            else:
+                return {
+                    'success': False,
+                    'error': f"API 請求失敗: HTTP {response.status_code}",
+                    'processing_time': processing_time
+                }
+        except requests.exceptions.Timeout:
+            return { 'success': False, 'error': 'API 請求超時' }
+        except requests.exceptions.ConnectionError:
+            return { 'success': False, 'error': '無法連接到 LLM API' }
+        except Exception as e:
+            return { 'success': False, 'error': f'校對處理錯誤: {str(e)}' }
 
 
 @api_view(['POST'])
@@ -195,6 +301,37 @@ def translate_chat_message(request):
             'success': False,
             'error': f'處理請求時發生錯誤: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['POST'])
+def proofread_message(request):
+    """
+    校對繁體中文原文，只回傳修正後文本。
+    Body: { "text": "要校對的繁中" }
+    """
+    try:
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+        else:
+            data = request.data
+
+        if 'text' not in data or not str(data['text']).strip():
+            return Response({'success': False, 'error': '請提供要校對的文字'}, status=status.HTTP_400_BAD_REQUEST)
+
+        text = str(data['text']).strip()
+        svc = LLMTranslationService()
+        result = svc.proofread_text(text)
+
+        if result.get('success'):
+            return Response({
+                'success': True,
+                'corrected_text': result.get('corrected_text', ''),
+                'processing_time': result.get('processing_time', 0),
+                'model_used': result.get('model_used')
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({ 'success': False, 'error': result.get('error', '未知錯誤') }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response({ 'success': False, 'error': f'處理請求時發生錯誤: {str(e)}' }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
